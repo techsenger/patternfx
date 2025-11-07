@@ -29,12 +29,19 @@ package com.techsenger.mvvm4fx.core;
  *
  * @author Pavel Castornii
  */
-public interface ComponentName {
+public class ComponentName extends Name {
+
+    public ComponentName(String text) {
+        super(text);
+    }
 
     /**
      * Returns the human-readable name of the component.
      *
      * @return the component name text
      */
-    String getText();
+    @Override
+    public String getText() {
+        return super.getText();
+    }
 }

@@ -57,6 +57,8 @@ public class ComponentDescriptor {
 
     private final ObjectProperty<HistoryPolicy> historyPolicy = new SimpleObjectProperty<>(HistoryPolicy.NONE);
 
+    private final ObjectProperty<ComponentGroup> group = new SimpleObjectProperty<>();
+
     public ComponentDescriptor(ComponentName name) {
         this(name, UUID.randomUUID());
     }
@@ -150,6 +152,33 @@ public class ComponentDescriptor {
      */
     public void setHistoryPolicy(HistoryPolicy policy) {
         historyPolicy.set(policy);
+    }
+
+    /**
+     * Returns the current {@link ComponentGroup}.
+     *
+     * @return the current component group
+     */
+    public ComponentGroup getGroup() {
+       return group.get();
+    }
+
+    /**
+     * Sets a new {@link ComponentGroup}.
+     *
+     * @param value the new component group to set
+     */
+    public void setGroup(ComponentGroup value) {
+       group.set(value);
+    }
+
+    /**
+     * Returns the {@link ObjectProperty} for the component group.
+     *
+     * @return the property representing the component group
+     */
+    public ObjectProperty<ComponentGroup> groupProperty() {
+       return group;
     }
 
     protected String resolveLogPrefix(String fullName) {

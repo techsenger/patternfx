@@ -14,24 +14,26 @@
  * limitations under the License.
  */
 
-package com.techsenger.mvvm4fx.demo;
-
-import com.techsenger.mvvm4fx.core.ComponentName;
+package com.techsenger.mvvm4fx.core;
 
 /**
  *
  * @author Pavel Castornii
  */
-public class DemoComponentName implements ComponentName {
+public class Name {
 
     private final String text;
 
-    public DemoComponentName(String text) {
+    public Name(String text) {
         this.text = text;
     }
 
-    @Override
     public String getText() {
+        return text;
+    }
+
+    @Override
+    public String toString() {
         return this.text;
     }
 }

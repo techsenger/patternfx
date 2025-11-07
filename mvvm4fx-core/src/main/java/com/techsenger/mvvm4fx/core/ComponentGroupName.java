@@ -14,21 +14,25 @@
  * limitations under the License.
  */
 
-package com.techsenger.mvvm4fx.demo;
-
-import com.techsenger.mvvm4fx.core.ComponentName;
+package com.techsenger.mvvm4fx.core;
 
 /**
  *
  * @author Pavel Castornii
  */
-public final class DemoComponentNames {
+public class ComponentGroupName extends Name {
 
-    public static final ComponentName PERSON_REGISTRY = new ComponentName("PersonRegistry");
+    public ComponentGroupName(String text) {
+        super(text);
+    }
 
-    public static final ComponentName PERSON_DIALOG = new ComponentName("PersonDialog");
-
-    private DemoComponentNames() {
-        //empty
+    /**
+     * Returns the human-readable name of the group.
+     *
+     * @return the group name text
+     */
+    @Override
+    public String getText() {
+        return super.getText();
     }
 }

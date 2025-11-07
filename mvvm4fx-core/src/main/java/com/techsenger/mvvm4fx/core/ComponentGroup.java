@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-package com.techsenger.mvvm4fx.demo;
-
-import com.techsenger.mvvm4fx.core.ComponentName;
+package com.techsenger.mvvm4fx.core;
 
 /**
+ * Represents a logical group of related components.
  *
  * @author Pavel Castornii
  */
-public final class DemoComponentNames {
+public interface ComponentGroup {
 
-    public static final ComponentName PERSON_REGISTRY = new ComponentName("PersonRegistry");
-
-    public static final ComponentName PERSON_DIALOG = new ComponentName("PersonDialog");
-
-    private DemoComponentNames() {
-        //empty
-    }
+    /**
+     * Returns the name of this component group.
+     *
+     * @return the {@link GroupName} representing this group's name
+     */
+    ComponentGroupName getName();
 }
