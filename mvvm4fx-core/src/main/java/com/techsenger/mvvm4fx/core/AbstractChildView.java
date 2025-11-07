@@ -18,8 +18,6 @@ package com.techsenger.mvvm4fx.core;
 
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -27,8 +25,6 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractChildView<T extends AbstractChildViewModel> extends AbstractParentView<T>
         implements ChildView<T> {
-
-    private static final Logger logger = LoggerFactory.getLogger(AbstractChildView.class);
 
     private final ReadOnlyObjectWrapper<ParentView<?>> parent = new ReadOnlyObjectWrapper<>();
 
