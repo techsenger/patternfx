@@ -117,6 +117,10 @@ A component always consists of at least two classes: a `ComponentViewModel` and 
 might arise: why is there no `Model` in the component, given that the pattern is called MVVM? Firstly, a component
 is a building block for constructing a user interface, which might not be related to the application's business logic
 at all. Secondly, the `Model` exists independently of the UI and should have no knowledge of the component's existence.
+Thirdly, MVVM is fundamentally about the separation of responsibilities rather than the mandatory presence of all
+three layers in every element. In other words, a component does not violate MVVM principles simply because it lacks a
+`Model`; it remains compliant as long as the `View` and `ViewModel` maintain a clear separation of concerns and
+communicate exclusively through data binding and observable properties.
 
 It is important to note, that in addition to its standard functions the `ComponentView` is responsible for managing the
 creation and removal of only two types of components: its own child components and components with an externally
