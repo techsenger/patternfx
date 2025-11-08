@@ -41,8 +41,8 @@ public abstract class AbstractComponentViewModel implements ComponentViewModel {
         this.descriptor = createDescriptor();
         this.descriptor.stateProperty().addListener((ov, oldV, newV) -> {
             var policy = this.descriptor.getHistoryPolicy();
-            if (this.descriptor.getState() == ComponentState.CONSTRUCTED) {
-                logger.debug("{} History policy on constucting: {}", this.descriptor.getLogPrefix(), policy);
+            if (this.descriptor.getState() == ComponentState.INITIALIZING) {
+                logger.debug("{} History policy on initializing: {}", this.descriptor.getLogPrefix(), policy);
                 ComponentHistory localHistory = null;
                 if (policy != NONE) {
                     localHistory = getOrRequestHistory();

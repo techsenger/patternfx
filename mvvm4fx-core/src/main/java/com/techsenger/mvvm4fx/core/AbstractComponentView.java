@@ -31,7 +31,6 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
 
     public AbstractComponentView(T viewModel) {
         this.viewModel = viewModel;
-        this.viewModel.getDescriptor().stateWrapper().set(ComponentState.CONSTRUCTED);
     }
 
     @Override
@@ -46,10 +45,11 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
     public final void initialize() {
         var descriptor = this.viewModel.getDescriptor();
         try {
-            if (descriptor.stateWrapper().get() != ComponentState.CONSTRUCTED) {
+            if (descriptor.stateWrapper().get() != ComponentState.CREATING) {
                 throw new IllegalStateException("Unexpected state of the component");
             }
             preInitialize(viewModel);
+            descriptor.stateWrapper().set(ComponentState.INITIALIZING);
             build(viewModel);
             bind(viewModel);
             addListeners(viewModel);
@@ -73,6 +73,7 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
                 throw new IllegalStateException("Unexpected state of the component");
             }
             preDeinitialize(viewModel);
+            descriptor.stateWrapper().set(ComponentState.DEINITIALIZING);
             removeHandlers(viewModel);
             removeListeners(viewModel);
             unbind(viewModel);

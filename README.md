@@ -135,11 +135,11 @@ acts as a technical identity card, containing all framework-related information 
 from business data. In other words, the purpose of this class is to ensure that internal component data does not mix
 with business data within the `ViewModel`.
 
-The `ComponentHistory` enables the preservation of the component's state upon its destruction. Data exchange occurs
-exclusively between the `ComponentViewModel` and the `ComponentHistory`. During component construction, data is restored
-from the `ComponentHistory` to the `ComponentViewModel`, while during deinitialization, data from the
-`ComponentViewModel` is saved to the `ComponentHistory`. The volume of state history that is restored and saved is
-configured via the `HistoryPolicy` enum.
+The `ComponentHistory` enables the preservation of the component’s state across its lifecycle. Data exchange occurs
+exclusively between the `ComponentViewModel` and the `ComponentHistory`. When the component’s state transitions to
+`INITIALIZING`, data is restored from the `ComponentHistory` to the `ComponentViewModel`. Conversely, when the state
+transitions to `DEINITIALIZED`, data from the `ComponentViewModel` is saved back to the `ComponentHistory`. The volume
+of state information that is restored and persisted is defined by the `HistoryPolicy` enum.
 
 The `ComponentMediator` is an interface that allows the `ComponentViewModel` to request the `ComponentView` to perform
 specific actions. These actions are typically related to creating or removing other components — operations that cannot
@@ -150,23 +150,15 @@ The mediator can be created and set in the `AbstractParentViewModel` either by o
 
 ### Component Lifecycle <a name="component-lifecycle"></a>
 
-A component has four distinct states (see `ComponentState`):
+A component has five distinct states (see `ComponentState`):
 
-1. Unconstructed - The component has not yet been constructed (`ComponentViewModel` exists, but `ComponentView` has
-not been created).
-
-2. Constructed - Both the `ComponentViewModel` and `ComponentView` have been created, but the component is not yet
-initialized. It is important to note that when the component transitions to this state, the `ComponentViewModel` state
-is restored from the `ComponentHistory`.
-
-3. Initialized - Both the `ComponentViewModel` and `ComponentView` have been fully initialized and are ready for use.
-The component enters this state upon completion of the `ComponentView#initialize(`) method, but before the call to the
-`AbstractComponentView#postInitialize()` method.
-
-4. Deinitialized - The component has been deinitialized and can't be used anymore. It enters this state upon
-completion of the `ComponentView#deinitialize()` method, but before the call to the
-`AbstractComponentView#postDeinitialize()` method. It is important to note that when the component transitions to this
-state, the `ComponentViewModel` state is saved to the `ComponentHistory`.
+| **State**          | **Description**                                                                                                                                                                                                                                                                                                                                  |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Creating**       | The component is currently being created. During this phase, both the `ComponentViewModel` and the `ComponentView` objects are being constructed, but initialization has not yet started.                                                                                                                                                        |
+| **Initializing**   | The component is in the process of initialization. This phase begins when the `ComponentView#initialize()` method is invoked, during which bindings, listeners, and other setup logic are established.                                                                                                                                           |
+| **Initialized**    | The component has been fully initialized and is ready for use. It enters this state upon completion of the `ComponentView#initialize()` method, but before the call to the `AbstractComponentView#postInitialize()` method.                                                                                                                      |
+| **Deinitializing** | The component is in the process of deinitialization. This phase begins when the `ComponentView#deinitialize()` method is invoked, during which bindings are removed, listeners are detached, and cleanup logic is performed.                                                                                                                     |
+| **Deinitialized**  | The component has been completely deinitialized and can no longer be used. It enters this state upon completion of the `ComponentView#deinitialize()` method, but before the call to the `AbstractComponentView#postDeinitialize()` method. When transitioning to this state, the `ComponentViewModel` state is saved to the `ComponentHistory`. |
 
 Each component features `ComponentView#initialize()` and `ComponentView#deinitialize()` methods, which initialize and
 deinitialize the component, respectively, altering its state. The default implementation of these methods in

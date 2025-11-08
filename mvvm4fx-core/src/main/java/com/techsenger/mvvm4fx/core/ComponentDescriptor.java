@@ -53,7 +53,7 @@ public class ComponentDescriptor {
     private final String logPrefix;
 
     private final ReadOnlyObjectWrapper<ComponentState> state =
-            new ReadOnlyObjectWrapper<>(ComponentState.UNCONSTRUCTED);
+            new ReadOnlyObjectWrapper<>(ComponentState.CREATING);
 
     private final ObjectProperty<HistoryPolicy> historyPolicy = new SimpleObjectProperty<>(HistoryPolicy.NONE);
 
