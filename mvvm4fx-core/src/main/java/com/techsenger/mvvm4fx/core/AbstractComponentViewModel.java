@@ -43,24 +43,24 @@ public abstract class AbstractComponentViewModel implements ComponentViewModel {
             var policy = this.descriptor.getHistoryPolicy();
             if (this.descriptor.getState() == ComponentState.CONSTRUCTED) {
                 logger.debug("{} History policy on constucting: {}", this.descriptor.getLogPrefix(), policy);
-                ComponentHistory history = null;
+                ComponentHistory localHistory = null;
                 if (policy != NONE) {
-                    history = getOrRequestHistory();
-                    if (history.isFresh()) {
+                    localHistory = getOrRequestHistory();
+                    if (localHistory.isFresh()) {
                         logger.debug("{} History is fresh. Skipping restoration", this.descriptor.getLogPrefix());
                     } else {
                         switch (policy) {
                             case DATA:
-                                history.restoreData(this);
+                                localHistory.restoreData(this);
                                 postHistoryRestore();
                                 break;
                             case APPEARANCE:
-                                history.restoreAppearance(this);
+                                localHistory.restoreAppearance(this);
                                 postHistoryRestore();
                                 break;
                             case ALL:
-                                history.restoreData(this);
-                                history.restoreAppearance(this);
+                                localHistory.restoreData(this);
+                                localHistory.restoreAppearance(this);
                                 postHistoryRestore();
                             break;
                             default:
