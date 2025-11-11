@@ -15,6 +15,8 @@ pattern. Examples of components include tabs, dialog windows, toolbars, image vi
     * [Component Structure](#component-structure)
     * [Component Lifecycle](#component-lifecycle)
     * [Component Hierarchy](#component-hierarchy)
+    * [When to Create a Component?](#when-to-create-component)
+    * [When not to Create a Component?](#when-not-to-create-component)
 * [Requirements](#requirements)
 * [Dependencies](#dependencies)
 * [Code building](#code-building)
@@ -194,6 +196,23 @@ enabling direct coordination and communication within the hierarchy while mainta
 between the presentation (View) and logic (ViewModel) layers. This design ensures consistency and synchronization
 across the component tree without violating the Unidirectional Hierarchy Rule (UHR), as the relationships are strictly
 hierarchical and non-cyclic.
+
+### When to Create a Component? <a name="when-to-create-component"></a>
+* The element has independent testable state or business logic that can exist without a View.
+* The element has a distinct lifecycle requiring separate initialization/deinitialization, or can be dynamically
+added/removed.
+* The element is potentially reusable across different contexts (e.g., dialogs, toolbars, multiple editor types).
+* Multiple closely related properties form a logical unit - grouping them into a separate component improves
+maintainability and reduces parent component complexity.
+* The element manages structural composition - it contains child components or forms an independent subtree
+(e.g., containers, tabs, panels).
+* State persistence is required - the element needs its own History to save and restore state between sessions.
+
+### When not to Create a Component? <a name="when-not-to-create-component"></a>
+* The element’s ViewModel would contain no meaningful behavior or data - making the component redundant.
+* The element represents a minor visual part of the interface and does not require its own logic or state.
+* The element is simple enough that separating it into its own component would add unnecessary complexity rather
+than improving clarity.
 
 ## Requirements <a name="requirements"></a>
 
