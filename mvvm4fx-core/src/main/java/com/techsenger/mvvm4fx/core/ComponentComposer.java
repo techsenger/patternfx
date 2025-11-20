@@ -20,13 +20,7 @@ package com.techsenger.mvvm4fx.core;
  *
  * @author Pavel Castornii
  */
-public interface ComponentViewModel {
+public interface ComponentComposer<T extends ComponentView<?>> extends ComponentView.Composer {
 
-    interface Composer {
-
-    }
-
-    ComponentDescriptor getDescriptor();
-
-    HistoryProvider getHistoryProvider();
+    ComponentViewModel.Composer getViewModelComposer();
 }

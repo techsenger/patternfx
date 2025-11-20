@@ -20,7 +20,11 @@ package com.techsenger.mvvm4fx.core;
  *
  * @author Pavel Castornii
  */
-public interface ComponentView<T extends ComponentViewModel> {
+public interface ComponentView<T extends ComponentViewModel> extends Lifecycle {
+
+    interface Composer extends Lifecycle {
+
+    }
 
     /**
      * Returns component view model.
@@ -28,16 +32,4 @@ public interface ComponentView<T extends ComponentViewModel> {
      * @return
      */
     T getViewModel();
-
-    /**
-     * Initializes component. Every component must be initialized before using it..
-     *
-     */
-    void initialize();
-
-    /**
-     * Deinitializes component. Every component must be deinitialized after using it.
-     *
-     */
-    void deinitialize();
 }

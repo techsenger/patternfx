@@ -20,13 +20,13 @@ package com.techsenger.mvvm4fx.core;
  *
  * @author Pavel Castornii
  */
-public interface ComponentViewModel {
+public abstract class AbstractChildComposer<T extends ChildView<?>> extends AbstractParentComposer<T> {
 
-    interface Composer {
+    protected abstract class ViewModelComposer extends AbstractParentComposer.ViewModelComposer {
 
     }
 
-    ComponentDescriptor getDescriptor();
-
-    HistoryProvider getHistoryProvider();
+    public AbstractChildComposer(T view) {
+        super(view);
+    }
 }

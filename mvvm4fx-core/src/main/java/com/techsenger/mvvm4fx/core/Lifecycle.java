@@ -20,13 +20,9 @@ package com.techsenger.mvvm4fx.core;
  *
  * @author Pavel Castornii
  */
-public interface ComponentViewModel {
+public interface Lifecycle {
 
-    interface Composer {
+    void initialize();
 
-    }
-
-    ComponentDescriptor getDescriptor();
-
-    HistoryProvider getHistoryProvider();
+    void deinitialize();
 }

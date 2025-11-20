@@ -37,6 +37,8 @@ public abstract class AbstractComponentViewModel implements ComponentViewModel {
 
     private ComponentHistory<?> history;
 
+    private ComponentViewModel.Composer composer;
+
     public AbstractComponentViewModel() {
         this.descriptor = createDescriptor();
         this.descriptor.stateProperty().addListener((ov, oldV, newV) -> {
@@ -109,6 +111,14 @@ public abstract class AbstractComponentViewModel implements ComponentViewModel {
 
     public void setHistoryProvider(HistoryProvider historyProvider) {
         this.historyProvider = historyProvider;
+    }
+
+    public Composer getComposer() {
+        return composer;
+    }
+
+    public void setComposer(Composer composer) {
+        this.composer = composer;
     }
 
     protected void postHistoryRestore() {

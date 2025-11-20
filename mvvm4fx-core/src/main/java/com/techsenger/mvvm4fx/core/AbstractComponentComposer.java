@@ -20,15 +20,39 @@ package com.techsenger.mvvm4fx.core;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractComponentMediator<T extends ParentView<?>> implements ComponentMediator {
+public abstract class AbstractComponentComposer<T extends ComponentView<?>> implements ComponentComposer<T> {
+
+    protected abstract class ViewModelComposer implements ComponentViewModel.Composer {
+
+    }
 
     private final T view;
 
-    public AbstractComponentMediator(T view) {
+    private final ComponentViewModel.Composer viewModelComposer;
+
+    public AbstractComponentComposer(T view) {
         this.view = view;
+        this.viewModelComposer = createViewModelComposer();
+    }
+
+    @Override
+    public ParentViewModel.Composer getViewModelComposer() {
+        return viewModelComposer;
+    }
+
+    @Override
+    public void initialize() {
+
+    }
+
+    @Override
+    public void deinitialize() {
+
     }
 
     protected final T getView() {
         return view;
     }
+
+    protected abstract ComponentViewModel.Composer createViewModelComposer();
 }

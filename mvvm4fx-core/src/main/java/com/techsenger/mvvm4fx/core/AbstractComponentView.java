@@ -29,8 +29,15 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
 
     private T viewModel;
 
+    private ComponentView.Composer composer;
+
     public AbstractComponentView(T viewModel) {
         this.viewModel = viewModel;
+        var composer = createComposer();
+        this.composer = composer;
+        if (this.composer != null) {
+            viewModel.setComposer(composer.getViewModelComposer());
+        }
     }
 
     @Override
@@ -84,6 +91,29 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
         } catch (Exception ex) {
             logger.error("{} Error deinitializing", descriptor.getLogPrefix(), ex);
         }
+    }
+
+    public ComponentView.Composer getComposer() {
+        return composer;
+    }
+
+    public void setComposer(ComponentView.Composer composer) {
+        this.composer = composer;
+    }
+
+    /**
+     * Creates a new {@link ComponentComposer} instance for this component.
+     *
+     * <p>This method is invoked during the component's construction phase and allows subclasses to provide a custom
+     * composer implementation. However, this method should be used only if the component is the owner of the composer.
+     * Otherwise the component setter should be used.
+     *
+     * <p>The default implementation returns {@code null}, meaning the component does not create a composer by default.
+     *
+     * @return a newly created {@link ComponentComposer}, or {@code null} if none is required
+     */
+    protected ComponentComposer<?> createComposer() {
+        return null;
     }
 
     /**

@@ -22,8 +22,8 @@ import java.io.Serializable;
  * Represents a serializable snapshot of a component's {@code ViewModel} state. A history object stores only the
  * information that must persist between component sessions and excludes all transient or runtime aspects.
  *
- * <p>The {@code ViewModel} itself may contain both persistent and non-persistent values. It also defines default values
- * for all of its properties, regardless of whether they are stored in the history or used only at runtime. The
+ * <p>The {@code ViewModel} itself may contain both persistent and non-persistent values. It also defines default
+ * values for all of its properties, regardless of whether they are stored in the history or used only at runtime. The
  * {@code ViewModel} owns the meaning of those defaults, while the history is responsible solely for persisting and
  * restoring the subset of states that are marked as persistent.
  *

@@ -15,6 +15,7 @@ pattern. Examples of components include tabs, dialog windows, toolbars, image vi
     * [Component Structure](#component-structure)
     * [Component Lifecycle](#component-lifecycle)
     * [Component Hierarchy](#component-hierarchy)
+    * [Composite Component](#composite-component)
     * [When to Create a Component?](#when-to-create-component)
     * [When not to Create a Component?](#when-not-to-create-component)
 * [Requirements](#requirements)
@@ -27,13 +28,14 @@ pattern. Examples of components include tabs, dialog windows, toolbars, image vi
 
 ## Overview <a name="overview"></a>
 
-MVVM4FX reimagines the Model–View–ViewModel pattern for JavaFX as a component-based, extensible platform designed
-around clarity, modularity, and the KISS principle. Each component exists as a self-contained unit composed of a View,
-ViewModel, and Descriptor, optionally extended with Mediator and History.
+MVVM4FX reimagines the `Model`–`View`–`ViewModel` pattern for JavaFX as a component-based, extensible platform designed
+around clarity, modularity, and the KISS principle. Each component exists as a self-contained unit composed of a `View`,
+`ViewModel`, and `Descriptor`, optionally extended with `Composer` and `History`.
 
-The framework enforces a strict separation between presentation, logic, and identity. The View defines the visual
-structure and behavior; the ViewModel encapsulates logic and state; the Descriptor holds the component’s technical
-identity; the Mediator enables controlled interaction between layers; and the History preserves continuity across sessions.
+The framework enforces a strict separation between presentation, logic, and identity. The `View` defines the visual
+structure and behavior; the `ViewModel` encapsulates logic and state; the `Descriptor` holds the component’s technical
+identity; the `Composer` is responsible for managing child components and their composition; and the
+`History` preserves continuity across sessions.
 
 At its core, MVVM4FX follows the KISS principle – every class, method, and abstraction exists only for a clear reason,
 avoiding unnecessary complexity or dependencies. This simplicity is deliberate: it keeps the architecture transparent,
@@ -58,48 +60,48 @@ Key features include:
 
 ### What is MVVM? <a name="what-is-mvvm"></a>
 
-MVVM (Model-View-ViewModel) is an architectural pattern that divides an application's logic into three main parts:
-Model, View, and ViewModel.
+MVVM (`Model`-`View`-`ViewModel`) is an architectural pattern that divides an application's logic into three main parts:
+`Model`, `View`, and `ViewModel`.
 
-Model — encapsulates the data and business logic of the application. Models represent an abstraction that stores and
-processes the application’s data, including all business logic rules and data validation logic. Models do not interact
-with the UI and do not know about View or ViewModel. Instead, they provide data and perform actions related to the
-business logic. Model can include:
+`Model` — encapsulates the data and business logic of the application. `Model`s represent an abstraction that stores and
+processes the application’s data, including all business logic rules and data validation logic. `Model`s do not interact
+with the UI and do not know about `View` or `ViewModel`. Instead, they provide data and perform actions related to the
+business logic. `Model` can include:
 
 * Data (for example, entities from a database or objects obtained from external sources).
 * Business logic (such as data processing rules, calculations, data manipulation).
 * Validation logic (for example, checks that are performed before saving data).
 
-View — represents the user interface that displays the data. The View's task is to contain UI elements and bind their
-state to the ViewModel. View is responsible for displaying data and interacting with the user, but it should not
-contain logic for managing the state of these elements. Because it is the responsibility of the ViewModel to control
-this state without knowing about specific controls in the View. For example, if the ViewModel indicates that a button
-should be active or inactive, the View will update the control, but the View will not manage the logic that determines
+`View` — represents the user interface that displays the data. The `View`'s task is to contain UI elements and bind their
+state to the `ViewModel`. `View` is responsible for displaying data and interacting with the user, but it should not
+contain logic for managing the state of these elements. Because it is the responsibility of the `ViewModel` to control
+this state without knowing about specific controls in the `View`. For example, if the `ViewModel` indicates that a button
+should be active or inactive, the `View` will update the control, but the `View` will not manage the logic that determines
 when the button should be enabled or disabled.
 
-Besides, the View may and should contain logic related to the visual behavior and layout of elements (presentation
+Besides, the `View` may and should contain logic related to the visual behavior and layout of elements (presentation
 logic). This includes calculating positions and sizes, managing component arrangement (e.g., docking or resizing),
 handling animations, drag-and-drop operations, or other view-related interactions that depend on specific UI components.
 
-ViewModel — manages the state of UI elements without needing to know the implementation details of the user interface.
-ViewModel can also serve as a layer between the View and Model, obtaining data from the Model and preparing it for
-display in the View. It can transform the data from the model into a format suitable for UI presentation.
+`ViewModel` — manages the state of UI elements without needing to know the implementation details of the user interface.
+`ViewModel` can also serve as a layer between the `View` and `Model`, obtaining data from the `Model` and preparing it for
+display in the `View`. It can transform the data from the model into a format suitable for UI presentation.
 
 ### MVVM Advantages <a name="mvvm-advantages"></a>
 
-* Separation of concerns. MVVM helps to clearly separate the presentation logic (View), business logic and data (Model),
-and interaction logic (ViewModel). This simplifies code maintenance and makes it more readable.
+* Separation of concerns. MVVM helps to clearly separate the presentation logic (`View`), business logic and data
+(`Model`), and interaction logic (`ViewModel`). This simplifies code maintenance and makes it more readable.
 
-* Testability. The ViewModel can be tested independently of the user interface (UI) because it is not tied to specific
+* Testability. The `ViewModel` can be tested independently of the user interface (UI) because it is not tied to specific
 visual elements. This makes it easy to write unit tests for business logic.
 
-* Two-way data binding. In MVVM, data is automatically synchronized between the View and ViewModel, which reduces the
+* Two-way data binding. In MVVM, data is automatically synchronized between the `View` and `ViewModel`, which reduces the
 amount of code required for managing UI state and simplifies updates.
 
 * Simplification of complex UIs. When an application has complex UIs with dynamic data, MVVM helps make the code more
 understandable and structured, easing management of UI element states.
 
-* UI updates without direct manipulation. The ViewModel manages updates to the View via data binding, avoiding direct
+* UI updates without direct manipulation. The `ViewModel` manages updates to the `View` via data binding, avoiding direct
 manipulation of UI elements. This makes the code more flexible and scalable.
 
 ## Component <a name="component"></a>
@@ -129,8 +131,9 @@ creation and removal of only two types of components: its own child components a
 provided API, such as dialogs or popup windows. This limitation exists because the `ComponentView` can only fully manage
 elements within its own scope and awareness.
 
-In addition to the `ComponentViewModel` and `ComponentView`, a component always has a `ComponentDescriptor` and may
-include two optional classes: `ComponentMediator` and `ComponentHistory`.
+In addition to the `ComponentViewModel` and `ComponentView`, a component always has a `ComponentDescriptor` (which
+is provided by the framework and normally does not require custom implementation) and may include two optional
+classes: `ComponentHistory` and `ComponentComposer`.
 
 The `ComponentDescriptor` represents the internal metadata and platform-level state of a component. The descriptor
 acts as a technical identity card, containing all framework-related information while keeping it completely separate
@@ -143,12 +146,8 @@ exclusively between the `ComponentViewModel` and the `ComponentHistory`. When th
 transitions to `DEINITIALIZED`, data from the `ComponentViewModel` is saved back to the `ComponentHistory`. The volume
 of state information that is restored and persisted is defined by the `HistoryPolicy` enum.
 
-The `ComponentMediator` is an interface that allows the `ComponentViewModel` to request the `ComponentView` to perform
-specific actions. These actions are typically related to creating or removing other components — operations that cannot
-be executed solely within the `ComponentViewModel`. It is important to emphasize that the `ComponentViewModel` must
-never hold a direct reference to the `ComponentView`, and the use of this interface does not violate this rule.
-The mediator can be created and set in the `AbstractParentViewModel` either by overriding the
-`AbstractParentView#createMediator()` method or by using `AbstractParentViewModel#setMediator(ComponentMediator)`
+The `ComponentComposer` is responsible for managing child components and their composition
+(see [Composite Component](#composite-component)).
 
 ### Component Lifecycle <a name="component-lifecycle"></a>
 
@@ -190,15 +189,87 @@ The parent component's `ComponentViewModel` holds a reference to the child compo
 child component's `ComponentView` through its `children` field, and the child component's `ComponentView` holds a
 reference to the parent component's `ComponentView` via its `parent` field.
 
-This dualistic linkage establishes a coherent and symmetric relationship between parent and child components at both
-the View and ViewModel layers. The parent and child components are fully aware of each other's existence and state,
+This two-layer linkage establishes a coherent and symmetric relationship between parent and child components at both
+the `View` and `ViewModel` layers. The parent and child components are fully aware of each other's existence and state,
 enabling direct coordination and communication within the hierarchy while maintaining clear separation of concerns
-between the presentation (View) and logic (ViewModel) layers. This design ensures consistency and synchronization
+between the presentation (`View`) and logic (`ViewModel`) layers. This design ensures consistency and synchronization
 across the component tree without violating the Unidirectional Hierarchy Rule (UHR), as the relationships are strictly
 hierarchical and non-cyclic.
 
+### Composite Component <a name="composite-component"></a>
+
+Components can be either simple or composite. A simple component has no child components. A composite component has
+one or more child components. Working with a composite component is one of the most challenging parts of using
+the platform for the following reasons:
+
+1. MVVM Gap. MVVM does not specify how child components should be created, how their lifecycle should be managed, or
+how they should be composed.
+2. Architectural Conflict. According to MVVM, the `ViewModel` must not know about the `View`, yet the `ViewModel` may
+need to initiate the creation of new components (for example, opening a dialog) and their composition — which is
+impossible without interacting with the `View`.
+3. Implementation Complexity. Due to the two-layer structure of a component (`View` and `ViewModel`), each of them requires
+its own version of a composer, which doubles the complexity of the problem. In addition, naming becomes difficult,
+since names like `SomeComponentViewComposer` and `SomeComponentViewModelComposer` are hardly convenient to work with.
+4. Inheritance Challenges. Supporting component inheritance, where hierarchies of all classes of inherited components
+must be created: `ChildView` extends `ParentView`, `ChildViewModel` extends `ParentViewModel`, `ChildComposer` extends
+`ParentComposer` etc.
+
+In MVVM4FX, the solution for working with composite components is implemented as follows.
+
+1. Separate Composer Interfaces. In the `View` and `ViewModel` classes of a composite component, nested `Composer`
+interfaces are defined: `View.Composer` contains the methods that the `View` will use to work with the `Composer`,
+and `ViewModel.Composer` contains the methods that the `ViewModel` will use to work with the `Composer`.
+The need to use interfaces is explained, firstly, by the requirement to test the component independently of other
+components, and secondly, by the fact that the `Composer` must know about both the `View` and the `ViewModel`, which
+would otherwise violate MVVM principles.
+
+
+```java
+public class FooViewModel extends AbstractChildViewModel {
+
+    public interface Composer extends ComponentViewModel.Composer {...}
+
+    ...
+}
+
+public class FooView extends AbstractChildView<FooViewModel> {
+
+    public interface Composer extends ComponentView.Composer {...}
+
+    ...
+}
+```
+Unified Composer Implementation. A single `Composer` class serves as the main implementation, which directly
+implements the `View.Composer` interface and contains a nested class implementing the `ViewModel.Composer` interface.
+The composer holds a reference to the associated `View` instance, allowing both the main class and nested class to
+access view-specific functionality while maintaining proper separation of concerns.
+
+```java
+public class FooComposer extends AbstractChildViewComposer<FooView> implements FooView.Composer {
+
+    protected class ViewModelComposer
+            extends AbstractChildViewComposer.ViewModelComposer
+            implements FooViewModel.Composer {...}
+
+    ...
+}
+```
+3. Composer Assignment. To assign a `Composer` to the `ViewModel`, the public method
+`AbstractComponentViewModel#setComposer(...)` is used, and for the `View` — `AbstractComponentView#setComposer(...)`.
+There is also the method `AbstractComponentView#createComposer()`, which can be overridden to automate `Composer`
+creation during construction.
+
+Advantages of this approach:
+
+* Strict Separation. Using the `View.Composer` and `ViewModel.Composer` interfaces enforces a clear separation of
+layers according to MVVM and simplifies testing.
+* Clean Architecture. The `Composer` class takes over all work related to managing child components, keeping the
+`View` and `ViewModel` free from logic that does not belong to them.
+* MVVM Compliance. The `Composer` class is where the `ViewModel`’s ability to initiate the addition or removal of
+a component is implemented without violating MVVM principles.
+
 ### When to Create a Component? <a name="when-to-create-component"></a>
-* The element has independent testable state or business logic that can exist without a View.
+* The element has independent testable state or business logic that can exist without a `View`.
 * The element has a distinct lifecycle requiring separate initialization/deinitialization, or can be dynamically
 added/removed.
 * The element is potentially reusable across different contexts (e.g., dialogs, toolbars, multiple editor types).
@@ -206,10 +277,10 @@ added/removed.
 maintainability and reduces parent component complexity.
 * The element manages structural composition - it contains child components or forms an independent subtree
 (e.g., containers, tabs, panels).
-* State persistence is required - the element needs its own History to save and restore state between sessions.
+* State persistence is required - the element needs its own `History` to save and restore state between sessions.
 
 ### When not to Create a Component? <a name="when-not-to-create-component"></a>
-* The element’s ViewModel would contain no meaningful behavior or data - making the component redundant.
+* The element’s `ViewModel` would contain no meaningful behavior or data - making the component redundant.
 * The element represents a minor visual part of the interface and does not require its own logic or state.
 * The element is simple enough that separating it into its own component would add unnecessary complexity rather
 than improving clarity.
