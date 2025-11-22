@@ -239,7 +239,7 @@ public class FooView extends AbstractChildView<FooViewModel> {
     ...
 }
 ```
-Unified Composer Implementation. A single `Composer` class serves as the main implementation, which directly
+2. Unified Composer Implementation. A single `Composer` class serves as the main implementation, which directly
 implements the `View.Composer` interface and contains a nested class implementing the `ViewModel.Composer` interface.
 The composer holds a reference to the associated `View` instance, allowing both the main class and nested class to
 access view-specific functionality while maintaining proper separation of concerns.
