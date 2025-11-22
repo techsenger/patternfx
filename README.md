@@ -245,10 +245,10 @@ The composer holds a reference to the associated `View` instance, allowing both 
 access view-specific functionality while maintaining proper separation of concerns.
 
 ```java
-public class FooComposer extends AbstractChildViewComposer<FooView> implements FooView.Composer {
+public class FooComposer extends AbstractChildComposer<FooView> implements FooView.Composer {
 
     protected class ViewModelComposer
-            extends AbstractChildViewComposer.ViewModelComposer
+            extends AbstractChildComposer.ViewModelComposer
             implements FooViewModel.Composer {...}
 
     ...
