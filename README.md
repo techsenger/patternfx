@@ -4,6 +4,8 @@ Techsenger MVVM4FX is a tiny framework for developing JavaFX applications using 
 the necessary interfaces and base class implementations for creating components, which serve as the units of the MVVM
 pattern. Examples of components include tabs, dialog windows, toolbars, image viewers, help pages, and more.
 
+As a real example of using this framework, see [TabShell](https://github.com/techsenger/tabshell) project.
+
 ## Table of Contents
 * [Overview](#overview)
 * [Features](#features)
@@ -44,8 +46,6 @@ predictable, and easy to extend.
 By combining conceptual clarity with structural discipline, MVVM4FX achieves both architectural purity and practical
 flexibility — a balance where components remain independent yet fully interoperable. It is not a minimalistic
 abstraction but a complete design system for building coherent, maintainable, and intelligent JavaFX applications.
-
-As a real example of using this framework, see [TabShell](https://github.com/techsenger/tabshell) project.
 
 ## Features <a name="features"></a>
 
