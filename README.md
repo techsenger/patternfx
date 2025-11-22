@@ -30,7 +30,7 @@ pattern. Examples of components include tabs, dialog windows, toolbars, image vi
 
 MVVM4FX reimagines the `Model`–`View`–`ViewModel` pattern for JavaFX as a component-based, extensible platform designed
 around clarity, modularity, and the KISS principle. Each component exists as a self-contained unit composed of a `View`,
-`ViewModel`, and `Descriptor`, optionally extended with `Composer` and `History`.
+`ViewModel` and `Descriptor`, optionally extended with `Composer` and `History`.
 
 The framework enforces a strict separation between presentation, logic, and identity. The `View` defines the visual
 structure and behavior; the `ViewModel` encapsulates logic and state; the `Descriptor` holds the component’s technical
@@ -44,6 +44,8 @@ predictable, and easy to extend.
 By combining conceptual clarity with structural discipline, MVVM4FX achieves both architectural purity and practical
 flexibility — a balance where components remain independent yet fully interoperable. It is not a minimalistic
 abstraction but a complete design system for building coherent, maintainable, and intelligent JavaFX applications.
+
+As a real example of using this framework, see [TabShell](https://github.com/techsenger/tabshell) project.
 
 ## Features <a name="features"></a>
 
