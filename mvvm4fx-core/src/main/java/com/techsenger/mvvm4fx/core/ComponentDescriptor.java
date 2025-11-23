@@ -34,7 +34,7 @@ import javafx.beans.property.SimpleObjectProperty;
  */
 public class ComponentDescriptor {
 
-    private static String logDelimiter = " ::";
+    private static String logDelimiter = " :";
 
     public static String getLogDelimiter() {
         return logDelimiter;

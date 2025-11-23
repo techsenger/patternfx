@@ -56,6 +56,7 @@ Key features include:
 * Component inheritance.
 * Ability to preserve component history.
 * Designed without considering FXML support.
+* Support for component-level logging.
 * Detailed documentation and sample code.
 
 ## MVVM <a name="mvvm"></a>
