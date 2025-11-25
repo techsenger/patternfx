@@ -129,11 +129,6 @@ three layers in every element. In other words, a component does not violate MVVM
 `Model`; it remains compliant as long as the `View` and `ViewModel` maintain a clear separation of concerns and
 communicate exclusively through data binding and observable properties.
 
-It is important to note, that in addition to its standard functions the `ComponentView` is responsible for managing the
-creation and removal of only two types of components: its own child components and components with an externally
-provided API, such as dialogs or popup windows. This limitation exists because the `ComponentView` can only fully manage
-elements within its own scope and awareness.
-
 In addition to the `ComponentViewModel` and `ComponentView`, a component always has a `ComponentDescriptor` (which
 is provided by the framework and normally does not require custom implementation) and may include two optional
 classes: `ComponentHistory` and `ComponentComposer`.
