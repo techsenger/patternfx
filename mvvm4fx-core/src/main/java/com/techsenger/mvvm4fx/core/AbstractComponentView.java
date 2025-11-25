@@ -57,6 +57,7 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
             }
             preInitialize(viewModel);
             descriptor.stateWrapper().set(ComponentState.INITIALIZING);
+            viewModel.initialize();
             build(viewModel);
             bind(viewModel);
             addListeners(viewModel);
@@ -85,6 +86,7 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
             removeListeners(viewModel);
             unbind(viewModel);
             unbuild(viewModel);
+            viewModel.deinitialize();
             descriptor.stateWrapper().set(ComponentState.DEINITIALIZED);
             logger.debug("{} Deinitialized component", descriptor.getLogPrefix());
             postDeinitialize(viewModel);

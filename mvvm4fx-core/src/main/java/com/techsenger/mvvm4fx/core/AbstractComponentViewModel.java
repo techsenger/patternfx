@@ -121,11 +121,19 @@ public abstract class AbstractComponentViewModel implements ComponentViewModel {
         this.composer = composer;
     }
 
+    protected void initialize() {
+
+    }
+
     protected void postHistoryRestore() {
 
     }
 
     protected void preHistorySave() {
+
+    }
+
+    protected void deinitialize() {
 
     }
 
