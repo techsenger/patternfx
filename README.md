@@ -252,10 +252,9 @@ public class FooComposer extends AbstractChildComposer<FooView> implements FooVi
     ...
 }
 ```
-3. Composer Assignment. To assign a `Composer` to the `ViewModel`, the public method
-`AbstractComponentViewModel#setComposer(...)` is used, and for the `View` — `AbstractComponentView#setComposer(...)`.
-There is also the method `AbstractComponentView#createComposer()`, which can be overridden to automate `Composer`
-creation during construction.
+3. Composer Assignment. To assign a `Composer` to the `View` and `ViewModel`, use the public method
+`AbstractComponentView#setComposer(...)`. There is also the method `AbstractComponentView#createComposer()`, which can
+be overridden to automate `Composer` creation during construction.
 
 Advantages of this approach:
 

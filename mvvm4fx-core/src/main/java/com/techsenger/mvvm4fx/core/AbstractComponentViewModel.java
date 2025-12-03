@@ -117,7 +117,7 @@ public abstract class AbstractComponentViewModel implements ComponentViewModel {
         return composer;
     }
 
-    public void setComposer(Composer composer) {
+    protected void setComposer(Composer composer) {
         this.composer = composer;
     }
 

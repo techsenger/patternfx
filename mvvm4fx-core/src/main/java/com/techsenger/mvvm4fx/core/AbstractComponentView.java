@@ -33,11 +33,7 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
 
     public AbstractComponentView(T viewModel) {
         this.viewModel = viewModel;
-        var composer = createComposer();
-        this.composer = composer;
-        if (this.composer != null) {
-            viewModel.setComposer(composer.getViewModelComposer());
-        }
+        setComposer(createComposer());
     }
 
     @Override
@@ -99,8 +95,24 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
         return composer;
     }
 
-    public void setComposer(ComponentView.Composer composer) {
+    /**
+     * Assigns the given {@link ComponentComposer} to this view and propagates its corresponding
+     * {@link ComponentViewModel.Composer} to the view model.
+     *
+     * <p>Since {@link ComponentComposer} extends {@link ComponentView.Composer}, it contains all composition logic
+     * required by the view itself, while also providing a dedicated composer for the associated view model.
+     *
+     * <p>If {@code composer} is {@code null}, both the view and the view model are detached from any composer.
+     *
+     * @param composer the composer instance to attach to this view; may be {@code null}
+     */
+    public void setComposer(ComponentComposer<?> composer) {
         this.composer = composer;
+        if (composer == null) {
+            viewModel.setComposer(null);
+        } else {
+            viewModel.setComposer(composer.getViewModelComposer());
+        }
     }
 
     /**
