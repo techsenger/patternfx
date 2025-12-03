@@ -29,7 +29,7 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
 
     private T viewModel;
 
-    private ComponentView.Composer composer;
+    private ComponentComposer<?> composer;
 
     public AbstractComponentView(T viewModel) {
         this.viewModel = viewModel;
@@ -91,27 +91,29 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
         }
     }
 
-    public ComponentView.Composer getComposer() {
+    public ComponentComposer<?> getComposer() {
         return composer;
     }
 
     /**
-     * Assigns the given {@link ComponentComposer} to this view and propagates its corresponding
-     * {@link ComponentViewModel.Composer} to the view model.
+     * Sets the {@link ComponentComposer} for this view and updates the view model with the corresponding
+     * {@link ComposerMediator}.
      *
-     * <p>Since {@link ComponentComposer} extends {@link ComponentView.Composer}, it contains all composition logic
-     * required by the view itself, while also providing a dedicated composer for the associated view model.
+     * <p>When a non-{@code null} composer is provided, the view becomes associated with that composer, and the view
+     * model receives the mediator obtained via {@link ComponentComposer#getMediator()}. This mediator enables
+     * communication between the view model and the rest of the component through the composer.
      *
-     * <p>If {@code composer} is {@code null}, both the view and the view model are detached from any composer.
+     * <p>If {@code composer} is {@code null}, the view is detached from any composer, and the view model's mediator
+     * is cleared as well, effectively disconnecting both layers from the component's composition mechanism.
      *
-     * @param composer the composer instance to attach to this view; may be {@code null}
+     * @param composer the composer to attach to this view, or {@code null} to detach
      */
     public void setComposer(ComponentComposer<?> composer) {
         this.composer = composer;
         if (composer == null) {
-            viewModel.setComposer(null);
+            viewModel.setMediator(null);
         } else {
-            viewModel.setComposer(composer.getViewModelComposer());
+            viewModel.setMediator(composer.getMediator());
         }
     }
 

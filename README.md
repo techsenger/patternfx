@@ -130,8 +130,8 @@ three layers in every element. In other words, a component does not violate MVVM
 communicate exclusively through data binding and observable properties.
 
 In addition to the `ComponentViewModel` and `ComponentView`, a component always has a `ComponentDescriptor` (which
-is provided by the framework and normally does not require custom implementation) and may include two optional
-classes: `ComponentHistory` and `ComponentComposer`.
+is provided by the framework and normally does not require custom implementation) and may include three optional
+classes: `ComponentHistory`, `ComponentComposer`, `ComponentMediator`.
 
 The `ComponentDescriptor` represents the internal metadata and platform-level state of a component. The descriptor
 acts as a technical identity card, containing all framework-related information while keeping it completely separate
@@ -144,8 +144,8 @@ exclusively between the `ComponentViewModel` and the `ComponentHistory`. When th
 transitions to `DEINITIALIZED`, data from the `ComponentViewModel` is saved back to the `ComponentHistory`. The volume
 of state information that is restored and persisted is defined by the `HistoryPolicy` enum.
 
-The `ComponentComposer` is responsible for managing child components and their composition
-(see [Composite Component](#composite-component)).
+The `ComponentComposer` is responsible for managing child components and their composition, while the `ComponentMediator`
+allows `ComponentViewModel` to interact with the `ComponentComposer` (see [Composite Component](#composite-component)).
 
 ### Component Lifecycle <a name="component-lifecycle"></a>
 
@@ -197,8 +197,9 @@ hierarchical and non-cyclic.
 ### Composite Component <a name="composite-component"></a>
 
 Components can be either simple or composite. A simple component has no child components. A composite component has
-one or more child components. Working with a composite component is one of the most challenging parts of using
-the platform for the following reasons:
+one or more child components. The use of `Composer` and `Mediator` is required only for components that manage children
+or dynamically create other components, such as dialogs, panels, or complex containers. Working with a composite
+component is one of the most challenging parts of using the platform for the following reasons:
 
 1. MVVM Gap. MVVM does not specify how child components should be created, how their lifecycle should be managed, or
 how they should be composed.
@@ -212,58 +213,75 @@ since names like `SomeComponentViewComposer` and `SomeComponentViewModelComposer
 must be created: `ChildView` extends `ParentView`, `ChildViewModel` extends `ParentViewModel`, `ChildComposer` extends
 `ParentComposer` etc.
 
-In MVVM4FX, the solution for working with composite components is implemented as follows.
+In MVVM4FX, the solution for working with composite components is implemented using two classes: `Composer` and `Mediator`:
 
-1. Separate Composer Interfaces. In the `View` and `ViewModel` classes of a composite component, nested `Composer`
-interfaces are defined: `View.Composer` contains the methods that the `View` will use to work with the `Composer`,
-and `ViewModel.Composer` contains the methods that the `ViewModel` will use to work with the `Composer`.
-The need to use interfaces is explained, firstly, by the requirement to test the component independently of other
-components, and secondly, by the fact that the `Composer` must know about both the `View` and the `ViewModel`, which
-would otherwise violate MVVM principles.
-
+1. `Mediator`. This is the interface that the `ViewModel` uses to interact with the `Composer`. The need for an
+interface is driven by two factors: first, it allows the `ViewModel` to be tested independently of other components;
+second, the `Composer` must know about both the `View` and the `ViewModel`, while the `ViewModel` must not know about
+the `View`.
 
 ```java
-public class FooViewModel extends AbstractChildViewModel {
-
-    public interface Composer extends ComponentViewModel.Composer {...}
+public interface FooMediator extends ChildMediator {
 
     ...
+}
+
+public class FooViewModel extends AbstractChildViewModel {
+
+    ...
+
+    @Override
+    public FooMediator getMediator() {
+        return (FooMediator) super.getMediator();
+    }
+}
+```
+
+2. `Composer`. This class contains the methods that manage the entire lifecycle of child components, as well as the
+methods the `View` uses to interact with the `Composer`. In addition, it defines a non-static inner class that
+implements the corresponding `Mediator`.
+
+```java
+public class FooComposer extends AbstractChildComposer<FooView> {
+
+    protected class Mediator extends AbstractChildComposer.Mediator implements FooMediator {...}
+
+    ...
+
+    @Override
+    protected FooMediator createMediator() {
+        return new FooComposer.Mediator();
+    }
 }
 
 public class FooView extends AbstractChildView<FooViewModel> {
 
-    public interface Composer extends ComponentView.Composer {...}
-
     ...
+
+    @Override
+    public FooComposer getComposer() {
+        return (FooComposer) super.getComposer();
+    }
+
+    @Override
+    protected ComponentComposer<?> createComposer() {
+        return new FooComposer(this);
+    }
 }
 ```
-2. Unified Composer Implementation. A single `Composer` class serves as the main implementation, which directly
-implements the `View.Composer` interface and contains a nested class implementing the `ViewModel.Composer` interface.
-The composer holds a reference to the associated `View` instance, allowing both the main class and nested class to
-access view-specific functionality while maintaining proper separation of concerns.
 
-```java
-public class FooComposer extends AbstractChildComposer<FooView> implements FooView.Composer {
-
-    protected class ViewModelComposer
-            extends AbstractChildComposer.ViewModelComposer
-            implements FooViewModel.Composer {...}
-
-    ...
-}
-```
-3. Composer Assignment. To assign a `Composer` to the `View` and `ViewModel`, use the public method
-`AbstractComponentView#setComposer(...)`. There is also the method `AbstractComponentView#createComposer()`, which can
-be overridden to automate `Composer` creation during construction.
+3. To assign a `Composer` to a `View` and a `Mediator` to a `ViewModel`, use the public method
+`AbstractComponentView#setComposer(...)`. There is also a `AbstractComponentView#createComposer()` method, which can
+be overridden to automatically create the `Composer` during construction.
 
 Advantages of this approach:
 
-* Strict Separation. Using the `View.Composer` and `ViewModel.Composer` interfaces enforces a clear separation of
-layers according to MVVM and simplifies testing.
-* Clean Architecture. The `Composer` class takes over all work related to managing child components, keeping the
-`View` and `ViewModel` free from logic that does not belong to them.
-* MVVM Compliance. The `Composer` class is where the `ViewModel`’s ability to initiate the addition or removal of
-a component is implemented without violating MVVM principles.
+* Strict Separation. Using a `Composer` together with a `Mediator` enforces a clear separation of layers according to
+MVVM and simplifies testing.
+* Clean Architecture. The `Composer` centralizes all logic related to managing child components, keeping the
+`View` and `ViewModel` free from responsibilities that do not belong to them.
+* MVVM Compliance. The `Mediator` interface defines how a `ViewModel` can initiate the addition or removal of a
+component without violating MVVM principles.
 
 ### When to Create a Component? <a name="when-to-create-component"></a>
 * The element has independent testable state or business logic that can exist without a `View`.

@@ -41,6 +41,11 @@ public abstract class AbstractChildViewModel extends AbstractParentViewModel imp
         return this.parent.get();
     }
 
+    @Override
+    public ChildMediator getMediator() {
+        return (ChildMediator) super.getMediator();
+    }
+
     ReadOnlyObjectWrapper<ParentViewModel> parentWrapper() {
         return parent;
     }

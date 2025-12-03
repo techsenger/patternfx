@@ -20,9 +20,8 @@ package com.techsenger.mvvm4fx.core;
  *
  * @author Pavel Castornii
  */
-public interface ComponentViewModel {
+public interface ParentComposer<T extends ParentView<?>> extends ComponentComposer<T> {
 
-    ComponentDescriptor getDescriptor();
-
-    HistoryProvider getHistoryProvider();
+    @Override
+    ParentMediator getMediator();
 }

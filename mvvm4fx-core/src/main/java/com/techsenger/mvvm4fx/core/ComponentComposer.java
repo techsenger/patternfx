@@ -20,7 +20,7 @@ package com.techsenger.mvvm4fx.core;
  *
  * @author Pavel Castornii
  */
-public interface ComponentComposer<T extends ComponentView<?>> extends ComponentView.Composer {
+public interface ComponentComposer<T extends ComponentView<?>> extends Lifecycle {
 
-    ComponentViewModel.Composer getViewModelComposer();
+    ComponentMediator getMediator();
 }

@@ -37,7 +37,7 @@ public abstract class AbstractComponentViewModel implements ComponentViewModel {
 
     private ComponentHistory<?> history;
 
-    private ComponentViewModel.Composer composer;
+    private ComponentMediator mediator;
 
     public AbstractComponentViewModel() {
         this.descriptor = createDescriptor();
@@ -113,12 +113,12 @@ public abstract class AbstractComponentViewModel implements ComponentViewModel {
         this.historyProvider = historyProvider;
     }
 
-    public Composer getComposer() {
-        return composer;
+    public ComponentMediator getMediator() {
+        return this.mediator;
     }
 
-    protected void setComposer(Composer composer) {
-        this.composer = composer;
+    protected void setMediator(ComponentMediator mediator) {
+        this.mediator = mediator;
     }
 
     protected void initialize() {

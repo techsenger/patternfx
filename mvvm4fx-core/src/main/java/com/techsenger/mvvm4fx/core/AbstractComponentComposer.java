@@ -22,22 +22,22 @@ package com.techsenger.mvvm4fx.core;
  */
 public abstract class AbstractComponentComposer<T extends ComponentView<?>> implements ComponentComposer<T> {
 
-    protected abstract class ViewModelComposer implements ComponentViewModel.Composer {
+    protected abstract class Mediator implements ComponentMediator {
 
     }
 
     private final T view;
 
-    private final ComponentViewModel.Composer viewModelComposer;
+    private final ComponentMediator mediator;
 
     public AbstractComponentComposer(T view) {
         this.view = view;
-        this.viewModelComposer = createViewModelComposer();
+        this.mediator = createMediator();
     }
 
     @Override
-    public ParentViewModel.Composer getViewModelComposer() {
-        return viewModelComposer;
+    public ComponentMediator getMediator() {
+        return mediator;
     }
 
     @Override
@@ -54,5 +54,5 @@ public abstract class AbstractComponentComposer<T extends ComponentView<?>> impl
         return view;
     }
 
-    protected abstract ComponentViewModel.Composer createViewModelComposer();
+    protected abstract ComponentMediator createMediator();
 }

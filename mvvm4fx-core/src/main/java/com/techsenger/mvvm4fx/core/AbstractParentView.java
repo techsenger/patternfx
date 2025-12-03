@@ -67,6 +67,11 @@ public abstract class AbstractParentView<T extends AbstractParentViewModel> exte
     }
 
     @Override
+    public ParentComposer<?> getComposer() {
+        return (ParentComposer<?>) super.getComposer();
+    }
+
+    @Override
     protected void addListeners(T viewModel) {
         super.addListeners(viewModel);
         children.addListener((ListChangeListener<ChildView<?>>) (change) -> {

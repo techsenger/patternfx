@@ -22,10 +22,6 @@ package com.techsenger.mvvm4fx.core;
  */
 public interface ComponentView<T extends ComponentViewModel> extends Lifecycle {
 
-    interface Composer extends Lifecycle {
-
-    }
-
     /**
      * Returns component view model.
      *

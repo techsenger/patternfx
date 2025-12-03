@@ -62,6 +62,11 @@ public abstract class AbstractParentViewModel extends AbstractComponentViewModel
         };
     }
 
+    @Override
+    public ParentMediator getMediator() {
+        return (ParentMediator) super.getMediator();
+    }
+
     ObservableList<ChildViewModel> getModifiableChildren() {
         return modifiableChildren;
     }
