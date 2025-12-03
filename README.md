@@ -215,7 +215,7 @@ must be created: `ChildView` extends `ParentView`, `ChildViewModel` extends `Par
 
 In MVVM4FX, the solution for working with composite components is implemented using two classes: `Composer` and `Mediator`:
 
-1. `Mediator`. This is the interface that the `ViewModel` uses to interact with the `Composer`. The need for an
+`Mediator`. This is the interface that the `ViewModel` uses to interact with the `Composer`. The need for an
 interface is driven by two factors: first, it allows the `ViewModel` to be tested independently of other components;
 second, the `Composer` must know about both the `View` and the `ViewModel`, while the `ViewModel` must not know about
 the `View`.
@@ -237,7 +237,7 @@ public class FooViewModel extends AbstractChildViewModel {
 }
 ```
 
-2. `Composer`. This class contains the methods that manage the entire lifecycle of child components, as well as the
+`Composer`. This class contains the methods that manage the entire lifecycle of child components, as well as the
 methods the `View` uses to interact with the `Composer`. In addition, it defines a non-static inner class that
 implements the corresponding `Mediator`.
 
@@ -270,7 +270,7 @@ public class FooView extends AbstractChildView<FooViewModel> {
 }
 ```
 
-3. To assign a `Composer` to a `View` and a `Mediator` to a `ViewModel`, use the public method
+Composer Assignment. To assign a `Composer` to a `View` and a `Mediator` to a `ViewModel`, use the public method
 `AbstractComponentView#setComposer(...)`. There is also a `AbstractComponentView#createComposer()` method, which can
 be overridden to automatically create the `Composer` during construction.
 
