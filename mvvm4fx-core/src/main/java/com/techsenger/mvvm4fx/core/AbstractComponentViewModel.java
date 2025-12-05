@@ -109,12 +109,13 @@ public abstract class AbstractComponentViewModel implements ComponentViewModel {
         return historyProvider;
     }
 
-    public void setHistoryProvider(HistoryProvider historyProvider) {
-        this.historyProvider = historyProvider;
-    }
-
+    @Override
     public ComponentMediator getMediator() {
         return this.mediator;
+    }
+
+    public void setHistoryProvider(HistoryProvider historyProvider) {
+        this.historyProvider = historyProvider;
     }
 
     protected void initialize() {

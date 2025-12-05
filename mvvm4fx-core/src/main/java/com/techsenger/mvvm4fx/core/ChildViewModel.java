@@ -39,4 +39,6 @@ public interface ChildViewModel extends ParentViewModel {
      */
     ParentViewModel getParent();
 
+    @Override
+    ChildMediator getMediator();
 }

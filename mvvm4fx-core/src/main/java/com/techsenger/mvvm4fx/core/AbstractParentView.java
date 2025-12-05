@@ -87,4 +87,9 @@ public abstract class AbstractParentView<T extends AbstractParentViewModel> exte
             }
         });
     }
+
+    @Override
+    protected ParentComposer<?> createComposer() {
+        return (ParentComposer<?>) super.createComposer();
+    }
 }

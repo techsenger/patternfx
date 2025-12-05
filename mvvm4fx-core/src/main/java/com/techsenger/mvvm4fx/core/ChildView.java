@@ -51,4 +51,7 @@ public interface ChildView<T extends ChildViewModel> extends ParentView<T> {
      * @return
      */
     Object getNode();
+
+    @Override
+    ChildComposer<?> getComposer();
 }

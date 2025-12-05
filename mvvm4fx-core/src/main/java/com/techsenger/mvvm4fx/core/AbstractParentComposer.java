@@ -34,4 +34,7 @@ public abstract class AbstractParentComposer<T extends ParentView<?>> extends Ab
     public ParentMediator getMediator() {
         return (Mediator) super.getMediator();
     }
+
+    @Override
+    protected abstract ParentMediator createMediator();
 }

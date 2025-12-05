@@ -17,7 +17,7 @@ As a real example of using this framework, see [TabShell](https://github.com/tec
     * [Component Structure](#component-structure)
     * [Component Lifecycle](#component-lifecycle)
     * [Component Hierarchy](#component-hierarchy)
-    * [Composite Component](#composite-component)
+    * [Component Composer](#component-composer)
     * [When to Create a Component?](#when-to-create-component)
     * [When not to Create a Component?](#when-not-to-create-component)
 * [Requirements](#requirements)
@@ -144,8 +144,9 @@ exclusively between the `ComponentViewModel` and the `ComponentHistory`. When th
 transitions to `DEINITIALIZED`, data from the `ComponentViewModel` is saved back to the `ComponentHistory`. The volume
 of state information that is restored and persisted is defined by the `HistoryPolicy` enum.
 
-The `ComponentComposer` is responsible for managing child components and their composition, while the `ComponentMediator`
-allows `ComponentViewModel` to interact with the `ComponentComposer` (see [Composite Component](#composite-component)).
+The `ComponentComposer` is responsible for managing child and derived components and their composition, while the
+`ComponentMediator` allows `ComponentViewModel` to interact with the `ComponentComposer`
+(see [Component Composer](#component-composer)).
 
 ### Component Lifecycle <a name="component-lifecycle"></a>
 
@@ -194,15 +195,17 @@ between the presentation (`View`) and logic (`ViewModel`) layers. This design en
 across the component tree without violating the Unidirectional Hierarchy Rule (UHR), as the relationships are strictly
 hierarchical and non-cyclic.
 
-### Composite Component <a name="composite-component"></a>
+### Component Composer<a name="component-composer"></a>
 
-Components can be either simple or composite. A simple component has no child components. A composite component has
-one or more child components. The use of `Composer` and `Mediator` is required only for components that manage children
-or dynamically create other components, such as dialogs, panels, or complex containers. Working with a composite
-component is one of the most challenging parts of using the platform for the following reasons:
+The `ComponentComposer` is responsible for:
+1. Creating, positioning, and managing child components (those that will reside directly inside this component).
+2. Creating and positioning derived components (those that will be provided to another component after creation,
+e.g., dialogs, tabs, system notifications, etc.).
 
-1. MVVM Gap. MVVM does not specify how child components should be created, how their lifecycle should be managed, or
-how they should be composed.
+Working with a composite component is one of the most challenging parts of using the platform for the following reasons:
+
+1. MVVM Gap. MVVM does not specify how child and derived components should be created, how their lifecycle should be
+managed, or how they should be composed.
 2. Architectural Conflict. According to MVVM, the `ViewModel` must not know about the `View`, yet the `ViewModel` may
 need to initiate the creation of new components (for example, opening a dialog) and their composition — which is
 impossible without interacting with the `View`.
@@ -213,12 +216,11 @@ since names like `SomeComponentViewComposer` and `SomeComponentViewModelComposer
 must be created: `ChildView` extends `ParentView`, `ChildViewModel` extends `ParentViewModel`, `ChildComposer` extends
 `ParentComposer` etc.
 
-In MVVM4FX, the solution for working with composite components is implemented using two classes: `Composer` and `Mediator`:
+In MVVM4FX, the solution is implemented using two classes: `ComponentComposer` and `ComponentMediator`:
 
-`Mediator`. This is the interface that the `ViewModel` uses to interact with the `Composer`. The need for an
-interface is driven by two factors: first, it allows the `ViewModel` to be tested independently of other components;
-second, the `Composer` must know about both the `View` and the `ViewModel`, while the `ViewModel` must not know about
-the `View`.
+`Mediator`. This is the interface that the `ViewModel` uses to interact with the `Composer`. This interface is needed
+for two reasons: first, it allows the `ViewModel` to be tested independently; second, it allows the `Composer` to
+access both the `View` and the `ViewModel`, without exposing the `View` to the `ViewModel`.
 
 ```java
 public interface FooMediator extends ChildMediator {
@@ -237,7 +239,7 @@ public class FooViewModel extends AbstractChildViewModel {
 }
 ```
 
-`Composer`. This class contains the methods that manage the entire lifecycle of child components, as well as the
+`Composer`. This class contains the methods to work with child and derived components, as well as the
 methods the `View` uses to interact with the `Composer`. In addition, it defines a non-static inner class that
 implements the corresponding `Mediator`.
 
@@ -247,6 +249,11 @@ public class FooComposer extends AbstractChildComposer<FooView> {
     protected class Mediator extends AbstractChildComposer.Mediator implements FooMediator {...}
 
     ...
+
+    @Override
+    public FooMediator getMediator() {
+        return (FooMediator) super.Mediator();
+    }
 
     @Override
     protected FooMediator createMediator() {
@@ -273,8 +280,7 @@ public class FooView extends AbstractChildView<FooViewModel> {
 Composer Creation and Initialization. The `Composer` is created during the component’s pre-initialization phase via
 the protected `AbstractComponentView#createComposer()` method. Creating the composer at this stage ensures that both
 the `View` and the `ViewModel` are fully constructed, allowing the composer to immediately access and interact with
-their properties and methods. The composer is also initialized during the pre-initialization phase, while its
-deinitialization takes place in the component’s post-deinitialization phase.
+their properties and methods. The composer is initialized before the `ViewModel` and deinitialized after the `ViewModel`.
 
 Advantages of this approach:
 

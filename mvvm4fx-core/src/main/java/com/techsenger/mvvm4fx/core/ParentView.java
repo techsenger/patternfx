@@ -46,4 +46,7 @@ public interface ParentView<T extends ParentViewModel> extends ComponentView<T> 
      * @return an {@link Iterator} that iterates over this component and all of its descendants
      */
     SubtreeIterator<ParentView<?>> breadthFirstIterator();
+
+    @Override
+    ParentComposer<?> getComposer();
 }

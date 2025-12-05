@@ -28,4 +28,11 @@ public interface ComponentView<T extends ComponentViewModel> extends Lifecycle {
      * @return
      */
     T getViewModel();
+
+    /**
+     * Returns component composer.
+     *
+     * @return the composer or {@code null}
+     */
+    ComponentComposer<?> getComposer();
 }

@@ -52,6 +52,9 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
             }
             preInitialize(viewModel);
             descriptor.stateWrapper().set(ComponentState.INITIALIZING);
+            if (this.composer != null) {
+                this.composer.initialize();
+            }
             viewModel.initialize();
             build(viewModel);
             bind(viewModel);
@@ -82,6 +85,9 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
             unbind(viewModel);
             unbuild(viewModel);
             viewModel.deinitialize();
+            if (this.composer != null) {
+                this.composer.deinitialize();
+            }
             descriptor.stateWrapper().set(ComponentState.DEINITIALIZED);
             logger.debug("{} Deinitialized component", descriptor.getLogPrefix());
             postDeinitialize(viewModel);
@@ -90,6 +96,7 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
         }
     }
 
+    @Override
     public ComponentComposer<?> getComposer() {
         return composer;
     }
@@ -125,7 +132,6 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
         this.composer = createComposer();
         if (this.composer != null) {
             viewModel.setMediator(this.composer.getMediator());
-            this.composer.initialize();
         }
     }
 
@@ -210,8 +216,6 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
      * The last method called in deinitialization.
      */
     protected void postDeinitialize(T viewModel) {
-        if (this.composer != null) {
-            this.composer.deinitialize();
-        }
+
     }
 }

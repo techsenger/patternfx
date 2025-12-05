@@ -47,4 +47,7 @@ public interface ParentViewModel extends ComponentViewModel {
      * @return an {@link Iterator} that iterates over this component and all of its descendants
      */
     SubtreeIterator<ParentViewModel> breadthFirstIterator();
+
+    @Override
+    ParentMediator getMediator();
 }

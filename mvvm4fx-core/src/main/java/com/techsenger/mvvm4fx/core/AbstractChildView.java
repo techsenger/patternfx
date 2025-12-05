@@ -59,6 +59,11 @@ public abstract class AbstractChildView<T extends AbstractChildViewModel> extend
         });
     }
 
+    @Override
+    protected ChildComposer<?> createComposer() {
+        return (ChildComposer<?>) super.createComposer();
+    }
+
     /**
      * Sets the parent component for this component.
      * <p>
