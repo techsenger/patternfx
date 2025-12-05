@@ -27,7 +27,7 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractComponentView.class);
 
-    private T viewModel;
+    private final T viewModel;
 
     private ComponentComposer<?> composer;
 
