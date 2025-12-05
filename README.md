@@ -270,9 +270,11 @@ public class FooView extends AbstractChildView<FooViewModel> {
 }
 ```
 
-Composer Assignment. To assign a `Composer` to a `View` and a `Mediator` to a `ViewModel`, use the public method
-`AbstractComponentView#setComposer(...)`. There is also a `AbstractComponentView#createComposer()` method, which can
-be overridden to automatically create the `Composer` during construction.
+Composer Creation and Initialization. The `Composer` is created during the component’s pre-initialization phase via
+the protected `AbstractComponentView#createComposer()` method. Creating the composer at this stage ensures that both
+the `View` and the `ViewModel` are fully constructed, allowing the composer to immediately access and interact with
+their properties and methods. The composer is also initialized during the pre-initialization phase, while its
+deinitialization takes place in the component’s post-deinitialization phase.
 
 Advantages of this approach:
 

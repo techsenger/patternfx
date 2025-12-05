@@ -117,10 +117,6 @@ public abstract class AbstractComponentViewModel implements ComponentViewModel {
         return this.mediator;
     }
 
-    protected void setMediator(ComponentMediator mediator) {
-        this.mediator = mediator;
-    }
-
     protected void initialize() {
 
     }
@@ -138,6 +134,10 @@ public abstract class AbstractComponentViewModel implements ComponentViewModel {
     }
 
     protected abstract ComponentDescriptor createDescriptor();
+
+    void setMediator(ComponentMediator mediator) {
+        this.mediator = mediator;
+    }
 
     private ComponentHistory getOrRequestHistory() {
         if (this.history == null) {

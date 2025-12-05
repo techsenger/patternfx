@@ -33,7 +33,6 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
 
     public AbstractComponentView(T viewModel) {
         this.viewModel = viewModel;
-        setComposer(createComposer());
     }
 
     @Override
@@ -96,33 +95,10 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
     }
 
     /**
-     * Sets the {@link ComponentComposer} for this view and updates the view model with the corresponding
-     * {@link ComposerMediator}.
-     *
-     * <p>When a non-{@code null} composer is provided, the view becomes associated with that composer, and the view
-     * model receives the mediator obtained via {@link ComponentComposer#getMediator()}. This mediator enables
-     * communication between the view model and the rest of the component through the composer.
-     *
-     * <p>If {@code composer} is {@code null}, the view is detached from any composer, and the view model's mediator
-     * is cleared as well, effectively disconnecting both layers from the component's composition mechanism.
-     *
-     * @param composer the composer to attach to this view, or {@code null} to detach
-     */
-    public void setComposer(ComponentComposer<?> composer) {
-        this.composer = composer;
-        if (composer == null) {
-            viewModel.setMediator(null);
-        } else {
-            viewModel.setMediator(composer.getMediator());
-        }
-    }
-
-    /**
      * Creates a new {@link ComponentComposer} instance for this component.
      *
-     * <p>This method is invoked during the component's construction phase and allows subclasses to provide a custom
-     * composer implementation. However, this method should be used only if the component is the owner of the composer.
-     * Otherwise the component setter should be used.
+     * <p>This method is invoked during the component's pre-initialization phase and allows subclasses to provide
+     * a custom composer implementation.
      *
      * <p>The default implementation returns {@code null}, meaning the component does not create a composer by default.
      *
@@ -146,7 +122,11 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
      * The first method called in initialization.
      */
     protected void preInitialize(T viewModel) {
-
+        this.composer = createComposer();
+        if (this.composer != null) {
+            viewModel.setMediator(this.composer.getMediator());
+            this.composer.initialize();
+        }
     }
 
     /**
@@ -230,6 +210,8 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
      * The last method called in deinitialization.
      */
     protected void postDeinitialize(T viewModel) {
-
+        if (this.composer != null) {
+            this.composer.deinitialize();
+        }
     }
 }
