@@ -264,7 +264,7 @@ public class FooView extends AbstractChildView<FooViewModel> {
     }
 
     @Override
-    protected ComponentComposer<?> createComposer() {
+    protected FooComposer createComposer() {
         return new FooComposer(this);
     }
 }
