@@ -131,7 +131,7 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
     protected void preInitialize(T viewModel) {
         this.composer = createComposer();
         if (this.composer != null) {
-            viewModel.setMediator(this.composer.getMediator());
+            viewModel.setMediator(this.composer.createMediator());
         }
     }
 

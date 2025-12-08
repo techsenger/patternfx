@@ -23,5 +23,5 @@ package com.techsenger.mvvm4fx.core;
 public interface ParentComposer<T extends ParentView<?>> extends ComponentComposer<T> {
 
     @Override
-    ParentMediator getMediator();
+    ParentMediator createMediator();
 }

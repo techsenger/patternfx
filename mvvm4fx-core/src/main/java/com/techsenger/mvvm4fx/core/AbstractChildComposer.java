@@ -29,12 +29,4 @@ public abstract class AbstractChildComposer<T extends ChildView<?>> extends Abst
     public AbstractChildComposer(T view) {
         super(view);
     }
-
-    @Override
-    public ChildMediator getMediator() {
-        return (ChildMediator) super.getMediator();
-    }
-
-    @Override
-    protected abstract ChildMediator createMediator();
 }

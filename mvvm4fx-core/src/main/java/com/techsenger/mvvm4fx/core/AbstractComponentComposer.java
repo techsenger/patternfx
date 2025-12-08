@@ -28,16 +28,8 @@ public abstract class AbstractComponentComposer<T extends ComponentView<?>> impl
 
     private final T view;
 
-    private final ComponentMediator mediator;
-
     public AbstractComponentComposer(T view) {
         this.view = view;
-        this.mediator = createMediator();
-    }
-
-    @Override
-    public ComponentMediator getMediator() {
-        return mediator;
     }
 
     @Override
@@ -53,6 +45,4 @@ public abstract class AbstractComponentComposer<T extends ComponentView<?>> impl
     protected final T getView() {
         return view;
     }
-
-    protected abstract ComponentMediator createMediator();
 }

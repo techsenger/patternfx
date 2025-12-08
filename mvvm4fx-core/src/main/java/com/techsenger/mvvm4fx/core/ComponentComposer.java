@@ -22,5 +22,5 @@ package com.techsenger.mvvm4fx.core;
  */
 public interface ComponentComposer<T extends ComponentView<?>> extends Lifecycle {
 
-    ComponentMediator getMediator();
+    ComponentMediator createMediator();
 }

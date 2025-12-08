@@ -251,12 +251,7 @@ public class FooComposer extends AbstractChildComposer<FooView> {
     ...
 
     @Override
-    public FooMediator getMediator() {
-        return (FooMediator) super.Mediator();
-    }
-
-    @Override
-    protected FooMediator createMediator() {
+    public FooMediator createMediator() {
         return new FooComposer.Mediator();
     }
 }
