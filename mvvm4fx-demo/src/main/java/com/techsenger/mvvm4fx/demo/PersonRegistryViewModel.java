@@ -17,7 +17,6 @@
 package com.techsenger.mvvm4fx.demo;
 
 import com.techsenger.mvvm4fx.core.AbstractParentViewModel;
-import com.techsenger.mvvm4fx.core.ComponentDescriptor;
 import com.techsenger.mvvm4fx.demo.model.Person;
 import com.techsenger.mvvm4fx.demo.model.PersonService;
 import java.util.Optional;
@@ -54,16 +53,16 @@ public class PersonRegistryViewModel extends AbstractParentViewModel {
     public PersonRegistryViewModel(PersonService service) {
         this.service = service;
         title.bind(Bindings.size(persons).asString("Person Registry (%d Items)"));
-        selectedPerson.addListener((ov, oldV, newV) -> {
-            removeDisabled.set(newV == null);
-            // log message example with component meta
-            logger.debug("{} Selected person property changed", getDescriptor().getLogPrefix());
-        });
     }
 
     @Override
-    protected ComponentDescriptor createDescriptor() {
-        return new ComponentDescriptor(DemoComponentNames.PERSON_REGISTRY);
+    protected void initialize() {
+        super.initialize();
+        selectedPerson.addListener((ov, oldV, newV) -> {
+            removeDisabled.set(newV == null);
+            // log message example with component meta
+            logger.debug("{} Selected person property changed", getMediator().getLogPrefix());
+        });
     }
 
     ObservableList<Person> getPersons() {

@@ -16,6 +16,11 @@
 
 package com.techsenger.mvvm4fx.core;
 
+import java.util.UUID;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleObjectProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,15 +32,109 @@ public abstract class AbstractComponent<T extends AbstractComponentView<?>> impl
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractComponent.class);
 
+    private static String logDelimiter = " :";
+
+    public static String getLogDelimiter() {
+        return logDelimiter;
+    }
+
+    public static void setLogDelimiter(String logDelimiter) {
+        AbstractComponent.logDelimiter = logDelimiter;
+    }
+
     protected abstract class Mediator implements ComponentMediator {
 
+        @Override
+        public ComponentName getName() {
+            return AbstractComponent.this.getName();
+        }
+
+        @Override
+        public UUID getUuid() {
+            return uuid;
+        }
+
+        @Override
+        public String getFullName() {
+            return fullName;
+        }
+
+        @Override
+        public String getLogPrefix() {
+            return logPrefix;
+        }
+
+        @Override
+        public ComponentState getState() {
+            return state.get();
+        }
+
+        @Override
+        public ReadOnlyObjectProperty<ComponentState> stateProperty() {
+            return state.getReadOnlyProperty();
+        }
+
+        @Override
+        public ObjectProperty<HistoryPolicy> historyPolicyProperty() {
+            return historyPolicy;
+        }
+
+        @Override
+        public HistoryPolicy getHistoryPolicy() {
+            return historyPolicy.get();
+        }
+
+        @Override
+        public void setHistoryPolicy(HistoryPolicy policy) {
+            historyPolicy.set(policy);
+        }
+
+        @Override
+        public ComponentHistory<?> getHistory() {
+            return history;
+        }
+
+        @Override
+        public ComponentGroup getGroup() {
+            return group.get();
+        }
+
+        @Override
+        public void setGroup(ComponentGroup value) {
+            group.set(value);
+        }
+
+        @Override
+        public ObjectProperty<ComponentGroup> groupProperty() {
+            return group;
+        }
     }
 
     private final T view;
 
+    private final UUID uuid = UUID.randomUUID();
+
+    private final String fullName;
+
+    private final String logPrefix;
+
+    private final ReadOnlyObjectWrapper<ComponentState> state = new ReadOnlyObjectWrapper<>(ComponentState.CREATING);
+
+    private final ObjectProperty<HistoryPolicy> historyPolicy = new SimpleObjectProperty<>(HistoryPolicy.NONE);
+
+    private final ObjectProperty<ComponentGroup> group = new SimpleObjectProperty<>();
+
+    private HistoryProvider historyProvider;
+
+    private ComponentHistory<?> history;
+
     public AbstractComponent(T view) {
         this.view = view;
         this.view.setComponent(this);
+        long least32bits = uuid.getLeastSignificantBits() & 0xFFFFFFFFL;
+        String shortUuid = String.format("%08X", least32bits);
+        this.fullName = getName().getText() + "@" + shortUuid;
+        this.logPrefix = resolveLogPrefix(fullName);
     }
 
     @Override
@@ -44,51 +143,111 @@ public abstract class AbstractComponent<T extends AbstractComponentView<?>> impl
     }
 
     @Override
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    @Override
+    public String getFullName() {
+        return fullName;
+    }
+
+    @Override
+    public String getLogPrefix() {
+        return logPrefix;
+    }
+
+    @Override
+    public ComponentState getState() {
+        return this.state.get();
+    }
+
+    @Override
+    public ReadOnlyObjectProperty<ComponentState> stateProperty() {
+        return state.getReadOnlyProperty();
+    }
+
+    @Override
+    public ObjectProperty<HistoryPolicy> historyPolicyProperty() {
+        return historyPolicy;
+    }
+
+    @Override
+    public HistoryPolicy getHistoryPolicy() {
+        return historyPolicy.get();
+    }
+
+    @Override
+    public void setHistoryPolicy(HistoryPolicy policy) {
+        historyPolicy.set(policy);
+    }
+
+    @Override
+    public ComponentHistory<?> getHistory() {
+        return history;
+    }
+
+    @Override
+    public ComponentGroup getGroup() {
+       return group.get();
+    }
+
+    @Override
+    public void setGroup(ComponentGroup value) {
+       group.set(value);
+    }
+
+    @Override
+    public ObjectProperty<ComponentGroup> groupProperty() {
+       return group;
+    }
+
+    @Override
     public final void initialize() {
         var viewModel = this.view.getViewModel();
-        var descriptor = viewModel.getDescriptor();
         try {
-            var currentState = descriptor.getState();
-            if (currentState != ComponentState.CREATING) {
-                throw new IllegalStateException("Unexpected state of the component - " + currentState.name());
+            if (getState() != ComponentState.CREATING) {
+                throw new IllegalStateException("Unexpected state of the component - " + getState().name());
             }
             // pre-initialization
             preInitialize();
             // initialization
-            descriptor.getStateWrapper().set(ComponentState.INITIALIZING);
+            state.set(ComponentState.INITIALIZING);
             viewModel.initialize();
             this.view.initialize();
-            descriptor.getStateWrapper().set(ComponentState.INITIALIZED);
-            logger.debug("{} Initialized component", descriptor.getLogPrefix());
+            state.set(ComponentState.INITIALIZED);
+            logger.debug("{} Initialized component", logPrefix);
             // post-initialization
             postInitialize();
         } catch (Exception ex) {
-            logger.error("{} Error initializing", descriptor.getLogPrefix(), ex);
+            logger.error("{} Error initializing", logPrefix, ex);
         }
     }
 
     @Override
     public final void deinitialize() {
         var viewModel = this.view.getViewModel();
-        var descriptor = viewModel.getDescriptor();
         try {
-            var currentState = descriptor.getState();
-            if (currentState != ComponentState.INITIALIZED) {
-                throw new IllegalStateException("Unexpected state of the component - " + currentState.name());
+            if (getState() != ComponentState.INITIALIZED) {
+                throw new IllegalStateException("Unexpected state of the component - " + getState().name());
             }
             // pre-deinitialization
             preDeinitialize();
             // deinitialization
-            descriptor.getStateWrapper().set(ComponentState.DEINITIALIZING);
+            state.set(ComponentState.DEINITIALIZING);
             this.view.deinitialize();
             viewModel.deinitialize();
-            descriptor.getStateWrapper().set(ComponentState.DEINITIALIZED);
-            logger.debug("{} Deinitialized component", descriptor.getLogPrefix());
+            state.set(ComponentState.DEINITIALIZED);
+            logger.debug("{} Deinitialized component", logPrefix);
             // post-deinitialization
             postDeinitialize();
         } catch (Exception ex) {
-            logger.error("{} Error deinitializing", descriptor.getLogPrefix(), ex);
+            logger.error("{} Error deinitializing", logPrefix, ex);
         }
+    }
+
+    protected String resolveLogPrefix(String fullName) {
+        return fullName + logDelimiter;
     }
 
     /**
@@ -97,6 +256,9 @@ public abstract class AbstractComponent<T extends AbstractComponentView<?>> impl
     protected void preInitialize() {
         var mediator = createMediator();
         this.view.getViewModel().setMediator(mediator);
+        if (this.historyProvider != null) {
+            this.history = this.historyProvider.provide();
+        }
         this.view.getViewModel().restoreHistory();
     }
 
@@ -114,7 +276,13 @@ public abstract class AbstractComponent<T extends AbstractComponentView<?>> impl
      * The last method called in deinitialization.
      */
     protected void postDeinitialize() {
-        this.view.getViewModel().saveHistory();
+        if (this.history != null) {
+            this.view.getViewModel().saveHistory();
+        }
+    }
+
+    protected void setHistoryProvider(HistoryProvider historyProvider) {
+        this.historyProvider = historyProvider;
     }
 
     protected abstract AbstractComponent.Mediator createMediator();

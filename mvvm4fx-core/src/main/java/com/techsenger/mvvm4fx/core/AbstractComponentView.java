@@ -46,16 +46,6 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
     }
 
     /**
-     * Returns the component descriptor for convenient access. This is a shortcut method that delegates to the
-     * underlying ViewModel's descriptor.
-     *
-     * @return the component descriptor
-     */
-    protected ComponentDescriptor getDescriptor() {
-       return this.viewModel.getDescriptor();
-    }
-
-    /**
      * Performs initialization.
      */
     protected void initialize() {

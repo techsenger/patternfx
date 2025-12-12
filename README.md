@@ -31,13 +31,13 @@ As a real example of using this framework, see [TabShell](https://github.com/tec
 
 MVVM4FX reimagines the `Model`–`View`–`ViewModel` pattern for JavaFX as a component-based, extensible platform designed
 around clarity, modularity, and the KISS principle. Each `Component` exists as a self-contained unit composed of a
-`View`, `ViewModel`, `Mediator`, `Descriptor`, optionally extended with `History`.
+`View`, `ViewModel`, `Mediator` optionally extended with `History`.
 
 The framework enforces a strict separation between presentation, logic, and identity. The `View` defines the visual
-structure and behavior; the `ViewModel` encapsulates logic and state; the `Descriptor` holds the component’s
-technical identity; the `Component` is responsible for initialization and deinitialization, managing child components,
-and their composition, operating at the component level. The `ComponentMediator` is the interface through which the
-`ViewModel` interacts with the `Component`, and the `History` preserves continuity across sessions.
+structure and behavior; the `ViewModel` encapsulates logic and state; the `Component` is responsible for initialization
+and deinitialization, managing child components, and their composition, operating at the component level. The
+`ComponentMediator` is the interface through which the `ViewModel` interacts with the `Component`, and the `History`
+preserves continuity across sessions.
 
 At its core, MVVM4FX follows the KISS principle – every class, method, and abstraction exists only for a clear reason,
 avoiding unnecessary complexity or dependencies. This simplicity is deliberate: it keeps the architecture transparent,
@@ -238,19 +238,12 @@ MVVM and simplifies testing.
 * MVVM Compliance. The `Mediator` interface defines how a `ViewModel` can initiate the addition or removal of a
 component without violating MVVM principles.
 
-In addition to the four classes, a component always has a `ComponentDescriptor` (which is provided by the framework
-and normally does not require custom implementation) and may include a `ComponentHistory`.
-
-The `ComponentDescriptor` represents the internal metadata and platform-level state of a component. The descriptor
-acts as a technical identity card, containing all framework-related information while keeping it completely separate
-from business data. In other words, the purpose of this class is to ensure that internal component data does not mix
-with business data within the `ViewModel`.
-
-The `ComponentHistory` enables the preservation of the component’s state across its lifecycle. Data exchange occurs
-exclusively between the `ComponentViewModel` and the `ComponentHistory`. When the component’s state transitions to
-`INITIALIZING`, data is restored from the `ComponentHistory` to the `ComponentViewModel`. Conversely, when the state
-transitions to `DEINITIALIZED`, data from the `ComponentViewModel` is saved back to the `ComponentHistory`. The volume
-of state information that is restored and persisted is defined by the `HistoryPolicy` enum.
+In addition to the four classes, a component may include a `ComponentHistory`. The `ComponentHistory` enables the
+preservation of the component’s state across its lifecycle. Data exchange occurs exclusively between the
+`ComponentViewModel` and the `ComponentHistory`. When the component’s state transitions to `INITIALIZING`, data is
+restored from the `ComponentHistory` to the `ComponentViewModel`. Conversely, when the state transitions to
+`DEINITIALIZED`, data from the `ComponentViewModel` is saved back to the `ComponentHistory`. The volume of state
+information that is restored and persisted is defined by the `HistoryPolicy` enum.
 
 ### Component Lifecycle<a name="component-lifecycle"></a>
 

@@ -20,6 +20,6 @@ package com.techsenger.mvvm4fx.core;
  *
  * @author Pavel Castornii
  */
-public interface ComponentMediator {
+public interface ComponentMediator extends ComponentDescriptor {
 
 }

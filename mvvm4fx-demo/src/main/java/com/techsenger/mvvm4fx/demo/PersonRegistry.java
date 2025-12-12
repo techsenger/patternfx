@@ -17,6 +17,7 @@
 package com.techsenger.mvvm4fx.demo;
 
 import com.techsenger.mvvm4fx.core.AbstractParentComponent;
+import com.techsenger.mvvm4fx.core.ComponentName;
 
 /**
  *
@@ -38,5 +39,10 @@ public class PersonRegistry extends AbstractParentComponent<PersonRegistryView> 
     @Override
     protected Mediator createMediator() {
         return new AbstractParentComponent.Mediator() { };
+    }
+
+    @Override
+    public ComponentName getName() {
+        return DemoComponentNames.PERSON_REGISTRY;
     }
 }

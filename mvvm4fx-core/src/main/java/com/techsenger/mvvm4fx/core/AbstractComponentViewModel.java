@@ -31,45 +31,21 @@ public abstract class AbstractComponentViewModel implements ComponentViewModel {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractComponentViewModel.class);
 
-    private final ComponentDescriptor descriptor;
-
-    private HistoryProvider historyProvider;
-
-    private ComponentHistory<?> history;
-
     private ComponentMediator mediator;
-
-    public AbstractComponentViewModel() {
-        this.descriptor = createDescriptor();
-    }
-
-    @Override
-    public ComponentDescriptor getDescriptor() {
-        return descriptor;
-    }
-
-    @Override
-    public HistoryProvider getHistoryProvider() {
-        return historyProvider;
-    }
 
     @Override
     public ComponentMediator getMediator() {
         return this.mediator;
     }
 
-    public void setHistoryProvider(HistoryProvider historyProvider) {
-        this.historyProvider = historyProvider;
-    }
-
     protected void restoreHistory() {
-        var policy = this.descriptor.getHistoryPolicy();
-        logger.debug("{} History policy during restore: {}", this.descriptor.getLogPrefix(), policy);
+        var policy = getMediator().getHistoryPolicy();
+        logger.debug("{} History policy during restore: {}", getMediator().getLogPrefix(), policy);
         ComponentHistory localHistory = null;
         if (policy != NONE) {
-            localHistory = getOrRequestHistory();
+            localHistory = getMediator().getHistory();
             if (localHistory.isFresh()) {
-                logger.debug("{} History is fresh. Skipping restoration", this.descriptor.getLogPrefix());
+                logger.debug("{} History is fresh. Skipping restoration", getMediator().getLogPrefix());
             } else {
                 switch (policy) {
                     case DATA:
@@ -93,20 +69,20 @@ public abstract class AbstractComponentViewModel implements ComponentViewModel {
     }
 
     protected void saveHistory() {
-        var policy = this.descriptor.getHistoryPolicy();
-        logger.debug("{} History policy during save: {}", this.descriptor.getLogPrefix(), policy);
+        var policy = getMediator().getHistoryPolicy();
+        logger.debug("{} History policy during save: {}", getMediator().getLogPrefix(), policy);
         switch (policy) {
             case DATA:
                 preHistorySave();
-                getOrRequestHistory().saveData(this);
+                ((ComponentHistory) getMediator().getHistory()).saveData(this);
                 break;
             case APPEARANCE:
                 preHistorySave();
-                getOrRequestHistory().saveAppearance(this);
+                ((ComponentHistory) getMediator().getHistory()).saveAppearance(this);
                 break;
             case ALL:
                 preHistorySave();
-                var h = getOrRequestHistory();
+                var h = (ComponentHistory) getMediator().getHistory();
                 h.saveData(this);
                 h.saveAppearance(this);
                 break;
@@ -132,19 +108,7 @@ public abstract class AbstractComponentViewModel implements ComponentViewModel {
      */
     protected void deinitialize() { }
 
-    protected abstract ComponentDescriptor createDescriptor();
-
     protected void setMediator(ComponentMediator mediator) {
         this.mediator = mediator;
-    }
-
-    private ComponentHistory getOrRequestHistory() {
-        if (this.history == null) {
-            if (this.historyProvider == null) {
-                throw new NullPointerException("No history provider");
-            }
-            this.history = this.historyProvider.provide();
-        }
-        return this.history;
     }
 }

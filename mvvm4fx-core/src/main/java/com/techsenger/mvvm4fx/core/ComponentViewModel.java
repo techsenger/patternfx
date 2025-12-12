@@ -22,9 +22,5 @@ package com.techsenger.mvvm4fx.core;
  */
 public interface ComponentViewModel {
 
-    ComponentDescriptor getDescriptor();
-
-    HistoryProvider getHistoryProvider();
-
     ComponentMediator getMediator();
 }
