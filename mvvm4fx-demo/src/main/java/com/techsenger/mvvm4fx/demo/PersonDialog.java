@@ -14,35 +14,22 @@
  * limitations under the License.
  */
 
-package com.techsenger.mvvm4fx.core;
+package com.techsenger.mvvm4fx.demo;
+
+import com.techsenger.mvvm4fx.core.AbstractParentComponent;
 
 /**
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractComponentComposer<T extends ComponentView<?>> implements ComponentComposer<T> {
+public class PersonDialog extends AbstractParentComponent<PersonDialogView> {
 
-    protected abstract class Mediator implements ComponentMediator {
-
-    }
-
-    private final T view;
-
-    public AbstractComponentComposer(T view) {
-        this.view = view;
+    public PersonDialog(PersonDialogView view) {
+        super(view);
     }
 
     @Override
-    public void initialize() {
-
-    }
-
-    @Override
-    public void deinitialize() {
-
-    }
-
-    protected final T getView() {
-        return view;
+    protected Mediator createMediator() {
+        return new AbstractParentComponent.Mediator() { };
     }
 }

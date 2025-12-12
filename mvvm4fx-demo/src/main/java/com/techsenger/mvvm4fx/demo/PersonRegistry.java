@@ -14,13 +14,29 @@
  * limitations under the License.
  */
 
-package com.techsenger.mvvm4fx.core;
+package com.techsenger.mvvm4fx.demo;
+
+import com.techsenger.mvvm4fx.core.AbstractParentComponent;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface ComponentComposer<T extends ComponentView<?>> extends Lifecycle {
+public class PersonRegistry extends AbstractParentComponent<PersonRegistryView> {
 
-    ComponentMediator createMediator();
+    public PersonRegistry(PersonRegistryView view) {
+        super(view);
+    }
+
+    @Override
+    protected void postInitialize() {
+        super.postInitialize();
+        getView().showStage();
+        getView().getViewModel().refresh();
+    }
+
+    @Override
+    protected Mediator createMediator() {
+        return new AbstractParentComponent.Mediator() { };
+    }
 }

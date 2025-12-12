@@ -26,7 +26,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -91,24 +90,22 @@ public class PersonRegistryView extends AbstractParentView<PersonRegistryViewMod
         super.addHandlers(viewModel);
         addButton.setOnAction(e -> {
             var dialogVM = viewModel.createDialog();
-            var dialogV = new PersonDialogView(dialogVM);
-            dialogV.initialize();
-            var dialog = dialogV.getDialog();
-            dialog.initOwner(stage);
-            dialog.initModality(Modality.WINDOW_MODAL);
+            var dialogV = new PersonDialogView(stage, dialogVM);
+            var dialogComponent = new PersonDialog(dialogV);
+            dialogComponent.initialize();
+
+            var jfxDialog = dialogV.getDialog();
             // javafx 19 has a bug - it shows a system notification in Ubuntu when closing
-            var result = dialog.showAndWait();
+            var result = jfxDialog.showAndWait();
             viewModel.add(result);
-            dialogV.deinitialize();
+
+            dialogComponent.deinitialize();
         });
         removeButton.setOnAction(e -> viewModel.remove());
         refreshButton.setOnAction(e -> viewModel.refresh());
     }
 
-    @Override
-    protected void postInitialize(PersonRegistryViewModel viewModel) {
-        super.postInitialize(viewModel);
+    void showStage() {
         stage.show();
-        viewModel.refresh();
     }
 }

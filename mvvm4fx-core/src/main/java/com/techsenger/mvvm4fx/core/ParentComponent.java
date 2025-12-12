@@ -22,28 +22,27 @@ import javafx.collections.ObservableList;
  *
  * @author Pavel Castornii
  */
-public interface ParentMediator extends ComponentMediator {
+public interface ParentComponent<T extends ParentView<?>> extends Component<T> {
 
     /**
-     * Returns an unmodifiable observable list of child ViewModels.  To modify the list of children, access the mutable
-     * list through {@link ParentView#getChildren()}. The returned list is guaranteed to be non-null but cannot be
-     * modified directly.
+     * Returns an unmodifiable list of child components. The list is manually maintained to preserve hierarchical
+     * relationships between components when required.
      *
-     * @return a non-null, unmodifiable observable list of child ViewModels
+     * @return an observable list of child components (never {@code null})
      */
-    ObservableList<ChildViewModel> getChildren();
+    ObservableList<ChildComponent<?>> getChildren();
 
     /**
      * Returns an iterator that traverses the component subtree starting from this component in depth-first order.
      *
      * @return an {@link Iterator} that iterates over this component and all of its descendants
      */
-    SubtreeIterator<ParentViewModel> depthFirstIterator();
+    SubtreeIterator<ParentComponent<?>> depthFirstIterator();
 
     /**
      * Returns an iterator that traverses the component subtree starting from this component in breadth-first order.
      *
      * @return an {@link Iterator} that iterates over this component and all of its descendants
      */
-    SubtreeIterator<ParentViewModel> breadthFirstIterator();
+    SubtreeIterator<ParentComponent<?>> breadthFirstIterator();
 }

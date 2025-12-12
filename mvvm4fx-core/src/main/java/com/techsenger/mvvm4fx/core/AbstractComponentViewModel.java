@@ -41,62 +41,6 @@ public abstract class AbstractComponentViewModel implements ComponentViewModel {
 
     public AbstractComponentViewModel() {
         this.descriptor = createDescriptor();
-        this.descriptor.stateProperty().addListener((ov, oldV, newV) -> {
-            var policy = this.descriptor.getHistoryPolicy();
-            if (this.descriptor.getState() == ComponentState.INITIALIZING) {
-                logger.debug("{} History policy on initializing: {}", this.descriptor.getLogPrefix(), policy);
-                ComponentHistory localHistory = null;
-                if (policy != NONE) {
-                    localHistory = getOrRequestHistory();
-                    if (localHistory.isFresh()) {
-                        logger.debug("{} History is fresh. Skipping restoration", this.descriptor.getLogPrefix());
-                    } else {
-                        switch (policy) {
-                            case DATA:
-                                localHistory.restoreData(this);
-                                postHistoryRestore();
-                                break;
-                            case APPEARANCE:
-                                localHistory.restoreAppearance(this);
-                                postHistoryRestore();
-                                break;
-                            case ALL:
-                                localHistory.restoreData(this);
-                                localHistory.restoreAppearance(this);
-                                postHistoryRestore();
-                            break;
-                            default:
-                                throw new AssertionError();
-                        }
-                    }
-                }
-            } else if (this.descriptor.getState() == ComponentState.DEINITIALIZED) {
-                logger.debug("{} History policy on deinitializing: {}", this.descriptor.getLogPrefix(), policy);
-                //The data and the appearance are saved to the history during the deinitialization of the component,
-                //not while the component is running, as this feature is rarely needed but significantly complicates
-                //the code.
-                switch (policy) {
-                    case DATA:
-                        preHistorySave();
-                        getOrRequestHistory().saveData(this);
-                        break;
-                    case APPEARANCE:
-                        preHistorySave();
-                        getOrRequestHistory().saveAppearance(this);
-                        break;
-                    case ALL:
-                        preHistorySave();
-                        var h = getOrRequestHistory();
-                        h.saveData(this);
-                        h.saveAppearance(this);
-                        break;
-                    case NONE:
-                        break;
-                    default:
-                        throw new AssertionError();
-                }
-            }
-        });
     }
 
     @Override
@@ -118,25 +62,79 @@ public abstract class AbstractComponentViewModel implements ComponentViewModel {
         this.historyProvider = historyProvider;
     }
 
-    protected void initialize() {
-
+    protected void restoreHistory() {
+        var policy = this.descriptor.getHistoryPolicy();
+        logger.debug("{} History policy during restore: {}", this.descriptor.getLogPrefix(), policy);
+        ComponentHistory localHistory = null;
+        if (policy != NONE) {
+            localHistory = getOrRequestHistory();
+            if (localHistory.isFresh()) {
+                logger.debug("{} History is fresh. Skipping restoration", this.descriptor.getLogPrefix());
+            } else {
+                switch (policy) {
+                    case DATA:
+                        localHistory.restoreData(this);
+                        postHistoryRestore();
+                        break;
+                    case APPEARANCE:
+                        localHistory.restoreAppearance(this);
+                        postHistoryRestore();
+                        break;
+                    case ALL:
+                        localHistory.restoreData(this);
+                        localHistory.restoreAppearance(this);
+                        postHistoryRestore();
+                    break;
+                    default:
+                        throw new AssertionError();
+                }
+            }
+        }
     }
 
-    protected void postHistoryRestore() {
-
+    protected void saveHistory() {
+        var policy = this.descriptor.getHistoryPolicy();
+        logger.debug("{} History policy during save: {}", this.descriptor.getLogPrefix(), policy);
+        switch (policy) {
+            case DATA:
+                preHistorySave();
+                getOrRequestHistory().saveData(this);
+                break;
+            case APPEARANCE:
+                preHistorySave();
+                getOrRequestHistory().saveAppearance(this);
+                break;
+            case ALL:
+                preHistorySave();
+                var h = getOrRequestHistory();
+                h.saveData(this);
+                h.saveAppearance(this);
+                break;
+            case NONE:
+                break;
+            default:
+                throw new AssertionError();
+        }
     }
 
-    protected void preHistorySave() {
+    // todo: remove
+    protected void postHistoryRestore() { }
 
-    }
+    protected void preHistorySave() { }
 
-    protected void deinitialize() {
+    /**
+     * Initializes the view model.
+     */
+    protected void initialize() { }
 
-    }
+    /**
+     * Deinitializes the view model.
+     */
+    protected void deinitialize() { }
 
     protected abstract ComponentDescriptor createDescriptor();
 
-    void setMediator(ComponentMediator mediator) {
+    protected void setMediator(ComponentMediator mediator) {
         this.mediator = mediator;
     }
 

@@ -30,6 +30,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.converter.IntegerStringConverter;
 
 /**
@@ -37,6 +39,8 @@ import javafx.util.converter.IntegerStringConverter;
  * @author Pavel Castornii
  */
 public class PersonDialogView extends AbstractParentView<PersonDialogViewModel> {
+
+    private final Stage stage;
 
     private final Label firstNameLabel = new Label("First Name");
 
@@ -57,8 +61,9 @@ public class PersonDialogView extends AbstractParentView<PersonDialogViewModel> 
 
     private Button okButton;
 
-    public PersonDialogView(PersonDialogViewModel viewModel) {
+    public PersonDialogView(Stage stage, PersonDialogViewModel viewModel) {
         super(viewModel);
+        this.stage = stage;
     }
 
     public Dialog<Person> getDialog() {
@@ -77,6 +82,8 @@ public class PersonDialogView extends AbstractParentView<PersonDialogViewModel> 
         hBox.setSpacing(10);
         hBox.setAlignment(Pos.CENTER_LEFT);
 
+        dialog.initOwner(stage);
+        dialog.initModality(Modality.WINDOW_MODAL);
         dialog.getDialogPane().setContent(hBox);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
         dialog.setResultConverter(dialogButton -> {

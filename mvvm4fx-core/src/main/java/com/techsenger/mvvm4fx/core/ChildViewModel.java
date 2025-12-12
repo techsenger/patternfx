@@ -16,28 +16,11 @@
 
 package com.techsenger.mvvm4fx.core;
 
-import javafx.beans.property.ReadOnlyObjectProperty;
-
 /**
  *
  * @author Pavel Castornii
  */
 public interface ChildViewModel extends ParentViewModel {
-
-    /**
-     * Returns the property representing the parent component of this component. The property holds a reference to the
-     * parent if this component is currently added as a child to another component, or {@code null} if it has no parent.
-     *
-     * @return the property containing the parent component
-     */
-    ReadOnlyObjectProperty<ParentViewModel> parentProperty();
-
-    /**
-     * Returns the value of {@link #parentProperty()}.
-     *
-     * @return the parent component, or {@code null} if this component has no parent
-     */
-    ParentViewModel getParent();
 
     @Override
     ChildMediator getMediator();

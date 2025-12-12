@@ -16,37 +16,18 @@
 
 package com.techsenger.mvvm4fx.core;
 
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-
 /**
  *
  * @author Pavel Castornii
  */
 public abstract class AbstractChildViewModel extends AbstractParentViewModel implements ChildViewModel {
 
-    private final ReadOnlyObjectWrapper<ParentViewModel> parent = new ReadOnlyObjectWrapper<>();
-
     public AbstractChildViewModel() {
         super();
     }
 
     @Override
-    public ReadOnlyObjectProperty<ParentViewModel> parentProperty() {
-        return this.parent.getReadOnlyProperty();
-    }
-
-    @Override
-    public ParentViewModel getParent() {
-        return this.parent.get();
-    }
-
-    @Override
     public ChildMediator getMediator() {
         return (ChildMediator) super.getMediator();
-    }
-
-    ReadOnlyObjectWrapper<ParentViewModel> parentWrapper() {
-        return parent;
     }
 }

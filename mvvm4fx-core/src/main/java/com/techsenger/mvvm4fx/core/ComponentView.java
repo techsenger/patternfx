@@ -20,19 +20,19 @@ package com.techsenger.mvvm4fx.core;
  *
  * @author Pavel Castornii
  */
-public interface ComponentView<T extends ComponentViewModel> extends Lifecycle {
+public interface ComponentView<T extends ComponentViewModel> {
 
     /**
-     * Returns component view model.
+     * Returns the view model.
      *
      * @return
      */
     T getViewModel();
 
     /**
-     * Returns component composer.
+     * Returns the component.
      *
-     * @return the composer or {@code null}
+     * @return
      */
-    ComponentComposer<?> getComposer();
+    Component<?> getComponent();
 }

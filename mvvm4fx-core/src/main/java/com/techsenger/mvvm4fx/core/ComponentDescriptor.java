@@ -52,8 +52,7 @@ public class ComponentDescriptor {
 
     private final String logPrefix;
 
-    private final ReadOnlyObjectWrapper<ComponentState> state =
-            new ReadOnlyObjectWrapper<>(ComponentState.CREATING);
+    private final ReadOnlyObjectWrapper<ComponentState> state = new ReadOnlyObjectWrapper<>(ComponentState.CREATING);
 
     private final ObjectProperty<HistoryPolicy> historyPolicy = new SimpleObjectProperty<>(HistoryPolicy.NONE);
 
@@ -185,7 +184,7 @@ public class ComponentDescriptor {
         return fullName + logDelimiter;
     }
 
-    ReadOnlyObjectWrapper<ComponentState> stateWrapper() {
+    ReadOnlyObjectWrapper<ComponentState> getStateWrapper() {
         return state;
     }
 }

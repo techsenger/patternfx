@@ -20,8 +20,22 @@ package com.techsenger.mvvm4fx.core;
  *
  * @author Pavel Castornii
  */
-public interface ParentComposer<T extends ParentView<?>> extends ComponentComposer<T> {
+public interface Component<T extends ComponentView<?>> {
 
-    @Override
-    ParentMediator createMediator();
+    /**
+     * Returns the view of the component.
+     *
+     * @return
+     */
+    T getView();
+
+    /**
+     * Initializes the component.
+     */
+    void initialize();
+
+    /**
+     * Deinitializes the component.
+     */
+    void deinitialize();
 }

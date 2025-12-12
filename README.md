@@ -17,7 +17,6 @@ As a real example of using this framework, see [TabShell](https://github.com/tec
     * [Component Structure](#component-structure)
     * [Component Lifecycle](#component-lifecycle)
     * [Component Hierarchy](#component-hierarchy)
-    * [Component Composer](#component-composer)
     * [When to Create a Component?](#when-to-create-component)
     * [When not to Create a Component?](#when-not-to-create-component)
 * [Requirements](#requirements)
@@ -31,13 +30,14 @@ As a real example of using this framework, see [TabShell](https://github.com/tec
 ## Overview <a name="overview"></a>
 
 MVVM4FX reimagines the `Model`–`View`–`ViewModel` pattern for JavaFX as a component-based, extensible platform designed
-around clarity, modularity, and the KISS principle. Each component exists as a self-contained unit composed of a `View`,
-`ViewModel` and `Descriptor`, optionally extended with `Composer` and `History`.
+around clarity, modularity, and the KISS principle. Each `Component` exists as a self-contained unit composed of a
+`View`, `ViewModel`, `Mediator`, `Descriptor`, optionally extended with `History`.
 
 The framework enforces a strict separation between presentation, logic, and identity. The `View` defines the visual
-structure and behavior; the `ViewModel` encapsulates logic and state; the `Descriptor` holds the component’s technical
-identity; the `Composer` is responsible for managing child components and their composition; and the
-`History` preserves continuity across sessions.
+structure and behavior; the `ViewModel` encapsulates logic and state; the `Descriptor` holds the component’s
+technical identity; the `Component` is responsible for initialization and deinitialization, managing child components,
+and their composition, operating at the component level. The `ComponentMediator` is the interface through which the
+`ViewModel` interacts with the `Component`, and the `History` preserves continuity across sessions.
 
 At its core, MVVM4FX follows the KISS principle – every class, method, and abstraction exists only for a clear reason,
 avoiding unnecessary complexity or dependencies. This simplicity is deliberate: it keeps the architecture transparent,
@@ -120,18 +120,127 @@ demonstrate.
 
 ### Component Structure <a name="component-structure"></a>
 
-A component always consists of at least two classes: a `ComponentViewModel` and a `ComponentView`. A natural question
-might arise: why is there no `Model` in the component, given that the pattern is called MVVM? Firstly, a component
-is a building block for constructing a user interface, which might not be related to the application's business logic
-at all. Secondly, the `Model` exists independently of the UI and should have no knowledge of the component's existence.
-Thirdly, MVVM is fundamentally about the separation of responsibilities rather than the mandatory presence of all
-three layers in every element. In other words, a component does not violate MVVM principles simply because it lacks a
-`Model`; it remains compliant as long as the `View` and `ViewModel` maintain a clear separation of concerns and
-communicate exclusively through data binding and observable properties.
+A component always consists of at least four classes: a `Component`, a `ComponentView`, a `ComponentViewModel`
+and `ComponentMediator`. A natural question might arise: why is there no `Model` in the component, given that
+the pattern is called MVVM?
 
-In addition to the `ComponentViewModel` and `ComponentView`, a component always has a `ComponentDescriptor` (which
-is provided by the framework and normally does not require custom implementation) and may include three optional
-classes: `ComponentHistory`, `ComponentComposer`, `ComponentMediator`.
+Firstly, a component is a building block for constructing a user interface, which might not be related to the
+application's business logic at all. Secondly, the `Model` exists independently of the UI and should have no knowledge
+of the component's existence. Thirdly, MVVM is fundamentally about the separation of responsibilities rather than
+the mandatory presence of all three layers in every element. In other words, a component does not violate MVVM
+principles simply because it lacks a `Model`; it remains compliant as long as the `View` and `ViewModel` maintain a
+clear separation of concerns and communicate exclusively through data binding and observable properties.
+
+The `ComponentView` and `ComponentViewModel` classes correspond to the `View` and `ViewModel` in the MVVM pattern and
+are relatively straightforward. The `Component` and `ComponentMediator` classes, on the other hand, address the
+aspects that MVVM does not cover and are therefore more complex, which is why they are explained in detail below.
+
+The `Component` is responsible for:
+
+1. Initializing and deinitializing the component.
+2. Creating, managing and destroying child components (those that will reside directly inside this component).
+3. Storing references to both the parent component and its child components
+4. Creating derived components (those that will be provided to another component after creation,
+e.g., dialogs, tabs, system notifications, etc.).
+
+Thus, a Component always operates strictly at the component level. It is important to keep this in mind to prevent it
+from turning into a God object.
+
+The `ComponentMediator` is the interface that the `ViewModel` uses to interact with the `Component`. This interface
+is needed for two reasons: first, it allows the `ViewModel` to be tested independently; second, it allows the `Component`
+to access both the `View` and the `ViewModel`, without exposing the `View` to the `ViewModel`.
+
+The `ComponentMediator` is implemented as a non-static inner class within the `Component`, which allows it to work with
+both the `View` and the `ViewModel` without violating MVVM principles.
+
+Working with a `Component` and `ComponentMediator` is one of the most challenging parts of using the platform for the
+following reasons:
+
+1. MVVM Gap. MVVM does not specify how child and derived components should be created, how their lifecycle should be
+managed, or how they should be composed.
+2. Architectural Conflict. According to MVVM, the `ViewModel` must not know about the `View`, yet the `ViewModel` may
+need to initiate the creation of new components (for example, opening a dialog) and their composition — which is
+impossible without interacting with the `View`.
+3. Implementation Complexity. Due to the two-layer structure of a component (`View` and `ViewModel`), each of them requires
+its own version of a `Component`, which doubles the complexity of the problem. In addition, naming becomes difficult,
+since names like `FooViewComponent` and `FooViewModelComponent` are hardly convenient to work with.
+4. Inheritance Challenges. Supporting component inheritance, where hierarchies of all classes of inherited components
+must be created: `ChildView` extends `ParentView`, `ChildViewModel` extends `ParentViewModel`, `ChildComponent` extends
+`ParentComponent` etc.
+
+Let’s look at some code demonstrating the use of these classes.
+
+```java
+
+public interface FooMediator extends ChildMediator {
+
+    ...
+}
+
+public class FooViewModel extends AbstractChildViewModel {
+
+    ...
+
+    @Override
+    public FooMediator getMediator() {
+        return (FooMediator) super.getMediator();
+    }
+}
+```
+
+public class FooView extends AbstractChildView<FooViewModel> {
+
+    public FooView(FooViewModel viewModel) {
+        ...
+    }
+
+    ...
+
+    @Override
+    public FooComponent getComponent() {
+        return (FooComponent) super.getComponent();
+    }
+}
+
+public class FooComponent extends AbstractChildComponent<FooView> {
+
+    protected class Mediator extends AbstractChildComponent.Mediator implements FooMediator {...}
+
+    public FooComponent(FooView view) {
+        ...
+    }
+
+    ...
+
+    @Override
+    protected FooMediator createMediator() {
+        return new FooComponent.Mediator(); // the mediator is created at the beginning of initialization
+    }
+}
+
+```
+This code demonstrates how to create a component instance.
+
+```java
+var viewModel = new FooViewModel();
+var view = new FooView(viewModel);
+var component = new FooComponent(view);
+component.initialize();
+...
+component.deinitialize();
+```
+
+Advantages of this approach:
+
+* Strict Separation. Using a `Component` together with a `Mediator` enforces a clear separation of layers according to
+MVVM and simplifies testing.
+* Clean Architecture. The `Component` centralizes all logic related to managing child components, keeping the
+`View` and `ViewModel` free from responsibilities that do not belong to them.
+* MVVM Compliance. The `Mediator` interface defines how a `ViewModel` can initiate the addition or removal of a
+component without violating MVVM principles.
+
+In addition to the four classes, a component always has a `ComponentDescriptor` (which is provided by the framework
+and normally does not require custom implementation) and may include a `ComponentHistory`.
 
 The `ComponentDescriptor` represents the internal metadata and platform-level state of a component. The descriptor
 acts as a technical identity card, containing all framework-related information while keeping it completely separate
@@ -144,29 +253,49 @@ exclusively between the `ComponentViewModel` and the `ComponentHistory`. When th
 transitions to `DEINITIALIZED`, data from the `ComponentViewModel` is saved back to the `ComponentHistory`. The volume
 of state information that is restored and persisted is defined by the `HistoryPolicy` enum.
 
-The `ComponentComposer` is responsible for managing child and derived components and their composition, while the
-`ComponentMediator` allows `ComponentViewModel` to interact with the `ComponentComposer`
-(see [Component Composer](#component-composer)).
+### Component Lifecycle<a name="component-lifecycle"></a>
 
-### Component Lifecycle <a name="component-lifecycle"></a>
+Each component features `Component#initialize()` and `Component#deinitialize()` methods,
+which initialize and deinitialize all the parts of the component, respectively, updating its state.
+
+In the default implementation during initialization, the component first enters the pre-initialization phase, where
+the `ComponentMediator` is created, attached to the `ViewModel`, and the component’s history is restored. After that,
+the main initialization phase begins, during which the `ViewModel` and `View` perform their own internal initialization.
+Once both parts are initialized, the component completes the process with a post-initialization phase that can be used
+for any additional logic specific to the component.
+
+Deinitialization follows the same structure in reverse. It begins with a pre-deinitialization phase, then proceeds to
+the main deinitialization of the `View` and `ViewModel` (reverse order), and finishes with a post-deinitialization
+phase. By default, the component saves its history at this final stage.
+
+Both AbstractComponentView and AbstractComponentViewModel provide protected initialize() and deinitialize() methods
+that are automatically invoked during the lifecycle, allowing each part to perform its own work without breaking
+the architectural boundaries. The optional pre and post hooks in `AbstractComponent` give developers additional
+flexibility to extend the lifecycle while preserving its structure. This design keeps the component's behavior
+predictable, transparent, and easy to customize.
+
+The default implementation of the `AbstractComponentView#initialize()` and `AbstractComponentView#deinitialize()` methods
+is split into four protected methods that perform the core `View` operations. These protected methods may be overridden
+and are responsible for the following:
+
+- building/unbuilding
+- binding/unbinding
+- adding/removing listeners
+- adding/removing handlers
+
+It is important to note that these protected methods should not be considered the only place for performing such tasks
+(e.g., adding or removing handlers) within the `View`; rather, they represent one part of the
+initialization/deinitialization process. Thus, such tasks may also be performed in other methods.
 
 A component has five distinct states (see `ComponentState`):
 
-| **State**          | **Description**                                                                                                                                                                                                                                                                                                                                               |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Creating**       | The component is currently being created. During this phase, both the `ComponentViewModel` and the `ComponentView` objects are being constructed, but initialization has not yet started.                                                                                                                                                                     |
-| **Initializing**   | The component is in the process of initialization. This phase begins when the `ComponentView#initialize()` method is invoked, during which bindings, listeners, and other setup logic are established. When the component transitions to this state, the `ComponentViewModel` restores its state from the `ComponentHistory`.                                 |
-| **Initialized**    | The component has been fully initialized and is ready for use. It enters this state upon completion of the `ComponentView#initialize()` method, but before the call to the `AbstractComponentView#postInitialize()` method.                                                                                                                                   |
-| **Deinitializing** | The component is in the process of deinitialization. This phase begins when the `ComponentView#deinitialize()` method is invoked, during which bindings are removed, listeners are detached, and cleanup logic is performed.                                                                                                                                  |
-| **Deinitialized**  | The component has been completely deinitialized and can no longer be used. It enters this state upon completion of the `ComponentView#deinitialize()` method, but before the call to the `AbstractComponentView#postDeinitialize()` method. When the component transitions to this state, the `ComponentViewModel` saves its state to the `ComponentHistory`. |
-
-Each component features `ComponentView#initialize()` and `ComponentView#deinitialize()` methods, which initialize and
-deinitialize the component, respectively, altering its state. The default implementation of these methods in
-`AbstractComponentView` is achieved through template methods that handle component building/unbuilding, binding/unbinding,
-adding/removing listeners, and adding/removing handlers via corresponding protected methods. It is important to note
-that these protected methods should not be considered the exclusive location for performing such tasks (e.g.,
-adding/removing handlers) within the component, but rather as part of the initialization/deinitialization process.
-Thus, adding/removing handlers may also be performed in other methods of the component.
+| **State**          | **Description** |
+|--------------------|-----------------|
+| **CREATING**       | The component is being constructed. The `ComponentViewModel`, `ComponentView`, and `Component` objects exist, but initialization has not yet begun. This is the earliest detectable phase of the lifecycle. |
+| **INITIALIZING**   | The component is undergoing initialization. Its `ComponentViewModel`, `ComponentView`, and other internal parts are being initialized. |
+| **INITIALIZED**    | The component has been fully initialized. The component, its view, and its view-model are active, bound, and synchronized, and the component is ready for use. |
+| **DEINITIALIZING** | The component is undergoing deinitialization. Its `ComponentView`, `ComponentViewModel`, and other internal parts are being deinitialized. |
+| **DEINITIALIZED**  | The component has been completely deinitialized. All resources have been released and cleanup has been performed. This is the terminal state of the lifecycle. |
 
 ### Component Hierarchy <a name="component-hierarchy"></a>
 
@@ -194,97 +323,6 @@ enabling direct coordination and communication within the hierarchy while mainta
 between the presentation (`View`) and logic (`ViewModel`) layers. This design ensures consistency and synchronization
 across the component tree without violating the Unidirectional Hierarchy Rule (UHR), as the relationships are strictly
 hierarchical and non-cyclic.
-
-### Component Composer<a name="component-composer"></a>
-
-The `ComponentComposer` is responsible for:
-1. Creating, positioning, and managing child components (those that will reside directly inside this component).
-2. Creating and positioning derived components (those that will be provided to another component after creation,
-e.g., dialogs, tabs, system notifications, etc.).
-
-Working with a composite component is one of the most challenging parts of using the platform for the following reasons:
-
-1. MVVM Gap. MVVM does not specify how child and derived components should be created, how their lifecycle should be
-managed, or how they should be composed.
-2. Architectural Conflict. According to MVVM, the `ViewModel` must not know about the `View`, yet the `ViewModel` may
-need to initiate the creation of new components (for example, opening a dialog) and their composition — which is
-impossible without interacting with the `View`.
-3. Implementation Complexity. Due to the two-layer structure of a component (`View` and `ViewModel`), each of them requires
-its own version of a composer, which doubles the complexity of the problem. In addition, naming becomes difficult,
-since names like `SomeComponentViewComposer` and `SomeComponentViewModelComposer` are hardly convenient to work with.
-4. Inheritance Challenges. Supporting component inheritance, where hierarchies of all classes of inherited components
-must be created: `ChildView` extends `ParentView`, `ChildViewModel` extends `ParentViewModel`, `ChildComposer` extends
-`ParentComposer` etc.
-
-In MVVM4FX, the solution is implemented using two classes: `ComponentComposer` and `ComponentMediator`:
-
-`Mediator`. This is the interface that the `ViewModel` uses to interact with the `Composer`. This interface is needed
-for two reasons: first, it allows the `ViewModel` to be tested independently; second, it allows the `Composer` to
-access both the `View` and the `ViewModel`, without exposing the `View` to the `ViewModel`.
-
-```java
-public interface FooMediator extends ChildMediator {
-
-    ...
-}
-
-public class FooViewModel extends AbstractChildViewModel {
-
-    ...
-
-    @Override
-    public FooMediator getMediator() {
-        return (FooMediator) super.getMediator();
-    }
-}
-```
-
-`Composer`. This class contains the methods to work with child and derived components, as well as the
-methods the `View` uses to interact with the `Composer`. In addition, it defines a non-static inner class that
-implements the corresponding `Mediator`.
-
-```java
-public class FooComposer extends AbstractChildComposer<FooView> {
-
-    protected class Mediator extends AbstractChildComposer.Mediator implements FooMediator {...}
-
-    ...
-
-    @Override
-    public FooMediator createMediator() {
-        return new FooComposer.Mediator();
-    }
-}
-
-public class FooView extends AbstractChildView<FooViewModel> {
-
-    ...
-
-    @Override
-    public FooComposer getComposer() {
-        return (FooComposer) super.getComposer();
-    }
-
-    @Override
-    protected FooComposer createComposer() {
-        return new FooComposer(this);
-    }
-}
-```
-
-Composer Creation and Initialization. The `Composer` is created during the component’s pre-initialization phase via
-the protected `AbstractComponentView#createComposer()` method. Creating the composer at this stage ensures that both
-the `View` and the `ViewModel` are fully constructed, allowing the composer to immediately access and interact with
-their properties and methods. The composer is initialized before the `ViewModel` and deinitialized after the `ViewModel`.
-
-Advantages of this approach:
-
-* Strict Separation. Using a `Composer` together with a `Mediator` enforces a clear separation of layers according to
-MVVM and simplifies testing.
-* Clean Architecture. The `Composer` centralizes all logic related to managing child components, keeping the
-`View` and `ViewModel` free from responsibilities that do not belong to them.
-* MVVM Compliance. The `Mediator` interface defines how a `ViewModel` can initiate the addition or removal of a
-component without violating MVVM principles.
 
 ### When to Create a Component? <a name="when-to-create-component"></a>
 * The element has independent testable state or business logic that can exist without a `View`.
