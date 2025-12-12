@@ -186,7 +186,6 @@ public class FooViewModel extends AbstractChildViewModel {
         return (FooMediator) super.getMediator();
     }
 }
-```
 
 public class FooView extends AbstractChildView<FooViewModel> {
 
