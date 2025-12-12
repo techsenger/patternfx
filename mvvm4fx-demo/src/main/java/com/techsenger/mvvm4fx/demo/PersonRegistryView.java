@@ -56,10 +56,10 @@ public class PersonRegistryView extends AbstractParentView<PersonRegistryViewMod
     }
 
     @Override
-    protected void build(PersonRegistryViewModel viewModel) {
-        super.build(viewModel);
+    protected void build() {
+        super.build();
         VBox.setVgrow(personTable, Priority.ALWAYS);
-        personTable.setItems(viewModel.getPersons());
+        personTable.setItems(getViewModel().getPersons());
         personTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         var idColumn = new TableColumn<Person, Integer>("Id");
         idColumn.setCellValueFactory(data -> data.getValue().idProperty());
@@ -78,18 +78,20 @@ public class PersonRegistryView extends AbstractParentView<PersonRegistryViewMod
     }
 
     @Override
-    protected void bind(PersonRegistryViewModel viewModel) {
-        super.bind(viewModel);
-        stage.titleProperty().bind(viewModel.titleProperty());
-        viewModel.selectedPersonProperty().bind(personTable.getSelectionModel().selectedItemProperty());
-        removeButton.disableProperty().bind(viewModel.removeDisabledProperty());
+    protected void bind() {
+        super.bind();
+        var vm = getViewModel();
+        stage.titleProperty().bind(vm.titleProperty());
+        vm.selectedPersonProperty().bind(personTable.getSelectionModel().selectedItemProperty());
+        removeButton.disableProperty().bind(vm.removeDisabledProperty());
     }
 
     @Override
-    protected void addHandlers(PersonRegistryViewModel viewModel) {
-        super.addHandlers(viewModel);
+    protected void addHandlers() {
+        super.addHandlers();
+        var vm = getViewModel();
         addButton.setOnAction(e -> {
-            var dialogVM = viewModel.createDialog();
+            var dialogVM = vm.createDialog();
             var dialogV = new PersonDialogView(stage, dialogVM);
             var dialogComponent = new PersonDialog(dialogV);
             dialogComponent.initialize();
@@ -97,12 +99,12 @@ public class PersonRegistryView extends AbstractParentView<PersonRegistryViewMod
             var jfxDialog = dialogV.getDialog();
             // javafx 19 has a bug - it shows a system notification in Ubuntu when closing
             var result = jfxDialog.showAndWait();
-            viewModel.add(result);
+            vm.add(result);
 
             dialogComponent.deinitialize();
         });
-        removeButton.setOnAction(e -> viewModel.remove());
-        refreshButton.setOnAction(e -> viewModel.refresh());
+        removeButton.setOnAction(e -> vm.remove());
+        refreshButton.setOnAction(e -> vm.refresh());
     }
 
     void showStage() {

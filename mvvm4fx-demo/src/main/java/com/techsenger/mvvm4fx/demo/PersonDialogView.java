@@ -71,8 +71,8 @@ public class PersonDialogView extends AbstractParentView<PersonDialogViewModel> 
     }
 
     @Override
-    protected void build(PersonDialogViewModel viewModel) {
-        super.build(viewModel);
+    protected void build() {
+        super.build();
         firstNameLabel.setMinWidth(Region.USE_PREF_SIZE);
         HBox.setHgrow(firstNameTextField, Priority.ALWAYS);
         lastNameLabel.setMinWidth(Region.USE_PREF_SIZE);
@@ -88,7 +88,7 @@ public class PersonDialogView extends AbstractParentView<PersonDialogViewModel> 
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == ButtonType.OK) {
-                return viewModel.createPerson();
+                return getViewModel().createPerson();
             }
             return null;
         });
@@ -97,24 +97,25 @@ public class PersonDialogView extends AbstractParentView<PersonDialogViewModel> 
     }
 
     @Override
-    protected void bind(PersonDialogViewModel viewModel) {
-        super.bind(viewModel);
-        dialog.titleProperty().bind(viewModel.titleProperty());
+    protected void bind() {
+        super.bind();
+        var vm = getViewModel();
+        dialog.titleProperty().bind(vm.titleProperty());
 
-        firstNameTextField.textProperty().bindBidirectional(viewModel.getPerson().firstNameProperty());
-        bindValid(firstNameTextField, viewModel.firstNameValidProperty());
-        lastNameTextField.textProperty().bindBidirectional(viewModel.getPerson().lastNameProperty());
-        bindValid(lastNameTextField, viewModel.lastNameValidProperty());
-        ageTextField.textProperty().bindBidirectional(viewModel.getPerson().ageProperty(),
+        firstNameTextField.textProperty().bindBidirectional(vm.getPerson().firstNameProperty());
+        bindValid(firstNameTextField, vm.firstNameValidProperty());
+        lastNameTextField.textProperty().bindBidirectional(vm.getPerson().lastNameProperty());
+        bindValid(lastNameTextField, vm.lastNameValidProperty());
+        ageTextField.textProperty().bindBidirectional(vm.getPerson().ageProperty(),
                 new IntegerStringConverter());
-        bindValid(ageTextField, viewModel.ageValidProperty());
+        bindValid(ageTextField, vm.ageValidProperty());
     }
 
     @Override
-    protected void addHandlers(PersonDialogViewModel viewModel) {
-        super.addHandlers(viewModel);
+    protected void addHandlers() {
+        super.addHandlers();
         okButton.addEventFilter(ActionEvent.ACTION, event -> {
-            if (!viewModel.isPersonValid()) {
+            if (!getViewModel().isPersonValid()) {
                 event.consume();
             }
         });

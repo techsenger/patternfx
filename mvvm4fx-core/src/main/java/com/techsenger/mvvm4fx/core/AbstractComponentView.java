@@ -49,68 +49,68 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
      * Performs initialization.
      */
     protected void initialize() {
-        build(viewModel);
-        bind(viewModel);
-        addListeners(viewModel);
-        addHandlers(viewModel);
+        build();
+        bind();
+        addListeners();
+        addHandlers();
     }
 
     /**
      * Performs deinitialization.
      */
     protected void deinitialize() {
-        removeHandlers(viewModel);
-        removeListeners(viewModel);
-        unbind(viewModel);
-        unbuild(viewModel);
+        removeHandlers();
+        removeListeners();
+        unbind();
+        unbuild();
     }
 
     /**
      * Builds view.
      */
-    protected void build(T viewModel) { }
+    protected void build() { }
 
     /**
      * Binds view to viewModel etc.
      */
-    protected void bind(T viewModel) { }
+    protected void bind() { }
 
     /**
      * Initializes listeners to different properties etc.
      */
-    protected void addListeners(T viewModel) { }
+    protected void addListeners() { }
 
     /**
      * Initializes handlers for mouse, keyboard etc events.
      */
-    protected void addHandlers(T viewModel) { }
+    protected void addHandlers() { }
 
     /**
      * Removes handlers.
      *
      * @param viewModel
      */
-    protected void removeHandlers(T viewModel) { }
+    protected void removeHandlers() { }
 
     /**
      * Removes listeners.
      *
      * @param viewModel
      */
-    protected void removeListeners(T viewModel) { }
+    protected void removeListeners() { }
 
     /**
      * Unbinds view from viewModel etc.
      *
      * @param viewModel
      */
-    protected void unbind(T viewModel) { }
+    protected void unbind() { }
 
     /**
      * Unbuilds view.
      * @param viewModel
      */
-    protected void unbuild(T viewModel) { }
+    protected void unbuild() { }
 
     void setComponent(AbstractComponent<?> component) {
         this.component = component;

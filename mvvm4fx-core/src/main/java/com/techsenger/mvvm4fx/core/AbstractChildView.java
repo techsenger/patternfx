@@ -31,9 +31,4 @@ public abstract class AbstractChildView<T extends AbstractChildViewModel> extend
     public AbstractChildComponent<?> getComponent() {
         return (AbstractChildComponent<?>) super.getComponent();
     }
-
-    @Override
-    protected void addListeners(T viewModel) {
-        super.addListeners(viewModel);
-    }
 }
