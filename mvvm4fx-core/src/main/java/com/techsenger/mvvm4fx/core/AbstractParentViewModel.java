@@ -16,6 +16,8 @@
 
 package com.techsenger.mvvm4fx.core;
 
+import java.util.List;
+
 /**
  *
  * @author Pavel Castornii
@@ -27,7 +29,29 @@ public abstract class AbstractParentViewModel extends AbstractComponentViewModel
     }
 
     @Override
-    public ParentMediator getMediator() {
+    public SubtreeIterator<ParentViewModel> depthFirstIterator() {
+        return new AbstractDepthFirstIterator<ParentViewModel>(this) {
+
+            @Override
+            List<ParentViewModel> getChildren(ParentViewModel parent) {
+                return (List) getMediator().getChildren();
+            }
+        };
+    }
+
+    @Override
+    public SubtreeIterator<ParentViewModel> breadthFirstIterator() {
+        return new AbstractBreadthFirstIterator<ParentViewModel>(this) {
+
+            @Override
+            List<ParentViewModel> getChildren(ParentViewModel parent) {
+                return (List) getMediator().getChildren();
+            }
+        };
+    }
+
+    @Override
+    protected ParentMediator getMediator() {
         return (ParentMediator) super.getMediator();
     }
 }

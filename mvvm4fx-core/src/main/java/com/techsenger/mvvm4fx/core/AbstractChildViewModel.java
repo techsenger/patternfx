@@ -27,7 +27,7 @@ public abstract class AbstractChildViewModel extends AbstractParentViewModel imp
     }
 
     @Override
-    public ChildMediator getMediator() {
+    protected ChildMediator getMediator() {
         return (ChildMediator) super.getMediator();
     }
 }

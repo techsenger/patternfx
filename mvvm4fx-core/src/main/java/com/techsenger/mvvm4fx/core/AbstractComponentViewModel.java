@@ -33,8 +33,7 @@ public abstract class AbstractComponentViewModel implements ComponentViewModel {
 
     private ComponentMediator mediator;
 
-    @Override
-    public ComponentMediator getMediator() {
+    protected ComponentMediator getMediator() {
         return this.mediator;
     }
 

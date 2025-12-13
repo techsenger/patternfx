@@ -48,29 +48,6 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?>> e
         public ObservableList<ChildViewModel> getChildren() {
             return children;
         }
-
-
-        @Override
-        public SubtreeIterator<ParentViewModel> depthFirstIterator() {
-            return new AbstractDepthFirstIterator<ParentViewModel>(getView().getViewModel()) {
-
-                @Override
-                List<ParentViewModel> getChildren(ParentViewModel parent) {
-                    return (List) parent.getMediator().getChildren();
-                }
-            };
-        }
-
-        @Override
-        public SubtreeIterator<ParentViewModel> breadthFirstIterator() {
-            return new AbstractBreadthFirstIterator<ParentViewModel>(getView().getViewModel()) {
-
-                @Override
-                List<ParentViewModel> getChildren(ParentViewModel parent) {
-                    return (List) parent.getMediator().getChildren();
-                }
-            };
-        }
     }
 
     private final ObservableList<ChildComponent<?>> modifiableChildren = FXCollections.observableArrayList();

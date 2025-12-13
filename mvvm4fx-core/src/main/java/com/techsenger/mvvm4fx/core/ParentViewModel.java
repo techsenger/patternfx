@@ -22,6 +22,17 @@ package com.techsenger.mvvm4fx.core;
  */
 public interface ParentViewModel extends ComponentViewModel {
 
-    @Override
-    ParentMediator getMediator();
+    /**
+     * Returns an iterator that traverses the component subtree starting from this component in depth-first order.
+     *
+     * @return an {@link Iterator} that iterates over this component and all of its descendants
+     */
+    SubtreeIterator<ParentViewModel> depthFirstIterator();
+
+    /**
+     * Returns an iterator that traverses the component subtree starting from this component in breadth-first order.
+     *
+     * @return an {@link Iterator} that iterates over this component and all of its descendants
+     */
+    SubtreeIterator<ParentViewModel> breadthFirstIterator();
 }

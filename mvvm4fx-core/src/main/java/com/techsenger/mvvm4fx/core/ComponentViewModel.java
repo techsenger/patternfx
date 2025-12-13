@@ -22,5 +22,4 @@ package com.techsenger.mvvm4fx.core;
  */
 public interface ComponentViewModel {
 
-    ComponentMediator getMediator();
 }
