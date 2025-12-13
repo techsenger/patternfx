@@ -16,7 +16,7 @@ As a real example of using this framework, see [TabShell](https://github.com/tec
     * [What is a Component?](#what-is-component)
     * [Component Structure](#component-structure)
     * [Component Lifecycle](#component-lifecycle)
-    * [Component Hierarchy](#component-hierarchy)
+    * [Component Tree](#component-tree)
     * [When to Create a Component?](#when-to-create-component)
     * [When not to Create a Component?](#when-not-to-create-component)
 * [Requirements](#requirements)
@@ -138,13 +138,23 @@ aspects that MVVM does not cover and are therefore more complex, which is why th
 The `Component` is responsible for:
 
 1. Initializing and deinitializing the component.
-2. Creating, managing and destroying child components (those that will reside directly inside this component).
-3. Storing references to both the parent component and its child components
-4. Creating derived components (those that will be provided to another component after creation,
-e.g., dialogs, tabs, system notifications, etc.).
+2. Providing component data and related objects that directly belong to the component:
+   - Structural data (parent/children references);
+   - Persistence data (component history);
+   - Configuration data (component settings);
+   - Lifecycle data (component state);
+   - Metadata (component ID, type, version, etc.).
+3. Creating, initializing, adding to the component tree, removing from the component tree, and deinitializing
+   child components (those that reside directly inside this component).
+4. Creating, initializing, and passing derived components to other components for further management
+   (e.g., dialogs, tabs, system notifications).
 
-Thus, a Component always operates strictly at the component level. It is important to keep this in mind to prevent it
-from turning into a God object.
+Thus, a `Component` always operates strictly at the component level and is intentionally non-initiative. A `Component`
+does not make decisions and does not trigger application behavior. Its sole responsibility is to execute operations
+requested by its client or by the `View` or `ViewModel` through the `Mediator`. In other words the `Component` and
+`Mediator` form a very thin layer that performs what the `ViewModel` cannot do and what is not the responsibility of
+the `View`. It is important to keep this in mind to prevent the `Component` from turning into a God object and
+violating MVVM responsibility principles.
 
 The `ComponentMediator` is the interface that the `ViewModel` uses to interact with the `Component`. This interface
 is needed for two reasons: first, it allows the `ViewModel` to be tested independently; second, it allows the `Component`
@@ -289,32 +299,34 @@ A component has five distinct states (see `ComponentState`):
 | **DEINITIALIZING** | The component is undergoing deinitialization. Its `ComponentView`, `ComponentViewModel`, and other internal parts are being deinitialized. |
 | **DEINITIALIZED**  | The component has been completely deinitialized. All resources have been released and cleanup has been performed. This is the terminal state of the lifecycle. |
 
-### Component Hierarchy <a name="component-hierarchy"></a>
+### Component Tree <a name="component-tree"></a>
 
-Components can act as both parents and children, forming a tree structure that can change dynamically.
-The library provides a mechanism for dynamically creating and removing components and includes optional logic
-for managing component relationships, leaving their use to the developer's discretion.
+Components in MVVM4FX form a hierarchical structure, called the component tree that can change dynamically. This tree
+represents the logical composition of the application and is independent of the JavaFX node tree, which is
+responsible only for rendering.
+
+Each `Component` may have a parent component and multiple child components. Together, they form a directed,
+acyclic structure that reflects ownership, lifecycle management, and state boundaries rather than visual layout.
+
+The component tree must not be confused with the JavaFX scene graph. The JavaFX node tree describes how UI elements
+are rendered and laid out on screen. The component tree describes how application functionality is structured,
+initialized, composed, and disposed. These two hierarchies serve different purposes and are intentionally decoupled.
 
 The component tree is built according to the Unidirectional Hierarchy Rule (UHR). This rule establishes a strict
-hierarchical order by explicitly prohibiting circular parent-child relationships, meaning a component cannot
-simultaneously be a direct parent and a direct child of another component. The UHR is designed to maintain a clear,
-acyclic structure, which prevents logical conflicts and ensures predictable behavior. Importantly, this rule does not
-restrict child components from directly accessing or communicating with their parents; it solely forbids cyclical
-dependencies that would compromise the architectural integrity of the hierarchy.
+hierarchical order by explicitly prohibiting circular parent-child relationships, meaning a component cannot be both a
+direct or indirect parent and child of another component. The UHR is designed to maintain a clear, acyclic structure,
+which prevents logical conflicts and ensures predictable behavior. Importantly, this rule does not restrict child
+components from directly accessing or communicating with their parents; it solely forbids cyclical dependencies that
+would compromise the architectural integrity of the hierarchy.
 
-It is crucial to highlight the interaction between components. Consider a parent and a child component as an example.
-The parent component's `ComponentViewModel` holds a reference to the child component's `ComponentViewModel` via its
-`children` field, while the child component's `ComponentViewModel` holds a reference to the parent component's
-`ComponentViewModel` via its `parent` field. Similarly, the parent component's `ComponentView` holds a reference to the
-child component's `ComponentView` through its `children` field, and the child component's `ComponentView` holds a
-reference to the parent component's `ComponentView` via its `parent` field.
+It is important to note that the component layer is intentionally designed to be thin. A `Component` must not contain
+business logic, presentation logic, or state manipulation beyond what is required for lifecycle management and
+structural composition. Its responsibility is limited to coordinating initialization and deinitialization, managing
+parent–child relationships, and defining ownership boundaries between components.
 
-This two-layer linkage establishes a coherent and symmetric relationship between parent and child components at both
-the `View` and `ViewModel` layers. The parent and child components are fully aware of each other's existence and state,
-enabling direct coordination and communication within the hierarchy while maintaining clear separation of concerns
-between the presentation (`View`) and logic (`ViewModel`) layers. This design ensures consistency and synchronization
-across the component tree without violating the Unidirectional Hierarchy Rule (UHR), as the relationships are strictly
-hierarchical and non-cyclic.
+Keeping the component layer thin prevents it from becoming a God object and ensures that application logic remains
+properly distributed between the View and the ViewModel. This constraint is essential for preserving architectural
+clarity, testability, and long-term maintainability.
 
 ### When to Create a Component? <a name="when-to-create-component"></a>
 * The element has independent testable state or business logic that can exist without a `View`.
