@@ -25,9 +25,7 @@ import javafx.collections.ObservableList;
 public interface ParentMediator extends ComponentMediator {
 
     /**
-     * Returns an unmodifiable observable list of child ViewModels.  To modify the list of children, access the mutable
-     * list through {@link ParentView#getChildren()}. The returned list is guaranteed to be non-null but cannot be
-     * modified directly.
+     * Returns an unmodifiable observable list of child ViewModels.
      *
      * @return a non-null, unmodifiable observable list of child ViewModels
      */

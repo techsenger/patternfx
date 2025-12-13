@@ -25,10 +25,9 @@ import javafx.collections.ObservableList;
 public interface ParentComponent<T extends ParentView<?>> extends Component<T> {
 
     /**
-     * Returns an unmodifiable list of child components. The list is manually maintained to preserve hierarchical
-     * relationships between components when required.
+     * Returns an unmodifiable list of child components.
      *
-     * @return an observable list of child components (never {@code null})
+     * @return an unmodifiable list of child components (never {@code null})
      */
     ObservableList<ChildComponent<?>> getChildren();
 
