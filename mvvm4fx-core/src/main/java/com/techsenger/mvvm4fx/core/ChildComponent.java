@@ -30,7 +30,7 @@ public interface ChildComponent<T extends ChildView<?>> extends ParentComponent<
      *
      * @return the property containing the parent component
      */
-    ReadOnlyObjectProperty<ParentComponent<?>> parentProperty();
+    ReadOnlyObjectProperty<? extends ParentComponent<?>> parentProperty();
 
     /**
      * Returns the value of {@link #parentProperty()}.
@@ -38,4 +38,23 @@ public interface ChildComponent<T extends ChildView<?>> extends ParentComponent<
      * @return the parent component, or {@code null} if this component has no parent
      */
     ParentComponent<?> getParent();
+
+    /**
+     * Returns the value of {@link #parentProperty()} cast to the specified type.
+     *
+     * @param <T> the expected type of the parent component
+     * @param parentClass the class object representing the expected parent type
+     * @return the parent component cast to the specified type, or {@code null} if this component has no parent
+     * @throws ClassCastException if the parent exists but is not of the specified type
+     */
+    <T extends ParentComponent<?>> T getParent(Class<T> parentClass);
+
+    /**
+     * Sets the parent component of this component.
+     *
+     * <p>Framework contract: This method is intended to be called exclusively by {@link ParentComponent}
+     * implementations while managing the component hierarchy. Direct invocation by user code results in undefined
+     * behavior.
+     */
+    void setParent(ParentComponent<?> parent);
 }

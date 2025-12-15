@@ -157,8 +157,8 @@ the `View`. It is important to keep this in mind to prevent the `Component` from
 violating MVVM responsibility principles.
 
 The `ComponentMediator` is the interface that the `ViewModel` uses to interact with the `Component`. This interface
-is needed for two reasons: first, it allows the `ViewModel` to be tested independently; second, it allows the `Component`
-to access both the `View` and the `ViewModel`, without exposing the `View` to the `ViewModel`.
+is needed for two reasons: first, it allows the `ViewModel` to be tested independently; second, it allows the
+`ViewModel` to use the `Component` without knowing the View, since the Component has knowledge of the View.
 
 The `ComponentMediator` is implemented as a non-static inner class within the `Component`, which allows it to work with
 both the `View` and the `ViewModel` without violating MVVM principles.

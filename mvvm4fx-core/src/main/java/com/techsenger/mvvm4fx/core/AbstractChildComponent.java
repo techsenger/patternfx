@@ -31,13 +31,15 @@ public abstract class AbstractChildComponent<T extends AbstractChildView<?>> ext
         private final ReadOnlyObjectWrapper<ParentViewModel> parent = new ReadOnlyObjectWrapper<>();
 
         public Mediator() {
-            AbstractChildComponent.this.parent.addListener((ov, oldV, newV) -> {
-                if (newV == null) {
-                    this.parent.set(null);
-                } else {
-                    this.parent.set(newV.getView().getViewModel());
-                }
-            });
+            this.parent.bind(
+                AbstractChildComponent.this.parent.map(p -> {
+                    if (p != null) {
+                        return p.getView().getViewModel();
+                    } else {
+                        return null;
+                    }
+                })
+            );
         }
 
         @Override
@@ -67,16 +69,13 @@ public abstract class AbstractChildComponent<T extends AbstractChildView<?>> ext
         return this.parent.get();
     }
 
-    /**
-     * Sets the parent component for this component.
-     * <p>
-     * This method is normally called automatically when the component is added as a child to another component.
-     * It can also be used explicitly when only the child-to-parent relationship needs to be established, without
-     * adding the component to the parent's list of children.
-     *
-     * @param parent the parent component to set
-     */
-    protected void setParent(ParentComponent<?> parent) {
+    @Override
+    public <T extends ParentComponent<?>> T getParent(Class<T> parentClass) {
+        return (T) getParent();
+    }
+
+    @Override
+    public void setParent(ParentComponent<?> parent) {
         this.parent.set(parent);
     }
 

@@ -16,10 +16,9 @@
 
 package com.techsenger.mvvm4fx.core;
 
-import com.techsenger.toolkit.fx.collections.ListSynchronizer;
+import com.techsenger.toolkit.fx.binding.ListBinder;
 import java.util.List;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 /**
@@ -31,7 +30,7 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?>> e
 
     protected abstract class Mediator extends AbstractComponent.Mediator implements ParentMediator {
 
-        private final ListSynchronizer childrenSynchronizer;
+        private final ListBinder childrenBinder;
 
         private final ObservableList<ChildViewModel> modifiableChildren = FXCollections.observableArrayList();
 
@@ -40,8 +39,8 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?>> e
 
         public Mediator() {
             var outerChildren = AbstractParentComponent.this.modifiableChildren;
-            childrenSynchronizer = new ListSynchronizer<ChildComponent<?>, ChildViewModel>(outerChildren,
-                    modifiableChildren, (v) -> v.getView().getViewModel());
+            childrenBinder = ListBinder.bindContent(modifiableChildren, outerChildren,
+                    (v) -> v.getView().getViewModel());
         }
 
         @Override
@@ -57,18 +56,6 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?>> e
 
     public AbstractParentComponent(T view) {
         super(view);
-        modifiableChildren.addListener((ListChangeListener<ChildComponent<?>>) (change) -> {
-            while (change.next()) {
-                if (change.wasAdded()) {
-                    change.getAddedSubList().stream().map(e -> (AbstractChildComponent<?>) e)
-                            .forEach(e -> e.setParent(this));
-                }
-                if (change.wasRemoved()) {
-                    change.getRemoved().stream().map(e -> (AbstractChildComponent<?>) e)
-                            .forEach(e -> e.setParent(null));
-                }
-            }
-        });
     }
 
     @Override
@@ -101,7 +88,13 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?>> e
     @Override
     protected abstract AbstractParentComponent.Mediator createMediator();
 
-    protected ObservableList<ChildComponent<?>> getModifiableChildren() {
-        return modifiableChildren;
+    protected void addChild(ChildComponent<?> child) {
+        this.modifiableChildren.add(child);
+        child.setParent(this);
+    }
+
+    protected void removeChild(ChildComponent<?> child) {
+        this.modifiableChildren.remove(child);
+        child.setParent(null);
     }
 }
