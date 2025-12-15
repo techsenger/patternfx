@@ -46,7 +46,7 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
     }
 
     /**
-     * Performs initialization.
+     * Initializes view.
      */
     protected void initialize() {
         build();
@@ -56,7 +56,7 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
     }
 
     /**
-     * Performs deinitialization.
+     * Deinitializes view.
      */
     protected void deinitialize() {
         removeHandlers();

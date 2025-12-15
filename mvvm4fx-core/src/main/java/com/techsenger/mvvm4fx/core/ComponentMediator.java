@@ -22,4 +22,5 @@ package com.techsenger.mvvm4fx.core;
  */
 public interface ComponentMediator extends ComponentDescriptor {
 
+    void deinitialize();
 }

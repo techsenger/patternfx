@@ -108,6 +108,11 @@ public abstract class AbstractComponent<T extends AbstractComponentView<?>> impl
         public ObjectProperty<ComponentGroup> groupProperty() {
             return group;
         }
+
+        @Override
+        public void deinitialize() {
+            AbstractComponent.this.deinitialize();
+        }
     }
 
     private final T view;
