@@ -22,4 +22,6 @@ package com.techsenger.mvvm4fx.core;
  */
 public interface ChildViewModel extends ParentViewModel {
 
+    @Override
+    ChildMediator getMediator();
 }

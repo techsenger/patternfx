@@ -222,7 +222,7 @@ public class FooComponent extends AbstractChildComponent<FooView> {
     ...
 
     @Override
-    protected FooMediator createMediator() {
+    public FooMediator createMediator() {
         return new FooComponent.Mediator(); // the mediator is created at the beginning of initialization
     }
 }
