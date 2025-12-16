@@ -30,4 +30,18 @@ public interface ParentMediator extends ComponentMediator {
      * @return a non-null, unmodifiable observable list of child ViewModels
      */
     ObservableList<ChildViewModel> getChildren();
+
+    /**
+     * Returns an iterator that traverses the component subtree starting from this component in depth-first order.
+     *
+     * @return an {@link Iterator} that iterates over this component and all of its descendants
+     */
+    SubtreeIterator<ParentViewModel> depthFirstIterator();
+
+    /**
+     * Returns an iterator that traverses the component subtree starting from this component in breadth-first order.
+     *
+     * @return an {@link Iterator} that iterates over this component and all of its descendants
+     */
+    SubtreeIterator<ParentViewModel> breadthFirstIterator();
 }

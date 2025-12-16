@@ -44,6 +44,28 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?>> e
         }
 
         @Override
+        public SubtreeIterator<ParentViewModel> depthFirstIterator() {
+            return new AbstractDepthFirstIterator<ParentViewModel>(getView().getViewModel()) {
+
+                @Override
+                List<ParentViewModel> getChildren(ParentViewModel parent) {
+                    return (List) children;
+                }
+            };
+        }
+
+        @Override
+        public SubtreeIterator<ParentViewModel> breadthFirstIterator() {
+            return new AbstractBreadthFirstIterator<ParentViewModel>(getView().getViewModel()) {
+
+                @Override
+                List<ParentViewModel> getChildren(ParentViewModel parent) {
+                    return (List) children;
+                }
+            };
+        }
+
+        @Override
         public ObservableList<ChildViewModel> getChildren() {
             return children;
         }
