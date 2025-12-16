@@ -108,7 +108,7 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?>> e
     }
 
     @Override
-    protected abstract AbstractParentComponent.Mediator createMediator();
+    protected abstract Mediator createMediator();
 
     protected void addChild(ChildComponent<?> child) {
         this.modifiableChildren.add(child);

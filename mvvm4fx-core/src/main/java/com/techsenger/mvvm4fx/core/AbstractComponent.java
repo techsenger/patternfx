@@ -290,5 +290,5 @@ public abstract class AbstractComponent<T extends AbstractComponentView<?>> impl
         this.historyProvider = historyProvider;
     }
 
-    protected abstract AbstractComponent.Mediator createMediator();
+    protected abstract Mediator createMediator();
 }
