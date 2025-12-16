@@ -41,7 +41,7 @@ public interface ComponentDescriptor {
     UUID getUuid();
 
     /**
-     * Returns a human-readable identifier that combines the component type and its UUID. For example:
+     * Returns a human-readable identifier that combines the component name and its UUID. For example:
      * {@code TextEditorTab#A0A0A0A0}.
      *
      * @return the full name of this component instance
