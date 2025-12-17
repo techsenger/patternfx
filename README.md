@@ -1,8 +1,10 @@
 # Techsenger MVVM4FX
 
-Techsenger MVVM4FX is a tiny framework for developing JavaFX applications using the MVVM pattern. It provides all
-the necessary interfaces and base class implementations for creating components, which serve as the units of the MVVM
-pattern. Examples of components include tabs, dialog windows, toolbars, image viewers, help pages, and more.
+Techsenger MVVM4FX is a compact, practical framework for building JavaFX applications with the MVVM pattern.
+It provides practical solutions to the most challenging problems of MVVM, including dynamic component composition,
+lifecycle management, and component state ownership. The framework supplies all necessary interfaces and base class
+implementations for creating components, which serve as the fundamental units of the MVVM pattern. Examples of
+components include tabs, dialog windows, toolbars, image viewers, help pages, and more.
 
 As a real example of using this framework, see [TabShell](https://github.com/techsenger/tabshell) project.
 
@@ -29,15 +31,20 @@ As a real example of using this framework, see [TabShell](https://github.com/tec
 
 ## Overview <a name="overview"></a>
 
-MVVM4FX reimagines the `Model`–`View`–`ViewModel` pattern for JavaFX as a component-based, extensible platform designed
-around clarity, modularity, and the KISS principle. Each `Component` exists as a self-contained unit composed of a
-`View`, `ViewModel`, `Mediator` optionally extended with `History`.
+MVVM4FX reimagines the Model–View–ViewModel pattern as a component-based framework designed around clarity, modularity,
+and the KISS principle for building complex, dynamic JavaFX applications. It addresses the most fundamental limitation
+of classical MVVM — dynamic component composition and lifecycle management — by introducing an explicit, imperative
+component layer responsible for the creation, ownership, and lifetime of components. Each `Component` exists as a
+self-contained architectural unit composed of a `ComponentView`, `ComponentViewModel`, and `ComponentMediator`,
+optionally augmented with `ComponentHistory`.
 
-The framework enforces a strict separation between presentation, logic, and identity. The `View` defines the visual
-structure and behavior; the `ViewModel` encapsulates logic and state; the `Component` is responsible for initialization
-and deinitialization, managing child components, and their composition, operating at the component level. The
-`ComponentMediator` is the interface through which the `ViewModel` interacts with the `Component`, and the `History`
-preserves continuity across sessions.
+The framework enforces a strict separation of responsibilities:
+- `Component` defines the identity and manages lifecycle, initialization/deinitialization, and composition of child
+components;
+- `ComponentView` defines the visual structure and behavior;
+- `ComponentViewModel` encapsulates logic and state;
+- `ComponentMediator` provides a controlled interaction channel between the `ComponentViewModel` and the `Component`;
+- `ComponentHistory` preserves continuity across sessions.
 
 At its core, MVVM4FX follows the KISS principle – every class, method, and abstraction exists only for a clear reason,
 avoiding unnecessary complexity or dependencies. This simplicity is deliberate: it keeps the architecture transparent,
@@ -135,6 +142,14 @@ The `ComponentView` and `ComponentViewModel` classes correspond to the `View` an
 are relatively straightforward. The `Component` and `ComponentMediator` classes, on the other hand, address the
 aspects that MVVM does not cover and are therefore more complex, which is why they are explained in detail below.
 
+The `Component` forms a very thin, structural layer of a higher order than the `View`, which allows it to add child
+components to its `View`. A `Component` always operates strictly at the component level and deliberately does not take
+initiative. Its sole responsibility is to perform operations requested by its clients—either directly or via the
+`Mediator`. For example, it can create a child component and place it in its `View`, but only when the `ViewModel`
+commands it to do so through the `Mediator`. Since the `Component` has the greatest capabilities, it is important to
+remember that its responsibilities are very limited, to prevent the `Component` from turning into a God object and
+violating MVVM responsibility principles.
+
 The `Component` is responsible for:
 
 1. Initializing and deinitializing the component.
@@ -145,16 +160,10 @@ The `Component` is responsible for:
    - Lifecycle data (component state);
    - Metadata (component ID, type, version, etc.).
 3. Creating, initializing, adding to the component tree, removing from the component tree, and deinitializing
-   child components (those that reside directly inside this component).
+   child components (those that reside directly inside this component). It can also add or remove child components in
+   its `View`.
 4. Creating, initializing, and passing derived components to other components for further management
    (e.g., dialogs, tabs, system notifications).
-
-Thus, a `Component` always operates strictly at the component level and is intentionally non-initiative. A `Component`
-does not make decisions and does not trigger application behavior. Its sole responsibility is to execute operations
-requested by its client or by the `View` or `ViewModel` through the `Mediator`. In other words the `Component` and
-`Mediator` form a very thin layer that performs what the `ViewModel` cannot do and what is not the responsibility of
-the `View`. It is important to keep this in mind to prevent the `Component` from turning into a God object and
-violating MVVM responsibility principles.
 
 The `ComponentMediator` is the interface that the `ViewModel` uses to interact with the `Component`. This interface
 is needed for two reasons: first, it allows the `ViewModel` to be tested independently; second, it allows the
