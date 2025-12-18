@@ -20,8 +20,6 @@ package com.techsenger.mvvm4fx.core;
  *
  * @author Pavel Castornii
  */
-public interface ParentView<T extends ParentViewModel> extends ComponentView<T> {
+public interface ParentView<T extends ParentViewModel<?>, S extends Component<?>> extends ComponentView<T, S> {
 
-    @Override
-    ParentComponent<?> getComponent();
 }

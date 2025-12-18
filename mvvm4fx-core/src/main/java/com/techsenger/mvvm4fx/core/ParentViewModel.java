@@ -20,8 +20,6 @@ package com.techsenger.mvvm4fx.core;
  *
  * @author Pavel Castornii
  */
-public interface ParentViewModel extends ComponentViewModel {
+public interface ParentViewModel<T extends ParentMediator> extends ComponentViewModel<T> {
 
-    @Override
-    ParentMediator getMediator();
 }

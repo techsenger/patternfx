@@ -23,7 +23,7 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractChildComponent<T extends AbstractChildView<?>> extends AbstractParentComponent<T>
+public abstract class AbstractChildComponent<T extends AbstractChildView<?, ?>> extends AbstractParentComponent<T>
         implements ChildComponent<T> {
 
     protected abstract class Mediator extends AbstractParentComponent.Mediator implements ChildMediator {

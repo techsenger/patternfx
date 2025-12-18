@@ -16,20 +16,16 @@
 
 package com.techsenger.mvvm4fx.core;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractComponentView<T extends AbstractComponentViewModel> implements ComponentView<T> {
-
-    private static final Logger logger = LoggerFactory.getLogger(AbstractComponentView.class);
+public abstract class AbstractComponentView<T extends AbstractComponentViewModel<?>, S extends AbstractComponent<?>>
+        implements ComponentView<T, S> {
 
     private final T viewModel;
 
-    private AbstractComponent<?> component;
+    private S component;
 
     public AbstractComponentView(T viewModel) {
         this.viewModel = viewModel;
@@ -41,7 +37,7 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
     }
 
     @Override
-    public AbstractComponent<?> getComponent() {
+    public S getComponent() {
         return component;
     }
 
@@ -113,6 +109,6 @@ public abstract class AbstractComponentView<T extends AbstractComponentViewModel
     protected void unbuild() { }
 
     void setComponent(AbstractComponent<?> component) {
-        this.component = component;
+        this.component = (S) component;
     }
 }

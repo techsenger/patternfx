@@ -17,6 +17,7 @@
 package com.techsenger.mvvm4fx.demo;
 
 import com.techsenger.mvvm4fx.core.AbstractParentViewModel;
+import com.techsenger.mvvm4fx.core.ParentMediator;
 import com.techsenger.mvvm4fx.demo.model.Person;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -27,7 +28,7 @@ import javafx.beans.property.StringProperty;
  *
  * @author Pavel Castornii
  */
-public class PersonDialogViewModel extends AbstractParentViewModel {
+public class PersonDialogViewModel extends AbstractParentViewModel<ParentMediator> {
 
     private final StringProperty title = new SimpleStringProperty("New Person");
 

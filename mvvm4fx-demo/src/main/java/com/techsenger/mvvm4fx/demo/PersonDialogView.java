@@ -38,7 +38,7 @@ import javafx.util.converter.IntegerStringConverter;
  *
  * @author Pavel Castornii
  */
-public class PersonDialogView extends AbstractParentView<PersonDialogViewModel> {
+public class PersonDialogView extends AbstractParentView<PersonDialogViewModel, PersonDialogComponent> {
 
     private final Stage stage;
 

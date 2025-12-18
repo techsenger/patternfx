@@ -320,18 +320,16 @@ public interface FooMediator extends ChildMediator {
 `ComponentViewModel` class:
 
 ```java
-public class FooViewModel extends AbstractChildViewModel {
+public class FooViewModel extends AbstractChildViewModel<FooMediator> {
 
-    public void addBar() {
+    public FooViewModel() {
+        ...
+    }
+
+    public void doSomething() {
         var bar = new BarViewModel();
         ... // set up the bar
         getMediator().addBar(bar);
-    }
-
-
-    @Override
-    public FooMediator getMediator() {
-        return (FooMediator) super.getMediator();
     }
 
     ...
@@ -341,18 +339,16 @@ public class FooViewModel extends AbstractChildViewModel {
 `ComponentView` class:
 
 ```java
-public class FooView extends AbstractChildView<FooViewModel> {
+public class FooView extends AbstractChildView<FooViewModel, FooComponent> {
 
     public FooView(FooViewModel viewModel) {
         ...
     }
 
-    ...
-
-    @Override
-    public FooComponent getComponent() {
-        return (FooComponent) super.getComponent();
+    protected void initialize() {
+        logger.debug("{} View is initializing", getComponent().getLogPrefix());
     }
+    ...
 }
 ```
 
@@ -380,7 +376,7 @@ public class FooComponent extends AbstractChildComponent<FooView> {
     ...
 
     @Override
-    public FooMediator createMediator() {
+    protected FooMediator createMediator() {
         return new FooComponent.Mediator(); // the mediator is created at the beginning of initialization
     }
 }

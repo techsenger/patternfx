@@ -27,13 +27,13 @@ import org.slf4j.LoggerFactory;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractComponentViewModel implements ComponentViewModel {
+public abstract class AbstractComponentViewModel<T extends ComponentMediator> implements ComponentViewModel<T> {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractComponentViewModel.class);
 
-    private ComponentMediator mediator;
+    private T mediator;
 
-    public ComponentMediator getMediator() {
+    public T getMediator() {
         return this.mediator;
     }
 
@@ -108,6 +108,6 @@ public abstract class AbstractComponentViewModel implements ComponentViewModel {
     protected void deinitialize() { }
 
     protected void setMediator(ComponentMediator mediator) {
-        this.mediator = mediator;
+        this.mediator = (T) mediator;
     }
 }

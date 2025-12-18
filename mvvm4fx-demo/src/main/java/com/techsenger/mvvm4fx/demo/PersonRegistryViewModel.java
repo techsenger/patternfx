@@ -17,6 +17,7 @@
 package com.techsenger.mvvm4fx.demo;
 
 import com.techsenger.mvvm4fx.core.AbstractParentViewModel;
+import com.techsenger.mvvm4fx.core.ParentMediator;
 import com.techsenger.mvvm4fx.demo.model.Person;
 import com.techsenger.mvvm4fx.demo.model.PersonService;
 import java.util.Optional;
@@ -36,7 +37,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Pavel Castornii
  */
-public class PersonRegistryViewModel extends AbstractParentViewModel {
+public class PersonRegistryViewModel extends AbstractParentViewModel<ParentMediator> {
 
     private static final Logger logger = LoggerFactory.getLogger(PersonRegistryViewModel.class);
 

@@ -21,7 +21,7 @@ package com.techsenger.mvvm4fx.core;
  *
  * @author Pavel Castornii
  */
-public interface ChildView<T extends ChildViewModel> extends ParentView<T> {
+public interface ChildView<T extends ChildViewModel<?>, S extends ChildComponent<?>> extends ParentView<T, S> {
 
     /**
      * Requests focus. Child component implements this method via selecting FX node that will request focus.
@@ -34,7 +34,4 @@ public interface ChildView<T extends ChildViewModel> extends ParentView<T> {
      * @return
      */
     Object getNode();
-
-    @Override
-    ChildComponent<?> getComponent();
 }

@@ -20,7 +20,7 @@ package com.techsenger.mvvm4fx.core;
  *
  * @author Pavel Castornii
  */
-public interface Component<T extends ComponentView<?>> extends ComponentDescriptor {
+public interface Component<T extends ComponentView<?, ?>> extends ComponentDescriptor {
 
     /**
      * Returns the view of the component.

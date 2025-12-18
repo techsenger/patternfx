@@ -20,14 +20,10 @@ package com.techsenger.mvvm4fx.core;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractChildViewModel extends AbstractParentViewModel implements ChildViewModel {
+public abstract class AbstractChildViewModel<M extends ChildMediator> extends AbstractParentViewModel<M>
+        implements ChildViewModel<M> {
 
     public AbstractChildViewModel() {
         super();
-    }
-
-    @Override
-    public ChildMediator getMediator() {
-        return (ChildMediator) super.getMediator();
     }
 }

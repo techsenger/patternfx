@@ -22,7 +22,7 @@ import javafx.beans.property.ReadOnlyObjectProperty;
  *
  * @author Pavel Castornii
  */
-public interface ChildComponent<T extends ChildView<?>> extends ParentComponent<T> {
+public interface ChildComponent<T extends ChildView<?, ?>> extends ParentComponent<T> {
 
     /**
      * Returns the property representing the parent component of this component. The property holds a reference to the

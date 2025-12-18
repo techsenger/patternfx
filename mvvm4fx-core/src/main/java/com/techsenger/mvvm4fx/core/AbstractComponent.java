@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractComponent<T extends AbstractComponentView<?>> implements Component<T> {
+public abstract class AbstractComponent<T extends AbstractComponentView<?, ?>> implements Component<T> {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractComponent.class);
 

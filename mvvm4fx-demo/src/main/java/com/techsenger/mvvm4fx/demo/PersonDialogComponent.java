@@ -23,26 +23,19 @@ import com.techsenger.mvvm4fx.core.ComponentName;
  *
  * @author Pavel Castornii
  */
-public class PersonRegistry extends AbstractParentComponent<PersonRegistryView> {
+public class PersonDialogComponent extends AbstractParentComponent<PersonDialogView> {
 
-    public PersonRegistry(PersonRegistryView view) {
+    public PersonDialogComponent(PersonDialogView view) {
         super(view);
     }
 
     @Override
-    protected void postInitialize() {
-        super.postInitialize();
-        getView().showStage();
-        getView().getViewModel().refresh();
+    public ComponentName getName() {
+        return DemoComponentNames.PERSON_DIALOG;
     }
 
     @Override
     protected Mediator createMediator() {
         return new AbstractParentComponent.Mediator() { };
-    }
-
-    @Override
-    public ComponentName getName() {
-        return DemoComponentNames.PERSON_REGISTRY;
     }
 }

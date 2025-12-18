@@ -31,10 +31,10 @@ public class Demo extends Application {
         var service = new PersonService();
         var viewModel = new PersonRegistryViewModel(service);
         var view = new PersonRegistryView(stage, viewModel);
-        var component = new PersonRegistry(view);
+        var component = new PersonRegistryComponent(view);
         component.initialize();
-        //just to show that every component must be deinitialized,
-        //it has no effect on the demo application
+        // just to show that every component must be deinitialized,
+        // it has no effect on the demo application
         stage.setOnCloseRequest(e -> component.deinitialize());
     }
 

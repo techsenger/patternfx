@@ -20,15 +20,10 @@ package com.techsenger.mvvm4fx.core;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractChildView<T extends AbstractChildViewModel> extends AbstractParentView<T>
-        implements ChildView<T> {
+public abstract class AbstractChildView<T extends AbstractChildViewModel<?>, S extends AbstractChildComponent<?>>
+        extends AbstractParentView<T, S> implements ChildView<T, S> {
 
     public AbstractChildView(T viewModel) {
         super(viewModel);
-    }
-
-    @Override
-    public AbstractChildComponent<?> getComponent() {
-        return (AbstractChildComponent<?>) super.getComponent();
     }
 }

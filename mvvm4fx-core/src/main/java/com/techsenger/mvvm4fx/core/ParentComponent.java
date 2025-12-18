@@ -22,7 +22,7 @@ import javafx.collections.ObservableList;
  *
  * @author Pavel Castornii
  */
-public interface ParentComponent<T extends ParentView<?>> extends Component<T> {
+public interface ParentComponent<T extends ParentView<?, ?>> extends Component<T> {
 
     /**
      * Returns an unmodifiable list of child components.

@@ -25,7 +25,7 @@ import javafx.collections.ObservableList;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractParentComponent<T extends AbstractParentView<?>> extends AbstractComponent<T>
+public abstract class AbstractParentComponent<T extends AbstractParentView<?, ?>> extends AbstractComponent<T>
         implements ParentComponent<T> {
 
     protected abstract class Mediator extends AbstractComponent.Mediator implements ParentMediator {

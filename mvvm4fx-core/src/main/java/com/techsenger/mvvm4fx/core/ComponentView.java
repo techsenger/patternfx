@@ -20,7 +20,7 @@ package com.techsenger.mvvm4fx.core;
  *
  * @author Pavel Castornii
  */
-public interface ComponentView<T extends ComponentViewModel> {
+public interface ComponentView<T extends ComponentViewModel<?>, S extends Component<?>> {
 
     /**
      * Returns the view model.
@@ -34,5 +34,5 @@ public interface ComponentView<T extends ComponentViewModel> {
      *
      * @return
      */
-    Component<?> getComponent();
+    S getComponent();
 }

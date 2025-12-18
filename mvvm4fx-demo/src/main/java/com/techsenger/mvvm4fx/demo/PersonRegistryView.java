@@ -32,7 +32,7 @@ import javafx.stage.Stage;
  *
  * @author Pavel Castornii
  */
-public class PersonRegistryView extends AbstractParentView<PersonRegistryViewModel> {
+public class PersonRegistryView extends AbstractParentView<PersonRegistryViewModel, PersonRegistryComponent> {
 
     private final Button addButton = new Button("Add");
 
@@ -93,7 +93,7 @@ public class PersonRegistryView extends AbstractParentView<PersonRegistryViewMod
         addButton.setOnAction(e -> {
             var dialogVM = vm.createDialog();
             var dialogV = new PersonDialogView(stage, dialogVM);
-            var dialogComponent = new PersonDialog(dialogV);
+            var dialogComponent = new PersonDialogComponent(dialogV);
             dialogComponent.initialize();
 
             var jfxDialog = dialogV.getDialog();
