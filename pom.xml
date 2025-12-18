@@ -7,12 +7,12 @@
         <version>1.6.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.techsenger.mvvm4fx</groupId>
-    <artifactId>mvvm4fx</artifactId>
+    <groupId>com.techsenger.patternfx</groupId>
+    <artifactId>patternfx</artifactId>
     <version>2.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>MVVM4FX</name>
-    <description>A lightweight MVVM framework for JavaFX applications</description>
+    <name>PatternFX</name>
+    <description>Techsenger PatternFX is a compact, practical, component-oriented framework for building JavaFX applications using an extended MVVM pattern</description>
 
     <licenses>
         <license>
@@ -21,17 +21,17 @@
         </license>
     </licenses>
 
-    <url>https://github.com/techsenger/mvvm4fx</url>
+    <url>https://github.com/techsenger/patternfx</url>
 
     <scm>
-        <connection>scm:git:https://github.com/techsenger/mvvm4fx.git</connection>
-        <developerConnection>scm:git:https://github.com/techsenger/mvvm4fx.git</developerConnection>
-        <url>https://github.com/techsenger/mvvm4fx</url>
+        <connection>scm:git:https://github.com/techsenger/patternfx.git</connection>
+        <developerConnection>scm:git:https://github.com/techsenger/patternfx.git</developerConnection>
+        <url>https://github.com/techsenger/patternfx</url>
     </scm>
 
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/techsenger/mvvm4fx/issues</url>
+        <url>https://github.com/techsenger/patternfx/issues</url>
     </issueManagement>
 
     <developers>
@@ -42,7 +42,7 @@
     </developers>
 
     <properties>
-        <publishing.plugin.exclusions>mvvm4fx-demo</publishing.plugin.exclusions>
+        <publishing.plugin.exclusions>patternfx-demo</publishing.plugin.exclusions>
     </properties>
 
     <repositories>
@@ -69,16 +69,16 @@
             </dependency>
 
             <dependency>
-                <groupId>com.techsenger.mvvm4fx</groupId>
-                <artifactId>mvvm4fx-core</artifactId>
+                <groupId>com.techsenger.patternfx</groupId>
+                <artifactId>patternfx-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
     <modules>
-        <module>mvvm4fx-core</module>
-        <module>mvvm4fx-demo</module>
+        <module>patternfx-core</module>
+        <module>patternfx-demo</module>
     </modules>
 </project>
 

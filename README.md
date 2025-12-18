@@ -1,10 +1,11 @@
-# Techsenger MVVM4FX
+# Techsenger PatternFX
 
-Techsenger MVVM4FX is a compact, practical framework for building JavaFX applications with the MVVM pattern.
-It provides practical solutions to the most challenging problems of MVVM, including dynamic component composition,
-lifecycle management, and component state ownership. The framework supplies all necessary interfaces and base class
-implementations for creating components, which serve as the fundamental units of the MVVM pattern. Examples of
-components include tabs, dialog windows, toolbars, image viewers, help pages, and more.
+Techsenger PatternFX is a compact, practical, component-oriented framework for building JavaFX applications using an
+extended MVVM pattern. It provides a complete architectural solution that addresses the limitations of classical
+MVVM while preserving its core strengths. With PatternFX, you can easily solve the most challenging MVVM problems,
+including dynamic component composition, lifecycle management, and component state ownership. The framework supplies
+all the necessary interfaces and base class implementations for creating components. Examples of such components
+include tabs, dialog windows, toolbars, image viewers, help pages, and more.
 
 As a real example of using this framework, see [TabShell](https://github.com/techsenger/tabshell) project.
 
@@ -33,7 +34,7 @@ As a real example of using this framework, see [TabShell](https://github.com/tec
 
 ## Overview <a name="overview"></a>
 
-MVVM4FX reimagines the Model–View–ViewModel pattern as a component-based framework designed around clarity, modularity,
+PatternFX reimagines the Model–View–ViewModel pattern as a component-based framework designed around clarity, modularity,
 and the KISS principle for building complex, dynamic JavaFX applications. It addresses the most fundamental limitation
 of classical MVVM — dynamic component composition and lifecycle management — by introducing an explicit, imperative
 component layer responsible for the creation, ownership, and lifetime of components. Each `Component` exists as a
@@ -48,11 +49,11 @@ components;
 - `ComponentMediator` provides a controlled interaction channel between the `ComponentViewModel` and the `Component`;
 - `ComponentHistory` preserves continuity across sessions.
 
-At its core, MVVM4FX follows the KISS principle – every class, method, and abstraction exists only for a clear reason,
+At its core, PatternFX follows the KISS principle – every class, method, and abstraction exists only for a clear reason,
 avoiding unnecessary complexity or dependencies. This simplicity is deliberate: it keeps the architecture transparent,
 predictable, and easy to extend.
 
-By combining conceptual clarity with structural discipline, MVVM4FX achieves both architectural purity and practical
+By combining conceptual clarity with structural discipline, PatternFX achieves both architectural purity and practical
 flexibility — a balance where components remain independent yet fully interoperable. It is not a minimalistic
 abstraction but a complete design system for building coherent, maintainable, and intelligent JavaFX applications.
 
@@ -251,7 +252,7 @@ A component has five distinct states (see `ComponentState`):
 
 ### Component Tree <a name="component-tree"></a>
 
-Components in MVVM4FX form a hierarchical structure, called the component tree that can change dynamically. This tree
+Components in PatternFX form a hierarchical structure, called the component tree that can change dynamically. This tree
 represents the logical composition of the application and is independent of the JavaFX node tree, which is
 responsible only for rendering.
 
@@ -283,7 +284,7 @@ clarity, testability, and long-term maintainability.
 There are two main approaches to managing UI components: declarative and imperative. Each has its own strengths and
 weaknesses.
 
-MVVM4FX adopts the imperative approach. In this approach, components are explicitly created, initialized, added to
+PatternFX adopts the imperative approach. In this approach, components are explicitly created, initialized, added to
 the component tree, and deinitialized by the developer. This choice leads to the following characteristics:
 
 Strengths:
@@ -300,7 +301,7 @@ tabs, dialogs, or search panels).
 - Higher initial learning curve for developers new to the framework.
 - Careful design discipline needed to prevent overly complex or "God" components.
 
-This approach ensures that MVVM4FX components behave predictably, remain testable, and can support complex,
+This approach ensures that PatternFX components behave predictably, remain testable, and can support complex,
 long-living, dynamic UI applications.
 
 ### Component Code Example<a name="component-code"></a>
@@ -416,13 +417,13 @@ Java 11+ and JavaFX 19.
 
 ## Dependencies <a name="dependencies"></a>
 
-This project is available on Maven Central:
+This project will be available on Maven Central in a few weeks:
 
 ```
 <dependency>
-    <groupId>com.techsenger.mvvm4fx</groupId>
-    <artifactId>mvvm4fx-core</artifactId>
-    <version>${mvvm4fx.version}</version>
+    <groupId>com.techsenger.patternfx</groupId>
+    <artifactId>patternfx-core</artifactId>
+    <version>${patternfx.version}</version>
 </dependency>
 ```
 
@@ -430,22 +431,22 @@ This project is available on Maven Central:
 
 To build the library use standard Git and Maven commands:
 
-    git clone https://github.com/techsenger/mvvm4fx
-    cd mvvm4fx
+    git clone https://github.com/techsenger/patternfx
+    cd patternfx
     mvn clean install
 
 ## Running Demo <a name="demo"></a>
 
 To run the demo execute the following commands in the root of the project:
 
-    cd mvvm4fx-demo
+    cd patternfx-demo
     mvn javafx:run
 
-Please note, that debugger settings are in `mvvm4fx-demo/pom.xml` file.
+Please note, that debugger settings are in `patternfx-demo/pom.xml` file.
 
 ## License <a name="license"></a>
 
-Techsenger MVVM4FX is licensed under the Apache License, Version 2.0.
+Techsenger PatternFX is licensed under the Apache License, Version 2.0.
 
 ## Contributing <a name="contributing"></a>
 
