@@ -17,6 +17,7 @@
 package com.techsenger.mvvm4fx.demo;
 
 import com.techsenger.mvvm4fx.core.AbstractParentViewModel;
+import com.techsenger.mvvm4fx.core.ComponentState;
 import com.techsenger.mvvm4fx.core.ParentMediator;
 import com.techsenger.mvvm4fx.demo.model.Person;
 import com.techsenger.mvvm4fx.demo.model.PersonService;
@@ -63,6 +64,11 @@ public class PersonRegistryViewModel extends AbstractParentViewModel<ParentMedia
             removeDisabled.set(newV == null);
             // log message example with component meta
             logger.debug("{} Selected person property changed", getMediator().getLogPrefix());
+        });
+        getMediator().stateProperty().addListener((ov, oldV, newV) -> {
+            if (newV == ComponentState.INITIALIZED) {
+                refresh();
+            }
         });
     }
 

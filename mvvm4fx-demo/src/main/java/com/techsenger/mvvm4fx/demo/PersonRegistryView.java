@@ -56,6 +56,12 @@ public class PersonRegistryView extends AbstractParentView<PersonRegistryViewMod
     }
 
     @Override
+    protected void initialize() {
+        super.initialize();
+        stage.show();
+    }
+
+    @Override
     protected void build() {
         super.build();
         VBox.setVgrow(personTable, Priority.ALWAYS);
@@ -105,9 +111,5 @@ public class PersonRegistryView extends AbstractParentView<PersonRegistryViewMod
         });
         removeButton.setOnAction(e -> vm.remove());
         refreshButton.setOnAction(e -> vm.refresh());
-    }
-
-    void showStage() {
-        stage.show();
     }
 }

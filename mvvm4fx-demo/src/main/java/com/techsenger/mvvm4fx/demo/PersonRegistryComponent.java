@@ -35,13 +35,6 @@ public class PersonRegistryComponent extends AbstractParentComponent<PersonRegis
     }
 
     @Override
-    protected void postInitialize() {
-        super.postInitialize();
-        getView().showStage();
-        getView().getViewModel().refresh();
-    }
-
-    @Override
     protected Mediator createMediator() {
         return new AbstractParentComponent.Mediator() { };
     }
