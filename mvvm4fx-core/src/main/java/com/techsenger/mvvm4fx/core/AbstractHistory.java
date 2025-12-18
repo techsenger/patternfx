@@ -20,7 +20,7 @@ package com.techsenger.mvvm4fx.core;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractHistory<T extends AbstractComponentViewModel> implements ComponentHistory<T> {
+public abstract class AbstractHistory<T extends AbstractComponentViewModel<?>> implements ComponentHistory<T> {
 
     private boolean fresh = true;
 

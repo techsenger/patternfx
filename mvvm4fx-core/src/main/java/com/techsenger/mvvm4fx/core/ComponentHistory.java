@@ -40,7 +40,7 @@ import java.io.Serializable;
  *
  * @author Pavel Castornii
  */
-public interface ComponentHistory<T extends ComponentViewModel> extends Serializable {
+public interface ComponentHistory<T extends ComponentViewModel<?>> extends Serializable {
 
     /**
      * Returns whether this history instance is fresh, meaning it was newly created and has not yet been used to
