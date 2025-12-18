@@ -324,6 +324,7 @@ public class FooViewModel extends AbstractChildViewModel {
 
     public void addBar() {
         var bar = new BarViewModel();
+        ... // set up the bar
         getMediator().addBar(bar);
     }
 
