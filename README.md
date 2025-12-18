@@ -19,6 +19,8 @@ As a real example of using this framework, see [TabShell](https://github.com/tec
     * [Component Structure](#component-structure)
     * [Component Lifecycle](#component-lifecycle)
     * [Component Tree](#component-tree)
+    * [Imperative Component Management](#component-imperative)
+    * [Component Code Example](#component-code)
     * [When to Create a Component?](#when-to-create-component)
     * [When not to Create a Component?](#when-not-to-create-component)
 * [Requirements](#requirements)
@@ -187,67 +189,6 @@ since names like `FooViewComponent` and `FooViewModelComponent` are hardly conve
 must be created: `ChildView` extends `ParentView`, `ChildViewModel` extends `ParentViewModel`, `ChildComponent` extends
 `ParentComponent` etc.
 
-Let’s look at some code demonstrating the use of these classes.
-
-```java
-
-public interface FooMediator extends ChildMediator {
-
-    ...
-}
-
-public class FooViewModel extends AbstractChildViewModel {
-
-    ...
-
-    @Override
-    public FooMediator getMediator() {
-        return (FooMediator) super.getMediator();
-    }
-}
-
-public class FooView extends AbstractChildView<FooViewModel> {
-
-    public FooView(FooViewModel viewModel) {
-        ...
-    }
-
-    ...
-
-    @Override
-    public FooComponent getComponent() {
-        return (FooComponent) super.getComponent();
-    }
-}
-
-public class FooComponent extends AbstractChildComponent<FooView> {
-
-    protected class Mediator extends AbstractChildComponent.Mediator implements FooMediator {...}
-
-    public FooComponent(FooView view) {
-        ...
-    }
-
-    ...
-
-    @Override
-    public FooMediator createMediator() {
-        return new FooComponent.Mediator(); // the mediator is created at the beginning of initialization
-    }
-}
-
-```
-This code demonstrates how to create a component instance.
-
-```java
-var viewModel = new FooViewModel();
-var view = new FooView(viewModel);
-var component = new FooComponent(view);
-component.initialize();
-...
-component.deinitialize();
-```
-
 Advantages of this approach:
 
 * Strict Separation. Using a `Component` together with a `Mediator` enforces a clear separation of layers according to
@@ -337,6 +278,124 @@ Keeping the component layer thin prevents it from becoming a God object and ensu
 properly distributed between the View and the ViewModel. This constraint is essential for preserving architectural
 clarity, testability, and long-term maintainability.
 
+### Imperative Component Management<a name="component-imperative"></a>
+
+There are two main approaches to managing UI components: declarative and imperative. Each has its own strengths and
+weaknesses.
+
+MVVM4FX adopts the imperative approach. In this approach, components are explicitly created, initialized, added to
+the component tree, and deinitialized by the developer. This choice leads to the following characteristics:
+
+Strengths:
+- Clear ownership and responsibility boundaries for components.
+- Predictable and transparent initialization and deinitialization order.
+- Full control over component lifecycle and composition.
+- Natural support for dynamic UI scenarios (e.g., tabs, dialogs, docking layouts).
+- Reliable state persistence and restoration via component history.
+- Strict separation of concerns between `Component`, `ComponentView`, and `ComponentViewModel`.
+
+Weaknesses:
+- Requires boilerplate code (though it is limited because components are typically large blocks such as editors,
+tabs, dialogs, or search panels).
+- Higher initial learning curve for developers new to the framework.
+- Careful design discipline needed to prevent overly complex or "God" components.
+
+This approach ensures that MVVM4FX components behave predictably, remain testable, and can support complex,
+long-living, dynamic UI applications.
+
+### Component Code Example<a name="component-code"></a>
+
+This example demonstrates the creation of a Foo component that dynamically adds a child Bar component.
+
+`ComponentMediator` interface:
+
+```java
+
+public interface FooMediator extends ChildMediator {
+
+    void addBar(BarViewModel bar);
+}
+```
+
+`ComponentViewModel` class:
+
+```java
+public class FooViewModel extends AbstractChildViewModel {
+
+    public void addBar() {
+        var bar = new BarViewModel();
+        getMediator().addBar(bar);
+    }
+
+
+    @Override
+    public FooMediator getMediator() {
+        return (FooMediator) super.getMediator();
+    }
+
+    ...
+}
+```
+
+`ComponentView` class:
+
+```java
+public class FooView extends AbstractChildView<FooViewModel> {
+
+    public FooView(FooViewModel viewModel) {
+        ...
+    }
+
+    ...
+
+    @Override
+    public FooComponent getComponent() {
+        return (FooComponent) super.getComponent();
+    }
+}
+```
+
+`Component` class:
+
+```java
+public class FooComponent extends AbstractChildComponent<FooView> {
+
+    protected class Mediator extends AbstractChildComponent.Mediator implements FooMediator {
+
+        @Override
+        public void addBar(BarViewModel vm) {
+            var v = new BarView(vm);
+            var c = new BarComponent(v);
+            c.initialize();
+            addChild(c);
+            getView.addSomewhere(v); // adding bar view into foo view
+        }
+    }
+
+    public FooComponent(FooView view) {
+        ...
+    }
+
+    ...
+
+    @Override
+    public FooMediator createMediator() {
+        return new FooComponent.Mediator(); // the mediator is created at the beginning of initialization
+    }
+}
+```
+
+This code demonstrates how to create the foo component instance:
+
+```java
+var viewModel = new FooViewModel();
+var view = new FooView(viewModel);
+var component = new FooComponent(view);
+component.initialize();
+... // use the component
+component.deinitialize();
+```
+
 ### When to Create a Component? <a name="when-to-create-component"></a>
 * The element has independent testable state or business logic that can exist without a `View`.
 * The element has a distinct lifecycle requiring separate initialization/deinitialization, or can be dynamically
@@ -360,7 +419,15 @@ Java 11+ and JavaFX 19.
 
 ## Dependencies <a name="dependencies"></a>
 
-The project will be added to the Maven Central repository in a few days.
+This project is available on Maven Central:
+
+```
+<dependency>
+    <groupId>com.techsenger.mvvm4fx</groupId>
+    <artifactId>mvvm4fx-core</artifactId>
+    <version>${mvvm4fx.version}</version>
+</dependency>
+```
 
 ## Code Building <a name="code-building"></a>
 
