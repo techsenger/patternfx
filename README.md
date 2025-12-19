@@ -193,11 +193,18 @@ must be created: `ChildView` extends `ParentView`, `ChildViewModel` extends `Par
 Advantages of this approach:
 
 * Strict Separation. Using a `Component` together with a `Mediator` enforces a clear separation of layers according to
-MVVM and simplifies testing.
+MVVM and simplifies testing. The `Mediator` interface defines how a `ViewModel` can initiate the addition or removal of
+a component without violating MVVM principles. It provides a controlled, testable channel for UI composition that
+respects the pattern's constraints.
 * Clean Architecture. The `Component` centralizes all logic related to managing child components, keeping the
-`View` and `ViewModel` free from responsibilities that do not belong to them.
-* MVVM Compliance. The `Mediator` interface defines how a `ViewModel` can initiate the addition or removal of a
-component without violating MVVM principles.
+`View` and `ViewModel` free from responsibilities that do not belong to them. This prevents `View` and `ViewModel` from
+becoming bloated with lifecycle management or compositional logic. In addition, the `Component` serves as a single
+source of truth for child component references. This eliminates duplication where `View` would store child `View`
+references and `ViewModel` would store child `ViewModel` references. Instead, the `Component` manages the complete
+child graph while exposing only appropriate references to each layer.
+* Explicit Component-Level Operations. When `View` or `ViewModel` needs to interact at the component level,
+it does so explicitly through `getComponent()` or `getMediator()` calls. This creates clear architectural boundaries
+and makes it immediately visible when code crosses from view/view-model concerns into component management concerns.
 
 In addition to the four classes, a component may include a `ComponentHistory`. The `ComponentHistory` enables the
 preservation of the component’s state across its lifecycle. Data exchange occurs exclusively between the
