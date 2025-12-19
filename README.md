@@ -346,7 +346,9 @@ public class FooView extends AbstractChildView<FooViewModel, FooComponent> {
         ...
     }
 
+    @Override
     protected void initialize() {
+        super.initialize();
         logger.debug("{} View is initializing", getComponent().getLogPrefix());
     }
     ...
