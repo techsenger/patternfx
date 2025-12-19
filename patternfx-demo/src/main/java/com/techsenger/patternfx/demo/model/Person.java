@@ -16,92 +16,59 @@
 
 package com.techsenger.patternfx.demo.model;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-
 /**
  *
  * @author Pavel Castornii
  */
 public class Person {
 
-    private final ObjectProperty<Integer> id = new SimpleObjectProperty<>();
+    private Integer id;
 
-    private final StringProperty firstName = new SimpleStringProperty();
+    private String firstName;
 
-    private final StringProperty lastName = new SimpleStringProperty();
+    private String lastName;
 
-    private final ObjectProperty<Integer> age = new SimpleObjectProperty<>();
+    private Integer age;
 
     public Person() {
 
     }
 
     public Person(String firstName, String lastName, Integer age) {
-        setFirstName(firstName);
-        setLastName(lastName);
-        setAge(age);
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
     }
 
     public Integer getId() {
-        return id.get();
-    }
-
-    public void setId(Integer value) {
-        id.set(value);
-    }
-
-    public ObjectProperty<Integer> idProperty() {
         return id;
     }
 
-    public StringProperty firstNameProperty() {
-        return firstName;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getFirstName() {
-        return firstName.get();
+        return firstName;
     }
 
     public void setFirstName(String firstName) {
-        this.firstName.set(firstName);
-    }
-
-    public boolean isFirstNameValid() {
-        return firstName.get() != null && !firstName.get().isBlank();
-    }
-
-    public StringProperty lastNameProperty() {
-        return lastName;
+        this.firstName = firstName;
     }
 
     public String getLastName() {
-        return lastName.get();
+        return lastName;
     }
 
     public void setLastName(String lastName) {
-        this.lastName.set(lastName);
-    }
-
-    public boolean isLastNameValid() {
-        return lastName.get() != null && !lastName.get().isBlank();
-    }
-
-    public ObjectProperty<Integer> ageProperty() {
-        return age;
+        this.lastName = lastName;
     }
 
     public Integer getAge() {
-        return age.get();
+        return age;
     }
 
     public void setAge(Integer age) {
-        this.age.set(age);
-    }
-
-    public boolean isAgeValid() {
-        return age.get() != null && age.get() >= 0 && age.get() <= 125;
+        this.age = age;
     }
 }

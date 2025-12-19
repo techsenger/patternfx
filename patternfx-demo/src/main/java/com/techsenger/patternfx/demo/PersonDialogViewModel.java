@@ -20,7 +20,9 @@ import com.techsenger.patternfx.core.AbstractParentViewModel;
 import com.techsenger.patternfx.core.ParentMediator;
 import com.techsenger.patternfx.demo.model.Person;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -32,7 +34,11 @@ public class PersonDialogViewModel extends AbstractParentViewModel<ParentMediato
 
     private final StringProperty title = new SimpleStringProperty("New Person");
 
-    private final Person person = new Person();
+    private final StringProperty firstName = new SimpleStringProperty();
+
+    private final StringProperty lastName = new SimpleStringProperty();
+
+    private final ObjectProperty<Integer> age = new SimpleObjectProperty();
 
     private final BooleanProperty firstNameValid = new SimpleBooleanProperty(true);
 
@@ -40,12 +46,44 @@ public class PersonDialogViewModel extends AbstractParentViewModel<ParentMediato
 
     private final BooleanProperty ageValid = new SimpleBooleanProperty(true);
 
-    StringProperty titleProperty() {
-        return title;
+    public String getFirstName() {
+        return firstName.get();
     }
 
-    Person getPerson() {
-        return person;
+    public void setFirstName(String firstName) {
+        this.firstName.set(firstName);
+    }
+
+    public StringProperty firstNameProperty() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName.get();
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName.set(lastName);
+    }
+
+    public StringProperty lastNameProperty() {
+        return lastName;
+    }
+
+    public Integer getAge() {
+        return age.get();
+    }
+
+    public void setAge(Integer age) {
+        this.age.set(age);
+    }
+
+    public ObjectProperty<Integer> ageProperty() {
+        return age;
+    }
+
+    StringProperty titleProperty() {
+        return title;
     }
 
     BooleanProperty firstNameValidProperty() {
@@ -61,14 +99,29 @@ public class PersonDialogViewModel extends AbstractParentViewModel<ParentMediato
     }
 
     boolean isPersonValid() {
-        firstNameValid.set(person.isFirstNameValid());
-        lastNameValid.set(person.isLastNameValid());
-        ageValid.set(person.isAgeValid());
+        firstNameValid.set(isFirstNameValid());
+        lastNameValid.set(isLastNameValid());
+        ageValid.set(isAgeValid());
         return firstNameValid.get() && lastNameValid.get() && ageValid.get();
     }
 
     Person createPerson() {
-        var newPerson = new Person(person.getFirstName(), person.getLastName(), person.getAge());
+        var newPerson = new Person(getFirstName(), getLastName(), getAge());
         return newPerson;
+    }
+
+    private boolean isFirstNameValid() {
+        var name = getFirstName();
+        return name != null && !name.isBlank();
+    }
+
+    private boolean isLastNameValid() {
+        var name = getLastName();
+        return name != null && !name.isBlank();
+    }
+
+    private boolean isAgeValid() {
+        var a = getAge();
+        return a != null && a >= 0 && a <= 125;
     }
 }

@@ -102,12 +102,11 @@ public class PersonDialogView extends AbstractParentView<PersonDialogViewModel, 
         var vm = getViewModel();
         dialog.titleProperty().bind(vm.titleProperty());
 
-        firstNameTextField.textProperty().bindBidirectional(vm.getPerson().firstNameProperty());
+        firstNameTextField.textProperty().bindBidirectional(vm.firstNameProperty());
         bindValid(firstNameTextField, vm.firstNameValidProperty());
-        lastNameTextField.textProperty().bindBidirectional(vm.getPerson().lastNameProperty());
+        lastNameTextField.textProperty().bindBidirectional(vm.lastNameProperty());
         bindValid(lastNameTextField, vm.lastNameValidProperty());
-        ageTextField.textProperty().bindBidirectional(vm.getPerson().ageProperty(),
-                new IntegerStringConverter());
+        ageTextField.textProperty().bindBidirectional(vm.ageProperty(), new IntegerStringConverter());
         bindValid(ageTextField, vm.ageValidProperty());
     }
 

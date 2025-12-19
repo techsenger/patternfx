@@ -18,6 +18,8 @@ package com.techsenger.patternfx.demo;
 
 import com.techsenger.patternfx.core.AbstractParentView;
 import com.techsenger.patternfx.demo.model.Person;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -68,13 +70,13 @@ public class PersonRegistryView extends AbstractParentView<PersonRegistryViewMod
         personTable.setItems(getViewModel().getPersons());
         personTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         var idColumn = new TableColumn<Person, Integer>("Id");
-        idColumn.setCellValueFactory(data -> data.getValue().idProperty());
+        idColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getId()));
         var firstNameColumn = new TableColumn<Person, String>("First Name");
-        firstNameColumn.setCellValueFactory(data -> data.getValue().firstNameProperty());
+        firstNameColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFirstName()));
         var lastNameColumn = new TableColumn<Person, String>("Last Name");
-        lastNameColumn.setCellValueFactory(data -> data.getValue().lastNameProperty());
+        lastNameColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLastName()));
         var ageColumn = new TableColumn<Person, Integer>("Age");
-        ageColumn.setCellValueFactory(data -> data.getValue().ageProperty());
+        ageColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAge()));
         personTable.getColumns().addAll(idColumn, firstNameColumn, lastNameColumn, ageColumn);
 
         VBox.setVgrow(content, Priority.ALWAYS);
