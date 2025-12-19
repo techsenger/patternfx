@@ -133,7 +133,7 @@ demonstrate.
 A component, as a rule, consists of the following classes: `Component` (with an inner `Mediator` implementation), 
 `ComponentView`, `ComponentViewModel`, and `ComponentMediator`:
 
-<img width="1004" height="446" alt="PatternFX" src="https://github.com/user-attachments/assets/e205c4a9-43ab-43b2-8cf0-2ac11c4a9af4" />
+<img width="1016" height="457" alt="PatternFX" src="https://github.com/user-attachments/assets/28ea5b5f-7f86-4dc6-bc74-6c4ed3c1abd7" />
 
 A natural question might arise: why is there no `Model` in the component, given that
 the pattern is called MVVM? Firstly, a component is a building block for constructing a user interface, which might
