@@ -131,15 +131,18 @@ demonstrate.
 ### Component Structure <a name="component-structure"></a>
 
 A component always consists of at least four classes: a `Component`, a `ComponentView`, a `ComponentViewModel`
-and `ComponentMediator`. A natural question might arise: why is there no `Model` in the component, given that
-the pattern is called MVVM?
+and `ComponentMediator`:
 
-Firstly, a component is a building block for constructing a user interface, which might not be related to the
-application's business logic at all. Secondly, the `Model` exists independently of the UI and should have no knowledge
-of the component's existence. Thirdly, MVVM is fundamentally about the separation of responsibilities rather than
-the mandatory presence of all three layers in every element. In other words, a component does not violate MVVM
-principles simply because it lacks a `Model`; it remains compliant as long as the `View` and `ViewModel` maintain a
-clear separation of concerns and communicate exclusively through data binding and observable properties.
+<img width="1013" height="460" alt="Screenshot from 2025-12-19 17-19-38" src="https://github.com/user-attachments/assets/00bbbb5e-9092-4752-8954-c9b8da184ca3" />
+
+A natural question might arise: why is there no `Model` in the component, given that
+the pattern is called MVVM? Firstly, a component is a building block for constructing a user interface, which might
+not be related to the application's business logic at all. Secondly, the `Model` exists independently of the UI and
+should have no knowledge of the component's existence. Thirdly, MVVM is fundamentally about the separation of 
+responsibilities rather than the mandatory presence of all three layers in every element. In other words, a component
+does not violate MVVM principles simply because it lacks a `Model`; it remains compliant as long as the `View` and 
+`ViewModel` maintain a clear separation of concerns and communicate exclusively through data binding and observable 
+properties.
 
 The `ComponentView` and `ComponentViewModel` classes correspond to the `View` and `ViewModel` in the MVVM pattern and
 are relatively straightforward. The `Component` and `ComponentMediator` classes, on the other hand, address the
