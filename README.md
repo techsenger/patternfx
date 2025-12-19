@@ -130,10 +130,10 @@ demonstrate.
 
 ### Component Structure <a name="component-structure"></a>
 
-A component always consists of at least four classes: a `Component`, a `ComponentView`, a `ComponentViewModel`
-and `ComponentMediator`:
+A component, as a rule, consists of the following classes: `Component` (with an inner `Mediator` implementation), 
+`ComponentView`, `ComponentViewModel`, and `ComponentMediator`:
 
-<img width="1013" height="460" alt="Screenshot from 2025-12-19 17-19-38" src="https://github.com/user-attachments/assets/00bbbb5e-9092-4752-8954-c9b8da184ca3" />
+<img width="1004" height="446" alt="PatternFX" src="https://github.com/user-attachments/assets/e205c4a9-43ab-43b2-8cf0-2ac11c4a9af4" />
 
 A natural question might arise: why is there no `Model` in the component, given that
 the pattern is called MVVM? Firstly, a component is a building block for constructing a user interface, which might
