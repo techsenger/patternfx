@@ -37,9 +37,10 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?, ?>
         private final ObservableList<ChildViewModel> children =
                 FXCollections.unmodifiableObservableList(modifiableChildren);
 
+        private final AbstractParentComponent<?> component = AbstractParentComponent.this;
+
         public Mediator() {
-            var outerChildren = AbstractParentComponent.this.modifiableChildren;
-            childrenBinder = ListBinder.bindContent(modifiableChildren, outerChildren,
+            childrenBinder = ListBinder.bindContent(modifiableChildren, component.getChildren(),
                     (v) -> v.getView().getViewModel());
         }
 

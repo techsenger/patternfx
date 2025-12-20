@@ -44,74 +44,76 @@ public abstract class AbstractComponent<T extends AbstractComponentView<?, ?>> i
 
     protected abstract class Mediator implements ComponentMediator {
 
+        private final AbstractComponent<?> component = AbstractComponent.this;
+
         @Override
         public ComponentName getName() {
-            return AbstractComponent.this.getName();
+            return component.getName();
         }
 
         @Override
         public UUID getUuid() {
-            return uuid;
+            return component.getUuid();
         }
 
         @Override
         public String getFullName() {
-            return fullName;
+            return component.getFullName();
         }
 
         @Override
         public String getLogPrefix() {
-            return logPrefix;
+            return component.getLogPrefix();
         }
 
         @Override
         public ComponentState getState() {
-            return state.get();
+            return component.getState();
         }
 
         @Override
         public ReadOnlyObjectProperty<ComponentState> stateProperty() {
-            return state.getReadOnlyProperty();
+            return component.stateProperty();
         }
 
         @Override
         public ObjectProperty<HistoryPolicy> historyPolicyProperty() {
-            return historyPolicy;
+            return component.historyPolicyProperty();
         }
 
         @Override
         public HistoryPolicy getHistoryPolicy() {
-            return historyPolicy.get();
+            return component.getHistoryPolicy();
         }
 
         @Override
         public void setHistoryPolicy(HistoryPolicy policy) {
-            historyPolicy.set(policy);
+            component.setHistoryPolicy(policy);
         }
 
         @Override
         public ComponentHistory<?> getHistory() {
-            return history;
+            return component.getHistory();
         }
 
         @Override
         public ComponentGroup getGroup() {
-            return group.get();
+            return component.getGroup();
         }
 
         @Override
         public void setGroup(ComponentGroup value) {
-            group.set(value);
+            component.setGroup(value);
         }
 
         @Override
         public ObjectProperty<ComponentGroup> groupProperty() {
-            return group;
+            return component.groupProperty();
         }
 
         @Override
         public void deinitialize() {
-            AbstractComponent.this.deinitialize();
+            component.deinitialize();
         }
     }
 

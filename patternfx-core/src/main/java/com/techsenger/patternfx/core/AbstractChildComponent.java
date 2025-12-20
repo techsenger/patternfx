@@ -30,9 +30,11 @@ public abstract class AbstractChildComponent<T extends AbstractChildView<?, ?>> 
 
         private final ReadOnlyObjectWrapper<ParentViewModel> parent = new ReadOnlyObjectWrapper<>();
 
+        private final AbstractChildComponent<?> component = AbstractChildComponent.this;
+
         public Mediator() {
             this.parent.bind(
-                AbstractChildComponent.this.parent.map(p -> {
+                component.parentProperty().map(p -> {
                     if (p != null) {
                         return p.getView().getViewModel();
                     } else {
