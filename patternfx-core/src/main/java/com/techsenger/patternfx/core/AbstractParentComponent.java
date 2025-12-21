@@ -19,6 +19,7 @@ package com.techsenger.patternfx.core;
 import com.techsenger.toolkit.fx.binding.ListBinder;
 import java.util.List;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 /**
@@ -79,6 +80,17 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?, ?>
 
     public AbstractParentComponent(T view) {
         super(view);
+        modifiableChildren.addListener((ListChangeListener<ChildComponent<?>>) (e) -> {
+            if (e.wasAdded()) {
+                for (var c: e.getAddedSubList()) {
+                    c.setParent(this);
+                }
+            } else if (e.wasRemoved()) {
+                for (var c: e.getRemoved()) {
+                    c.setParent(null);
+                }
+            }
+        });
     }
 
     @Override
@@ -108,16 +120,10 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?, ?>
         return this.children;
     }
 
+    protected ObservableList<ChildComponent<?>> getModifiableChildren() {
+        return modifiableChildren;
+    }
+
     @Override
     protected abstract Mediator createMediator();
-
-    protected void addChild(ChildComponent<?> child) {
-        this.modifiableChildren.add(child);
-        child.setParent(this);
-    }
-
-    protected void removeChild(ChildComponent<?> child) {
-        this.modifiableChildren.remove(child);
-        child.setParent(null);
-    }
 }
