@@ -130,7 +130,7 @@ demonstrate.
 
 ### Component Structure <a name="component-structure"></a>
 
-A component, as a rule, consists of the following classes: `Component` (with an inner `Mediator` implementation), 
+A component, as a rule, consists of the following classes: `Component` (with an inner `Mediator` implementation),
 `ComponentView`, `ComponentViewModel`, and `ComponentMediator`:
 
 <img width="1016" height="457" alt="PatternFX" src="https://github.com/user-attachments/assets/28ea5b5f-7f86-4dc6-bc74-6c4ed3c1abd7" />
@@ -138,10 +138,10 @@ A component, as a rule, consists of the following classes: `Component` (with an 
 A natural question might arise: why is there no `Model` in the component, given that
 the pattern is called MVVM? Firstly, a component is a building block for constructing a user interface, which might
 not be related to the application's business logic at all. Secondly, the `Model` exists independently of the UI and
-should have no knowledge of the component's existence. Thirdly, MVVM is fundamentally about the separation of 
+should have no knowledge of the component's existence. Thirdly, MVVM is fundamentally about the separation of
 responsibilities rather than the mandatory presence of all three layers in every element. In other words, a component
-does not violate MVVM principles simply because it lacks a `Model`; it remains compliant as long as the `View` and 
-`ViewModel` maintain a clear separation of concerns and communicate exclusively through data binding and observable 
+does not violate MVVM principles simply because it lacks a `Model`; it remains compliant as long as the `View` and
+`ViewModel` maintain a clear separation of concerns and communicate exclusively through data binding and observable
 properties.
 
 The `ComponentView` and `ComponentViewModel` classes correspond to the `View` and `ViewModel` in the MVVM pattern and
@@ -215,6 +215,15 @@ preservation of the component’s state across its lifecycle. Data exchange occu
 restored from the `ComponentHistory` to the `ComponentViewModel`. Conversely, when the state transitions to
 `DEINITIALIZED`, data from the `ComponentViewModel` is saved back to the `ComponentHistory`. The volume of state
 information that is restored and persisted is defined by the `HistoryPolicy` enum.
+
+In addition to the four main classes, a component may include a `ComponentHistory`, which preserves the component’s
+state across its lifecycle. In the default implementation, the `ComponentHistory` instance is lazily provided via a
+`HistoryProvider` that is set before initialization. During the `preInitialize()` phase, the provider’s `provide()`
+method is called to obtain the history. After the history is obtained, the provider is cleared (set to null), and the
+component uses the history. State restoration occurs in the `preInitialize()` phase via the
+`AbstractComponentViewModel#restoreHistory()` method. State saving occurs in the `postDeinitialize()` phase via the
+`AbstractComponentViewModel#saveHistory()` method. The volume and type of state information that is restored and
+persisted are determined by the `HistoryPolicy` enum.
 
 ### Component Lifecycle<a name="component-lifecycle"></a>
 

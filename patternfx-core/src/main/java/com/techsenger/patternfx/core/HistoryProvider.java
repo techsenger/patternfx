@@ -17,11 +17,14 @@
 package com.techsenger.patternfx.core;
 
 /**
+ * Provides a history instance for a component. This method is called during the {@code preInitialize()} phase. After
+ * the history is obtained, the component uses the returned history, and the provider is cleared (set to null).
  *
+ * @param <T> the type of {@link ComponentHistory} provided
  * @author Pavel Castornii
  */
 @FunctionalInterface
-public interface HistoryProvider {
+public interface HistoryProvider<T extends ComponentHistory<?>> {
 
-    ComponentHistory<?> provide();
+    T provide();
 }

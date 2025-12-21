@@ -131,7 +131,7 @@ public abstract class AbstractComponent<T extends AbstractComponentView<?, ?>> i
 
     private final ObjectProperty<ComponentGroup> group = new SimpleObjectProperty<>();
 
-    private HistoryProvider historyProvider;
+    private HistoryProvider<?> historyProvider;
 
     private ComponentHistory<?> history;
 
@@ -265,6 +265,7 @@ public abstract class AbstractComponent<T extends AbstractComponentView<?, ?>> i
         this.view.getViewModel().setMediator(mediator);
         if (this.historyProvider != null) {
             this.history = this.historyProvider.provide();
+            this.historyProvider = null;
         }
         this.view.getViewModel().restoreHistory();
     }
@@ -288,7 +289,7 @@ public abstract class AbstractComponent<T extends AbstractComponentView<?, ?>> i
         }
     }
 
-    protected void setHistoryProvider(HistoryProvider historyProvider) {
+    protected void setHistoryProvider(HistoryProvider<? extends ComponentHistory<?>> historyProvider) {
         this.historyProvider = historyProvider;
     }
 
