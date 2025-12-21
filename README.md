@@ -384,7 +384,7 @@ public class FooComponent extends AbstractChildComponent<FooView> {
             var v = new BarView(vm);
             var c = new BarComponent(v);
             c.initialize();
-            addChild(c);
+            getModifiableChildren().add(c);
             getView.addSomewhere(v); // adding bar view into foo view
         }
     }
