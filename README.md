@@ -209,6 +209,11 @@ child graph while exposing only appropriate references to each layer.
 it does so explicitly through `getComponent()` or `getMediator()` calls. This creates clear architectural boundaries
 and makes it immediately visible when code crosses from view/view-model concerns into component management concerns.
 
+**Important:** `Component` and `ComponentMediator` are an extension of the MVVM pattern. The MVVM pattern remains the core
+of the framework and defines all key rules of operation. This extension is used only when functionality is required
+that standard MVVM cannot provide. In such cases, the developer accesses the `getComponent()` / `getMediator()` methods.
+Following this principle ensures that MVVM principles are never violated and that the framework is used correctly.
+
 In addition to the four classes, a component may include a `ComponentHistory`. The `ComponentHistory` enables the
 preservation of the component’s state across its lifecycle. Data exchange occurs exclusively between the
 `ComponentViewModel` and the `ComponentHistory`. When the component’s state transitions to `INITIALIZING`, data is
