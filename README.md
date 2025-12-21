@@ -214,13 +214,6 @@ of the framework and defines all key rules of operation. Whenever a developer ne
 they access the `getComponent()` and `getMediator()` methods — this immediately signals that the extension is being
 used. Following this principle ensures that MVVM principles are never violated and that the framework is used correctly.
 
-In addition to the four classes, a component may include a `ComponentHistory`. The `ComponentHistory` enables the
-preservation of the component’s state across its lifecycle. Data exchange occurs exclusively between the
-`ComponentViewModel` and the `ComponentHistory`. When the component’s state transitions to `INITIALIZING`, data is
-restored from the `ComponentHistory` to the `ComponentViewModel`. Conversely, when the state transitions to
-`DEINITIALIZED`, data from the `ComponentViewModel` is saved back to the `ComponentHistory`. The volume of state
-information that is restored and persisted is defined by the `HistoryPolicy` enum.
-
 In addition to the four main classes, a component may include a `ComponentHistory`, which preserves the component’s
 state across its lifecycle. In the default implementation, the `ComponentHistory` instance is lazily provided via a
 `HistoryProvider` that is set before initialization. During the `preInitialize()` phase, the provider’s `provide()`
