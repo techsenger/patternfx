@@ -18,10 +18,9 @@ package com.techsenger.patternfx.demo;
 
 import com.techsenger.patternfx.core.AbstractParentViewModel;
 import com.techsenger.patternfx.core.ComponentState;
-import com.techsenger.patternfx.core.ParentMediator;
 import com.techsenger.patternfx.demo.model.Person;
 import com.techsenger.patternfx.demo.model.PersonService;
-import java.util.Optional;
+import java.util.Iterator;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -38,7 +37,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Pavel Castornii
  */
-public class PersonRegistryViewModel extends AbstractParentViewModel<ParentMediator> {
+public class PersonRegistryViewModel extends AbstractParentViewModel<PersonRegistryMediator> {
 
     private static final Logger logger = LoggerFactory.getLogger(PersonRegistryViewModel.class);
 
@@ -84,10 +83,6 @@ public class PersonRegistryViewModel extends AbstractParentViewModel<ParentMedia
         return selectedPerson;
     }
 
-    PersonDialogViewModel createDialog() {
-        return new PersonDialogViewModel();
-    }
-
     BooleanProperty removeDisabledProperty() {
         return this.removeDisabled;
     }
@@ -97,17 +92,25 @@ public class PersonRegistryViewModel extends AbstractParentViewModel<ParentMedia
         persons.addAll(service.readAll());
     }
 
-    void add(Optional<Person> person) {
-        if (person.isPresent()) {
-            var p = person.get();
-            service.save(p);
-            persons.add(p);
-        }
+    void add() {
+        var dialogVM = new PersonDialogViewModel((p) -> add(p));
+        getMediator().openDialog(dialogVM);
     }
 
     void remove() {
         var id = selectedPerson.get().getId();
         service.delete(id);
-        persons.removeIf(p -> p.getId().equals(id));
+        for (Iterator<Person> it = persons.iterator(); it.hasNext();) {
+            Person p = it.next();
+            if (p.getId() == id) {
+                it.remove();
+                break;
+            }
+        }
+    }
+
+    private void add(Person person) {
+        service.save(person);
+        persons.add(person);
     }
 }

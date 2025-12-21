@@ -17,7 +17,6 @@
 package com.techsenger.patternfx.demo;
 
 import com.techsenger.patternfx.core.AbstractParentView;
-import com.techsenger.patternfx.demo.model.Person;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.event.ActionEvent;
@@ -57,16 +56,16 @@ public class PersonDialogView extends AbstractParentView<PersonDialogViewModel, 
     private final HBox hBox = new HBox(firstNameLabel, firstNameTextField, lastNameLabel, lastNameTextField,
                 ageLabel, ageTextField);
 
-    private final Dialog<Person> dialog = new Dialog<>();
+    private final Dialog<ButtonType> dialog = new Dialog<>();
 
     private Button okButton;
 
-    public PersonDialogView(Stage stage, PersonDialogViewModel viewModel) {
+    public PersonDialogView(PersonDialogViewModel viewModel, Stage stage) {
         super(viewModel);
         this.stage = stage;
     }
 
-    public Dialog<Person> getDialog() {
+    protected Dialog<ButtonType> getDialog() {
         return this.dialog;
     }
 
@@ -86,13 +85,6 @@ public class PersonDialogView extends AbstractParentView<PersonDialogViewModel, 
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.getDialogPane().setContent(hBox);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == ButtonType.OK) {
-                return getViewModel().createPerson();
-            }
-            return null;
-        });
-
         this.okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
     }
 
@@ -114,7 +106,7 @@ public class PersonDialogView extends AbstractParentView<PersonDialogViewModel, 
     protected void addHandlers() {
         super.addHandlers();
         okButton.addEventFilter(ActionEvent.ACTION, event -> {
-            if (!getViewModel().isPersonValid()) {
+            if (!getViewModel().addNewPerson()) {
                 event.consume();
             }
         });

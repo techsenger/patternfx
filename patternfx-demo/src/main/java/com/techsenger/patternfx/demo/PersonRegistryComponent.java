@@ -25,6 +25,18 @@ import com.techsenger.patternfx.core.ComponentName;
  */
 public class PersonRegistryComponent extends AbstractParentComponent<PersonRegistryView> {
 
+    private final class Mediator extends AbstractParentComponent.Mediator implements PersonRegistryMediator {
+
+        @Override
+        public void openDialog(PersonDialogViewModel vm) {
+            var dialogV = new PersonDialogView(vm, getView().getStage());
+            var dialogC = new PersonDialogComponent(dialogV);
+            dialogC.initialize();
+            dialogC.getView().getDialog().showAndWait();
+            dialogC.deinitialize();
+        }
+    }
+
     public PersonRegistryComponent(PersonRegistryView view) {
         super(view);
     }
@@ -36,6 +48,6 @@ public class PersonRegistryComponent extends AbstractParentComponent<PersonRegis
 
     @Override
     protected Mediator createMediator() {
-        return new AbstractParentComponent.Mediator() { };
+        return new Mediator();
     }
 }

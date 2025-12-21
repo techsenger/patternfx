@@ -98,19 +98,12 @@ public class PersonRegistryView extends AbstractParentView<PersonRegistryViewMod
     protected void addHandlers() {
         super.addHandlers();
         var vm = getViewModel();
-        addButton.setOnAction(e -> {
-            var dialogVM = vm.createDialog();
-            var dialogV = new PersonDialogView(stage, dialogVM);
-            var dialogComponent = new PersonDialogComponent(dialogV);
-            dialogComponent.initialize();
-
-            var jfxDialog = dialogV.getDialog();
-            var result = jfxDialog.showAndWait();
-            vm.add(result);
-
-            dialogComponent.deinitialize();
-        });
+        addButton.setOnAction(e -> vm.add());
         removeButton.setOnAction(e -> vm.remove());
         refreshButton.setOnAction(e -> vm.refresh());
+    }
+
+    Stage getStage() {
+        return stage;
     }
 }

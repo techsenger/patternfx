@@ -16,7 +16,7 @@
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
         <!-- JavaFX 19 has a bug: it shows a system notification on Ubuntu when a dialog is closed -->
-        <javafx.version>25</javafx.version>
+        <javafx.version>18</javafx.version>
     </properties>
 
     <dependencies>

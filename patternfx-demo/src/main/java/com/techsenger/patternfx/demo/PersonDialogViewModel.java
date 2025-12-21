@@ -19,6 +19,7 @@ package com.techsenger.patternfx.demo;
 import com.techsenger.patternfx.core.AbstractParentViewModel;
 import com.techsenger.patternfx.core.ParentMediator;
 import com.techsenger.patternfx.demo.model.Person;
+import java.util.function.Consumer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -45,6 +46,12 @@ public class PersonDialogViewModel extends AbstractParentViewModel<ParentMediato
     private final BooleanProperty lastNameValid = new SimpleBooleanProperty(true);
 
     private final BooleanProperty ageValid = new SimpleBooleanProperty(true);
+
+    private final Consumer<Person> resultCallback;
+
+    public PersonDialogViewModel(Consumer<Person> resultCallback) {
+        this.resultCallback = resultCallback;
+    }
 
     public String getFirstName() {
         return firstName.get();
@@ -98,16 +105,20 @@ public class PersonDialogViewModel extends AbstractParentViewModel<ParentMediato
         return ageValid;
     }
 
-    boolean isPersonValid() {
+    boolean addNewPerson() {
+        if (isPersonValid()) {
+            var newPerson = new Person(getFirstName(), getLastName(), getAge());
+            this.resultCallback.accept(newPerson);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isPersonValid() {
         firstNameValid.set(isFirstNameValid());
         lastNameValid.set(isLastNameValid());
         ageValid.set(isAgeValid());
         return firstNameValid.get() && lastNameValid.get() && ageValid.get();
-    }
-
-    Person createPerson() {
-        var newPerson = new Person(getFirstName(), getLastName(), getAge());
-        return newPerson;
     }
 
     private boolean isFirstNameValid() {
