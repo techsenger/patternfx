@@ -29,7 +29,7 @@ import javafx.collections.ObservableList;
 public abstract class AbstractParentComponent<T extends AbstractParentView<?, ?>> extends AbstractComponent<T>
         implements ParentComponent<T> {
 
-    protected abstract class Mediator extends AbstractComponent.Mediator implements ParentMediator {
+    protected class Mediator extends AbstractComponent.Mediator implements ParentMediator {
 
         private final ListBinder childrenBinder;
 

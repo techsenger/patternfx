@@ -42,7 +42,7 @@ public abstract class AbstractComponent<T extends AbstractComponentView<?, ?>> i
         AbstractComponent.logDelimiter = logDelimiter;
     }
 
-    protected abstract class Mediator implements ComponentMediator {
+    protected class Mediator implements ComponentMediator {
 
         private final AbstractComponent<?> component = AbstractComponent.this;
 

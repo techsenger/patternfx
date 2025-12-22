@@ -36,6 +36,6 @@ public class PersonDialogComponent extends AbstractParentComponent<PersonDialogV
 
     @Override
     protected Mediator createMediator() {
-        return new AbstractParentComponent.Mediator() { };
+        return new AbstractParentComponent.Mediator();
     }
 }
