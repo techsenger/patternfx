@@ -33,9 +33,9 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?, ?>
 
         private final ListBinder childrenBinder;
 
-        private final ObservableList<ChildViewModel> modifiableChildren = FXCollections.observableArrayList();
+        private final ObservableList<ChildViewModel<?>> modifiableChildren = FXCollections.observableArrayList();
 
-        private final ObservableList<ChildViewModel> children =
+        private final ObservableList<ChildViewModel<?>> children =
                 FXCollections.unmodifiableObservableList(modifiableChildren);
 
         private final AbstractParentComponent<?> component = AbstractParentComponent.this;
@@ -46,29 +46,29 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?, ?>
         }
 
         @Override
-        public SubtreeIterator<ParentViewModel> depthFirstIterator() {
-            return new AbstractDepthFirstIterator<ParentViewModel>(getView().getViewModel()) {
+        public SubtreeIterator<ParentViewModel<?>> depthFirstIterator() {
+            return new AbstractDepthFirstIterator<ParentViewModel<?>>(getView().getViewModel()) {
 
                 @Override
-                List<ParentViewModel> getChildren(ParentViewModel parent) {
-                    return (List) children;
+                List<ParentViewModel<?>> getChildren(ParentViewModel<?> parent) {
+                    return (List) parent.getMediator().getChildren();
                 }
             };
         }
 
         @Override
-        public SubtreeIterator<ParentViewModel> breadthFirstIterator() {
-            return new AbstractBreadthFirstIterator<ParentViewModel>(getView().getViewModel()) {
+        public SubtreeIterator<ParentViewModel<?>> breadthFirstIterator() {
+            return new AbstractBreadthFirstIterator<ParentViewModel<?>>(getView().getViewModel()) {
 
                 @Override
-                List<ParentViewModel> getChildren(ParentViewModel parent) {
-                    return (List) children;
+                List<ParentViewModel<?>> getChildren(ParentViewModel<?> parent) {
+                    return (List) parent.getMediator().getChildren();
                 }
             };
         }
 
         @Override
-        public ObservableList<ChildViewModel> getChildren() {
+        public ObservableList<ChildViewModel<?>> getChildren() {
             return children;
         }
     }

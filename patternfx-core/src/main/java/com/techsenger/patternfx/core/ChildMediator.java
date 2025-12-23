@@ -30,12 +30,12 @@ public interface ChildMediator extends ParentMediator {
      *
      * @return the property containing the parent component
      */
-    ReadOnlyObjectProperty<ParentViewModel> parentProperty();
+    ReadOnlyObjectProperty<ParentViewModel<?>> parentProperty();
 
     /**
      * Returns the value of {@link #parentProperty()}.
      *
      * @return the parent component, or {@code null} if this component has no parent
      */
-    ParentViewModel getParent();
+    ParentViewModel<?> getParent();
 }

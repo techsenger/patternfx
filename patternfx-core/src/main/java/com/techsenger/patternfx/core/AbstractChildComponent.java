@@ -28,7 +28,7 @@ public abstract class AbstractChildComponent<T extends AbstractChildView<?, ?>> 
 
     protected class Mediator extends AbstractParentComponent.Mediator implements ChildMediator {
 
-        private final ReadOnlyObjectWrapper<ParentViewModel> parent = new ReadOnlyObjectWrapper<>();
+        private final ReadOnlyObjectWrapper<ParentViewModel<?>> parent = new ReadOnlyObjectWrapper<>();
 
         private final AbstractChildComponent<?> component = AbstractChildComponent.this;
 
@@ -45,12 +45,12 @@ public abstract class AbstractChildComponent<T extends AbstractChildView<?, ?>> 
         }
 
         @Override
-        public ReadOnlyObjectProperty<ParentViewModel> parentProperty() {
+        public ReadOnlyObjectProperty<ParentViewModel<?>> parentProperty() {
             return this.parent.getReadOnlyProperty();
         }
 
         @Override
-        public ParentViewModel getParent() {
+        public ParentViewModel<?> getParent() {
             return this.parent.get();
         }
     }
