@@ -16,6 +16,7 @@
 
 package com.techsenger.patternfx.core;
 
+import java.util.function.BiConsumer;
 import javafx.collections.ObservableList;
 
 /**
@@ -44,4 +45,24 @@ public interface ParentComponent<T extends ParentView<?, ?>> extends Component<T
      * @return an {@link Iterator} that iterates over this component and all of its descendants
      */
     SubtreeIterator<ParentComponent<?>> breadthFirstIterator();
+
+    /**
+     * Returns a string representation of this component and all its descendants formatted as a tree.
+     *
+     * @return a tree-formatted string representation of this component
+     */
+    String toTreeString();
+
+    /**
+     * Returns a string representation of this component and all its descendants formatted as a tree, allowing the
+     * caller to append an additional note for each component.
+     *
+     * The provided {@code componentAppender} is invoked for each component and is responsible for appending the
+     * complete string representation of that component to the given {@link StringBuilder}. The tree structure and
+     * line separation are handled by this method.
+     *
+     * @param componentAppender a callback used to append the full string representation of each component.
+     * @return a tree-formatted string representation of this component
+     */
+    String toTreeString(BiConsumer<ParentComponent<?>, StringBuilder> componentAppender);
 }

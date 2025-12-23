@@ -18,6 +18,7 @@ package com.techsenger.patternfx.core;
 
 import com.techsenger.toolkit.fx.binding.ListBinder;
 import java.util.List;
+import java.util.function.BiConsumer;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -65,6 +66,16 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?, ?>
                     return (List) parent.getMediator().getChildren();
                 }
             };
+        }
+
+        @Override
+        public String toTreeString() {
+            return component.toTreeString(depthFirstIterator(), (c, b) -> b.append(c.getMediator().getFullName()));
+        }
+
+        @Override
+        public String toTreeString(BiConsumer<ParentViewModel<?>, StringBuilder> componentAppender) {
+            return component.toTreeString(depthFirstIterator(), componentAppender);
         }
 
         @Override
@@ -122,10 +133,34 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?, ?>
         return this.children;
     }
 
+    @Override
+    public String toTreeString() {
+        return toTreeString(depthFirstIterator(), (c, b) -> b.append(c.getFullName()));
+    }
+
+    @Override
+    public String toTreeString(BiConsumer<ParentComponent<?>, StringBuilder> componentAppender) {
+        return toTreeString(depthFirstIterator(), componentAppender);
+    }
+
     protected ObservableList<ChildComponent<?>> getModifiableChildren() {
         return modifiableChildren;
     }
 
     @Override
     protected abstract Mediator createMediator();
+
+    public <T> String toTreeString(SubtreeIterator<T> iterator, BiConsumer<T, StringBuilder> componentAppender) {
+        var builder = new StringBuilder();
+        var sep = System.lineSeparator();
+        while (iterator.hasNext()) {
+            var c = iterator.next();
+            if (builder.length() > 0) {
+                builder.append(sep);
+            }
+            builder.append("    ".repeat(iterator.getDepth()));
+            componentAppender.accept(c, builder);
+        }
+        return builder.toString();
+    }
 }
