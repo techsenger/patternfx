@@ -40,7 +40,9 @@ and the KISS principle for building complex, dynamic JavaFX applications. It add
 of classical MVVM — dynamic component composition and lifecycle management — by introducing an explicit, imperative
 component layer responsible for the creation, ownership, and lifetime of components. Each `Component` exists as a
 self-contained architectural unit composed of a `ComponentView`, `ComponentViewModel`, and `ComponentMediator`,
-optionally augmented with `ComponentHistory`.
+optionally augmented with `ComponentHistory`:
+
+<img width="1217" height="542" alt="PatternFX" src="https://github.com/user-attachments/assets/21a63b51-f939-407c-b3ea-03e4f62815d7" />
 
 The framework enforces a strict separation of responsibilities:
 - `Component` defines the identity and manages lifecycle, initialization/deinitialization, and composition of child
@@ -133,9 +135,7 @@ demonstrate.
 ### Component Structure <a name="component-structure"></a>
 
 A component, as a rule, consists of the following classes: `Component` (with an inner `Mediator` implementation),
-`ComponentView`, `ComponentViewModel`, and `ComponentMediator`:
-
-<img width="1016" height="457" alt="PatternFX" src="https://github.com/user-attachments/assets/28ea5b5f-7f86-4dc6-bc74-6c4ed3c1abd7" />
+`ComponentView`, `ComponentViewModel`, and `ComponentMediator`.
 
 A natural question might arise: why is there no `Model` in the component, given that
 the pattern is called MVVM? Firstly, a component is a building block for constructing a user interface, which might
