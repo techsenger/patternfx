@@ -150,7 +150,7 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?, ?>
     @Override
     protected abstract Mediator createMediator();
 
-    public <T> String toTreeString(TreeIterator<T> iterator, BiConsumer<T, StringBuilder> componentAppender) {
+    private <T> String toTreeString(TreeIterator<T> iterator, BiConsumer<T, StringBuilder> componentAppender) {
         var builder = new StringBuilder();
         var sep = System.lineSeparator();
         while (iterator.hasNext()) {
