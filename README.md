@@ -21,6 +21,7 @@ As a real example of using this framework, see [TabShell](https://github.com/tec
     * [Component Lifecycle](#component-lifecycle)
     * [Component Tree](#component-tree)
     * [Imperative Component Management](#component-imperative)
+    * [Component Logging](#component-logging)
     * [Component Code Example](#component-code)
     * [When to Create a Component?](#when-to-create-component)
     * [When not to Create a Component?](#when-not-to-create-component)
@@ -321,6 +322,24 @@ tabs, dialogs, or search panels).
 
 This approach ensures that PatternFX components behave predictably, remain testable, and can support complex,
 long-living, dynamic UI applications.
+
+### Component Logging <a name="component-logging"></a>
+
+PatternFX supports component-scoped logging, allowing log messages to be produced in the context of a specific
+component instance rather than only at the class or subsystem level. This approach is especially useful in complex and
+dynamic applications where multiple instances of the same component type may exist simultaneously (for example, tabs,
+dialogs, editors, or background components). Component-scoped logging makes it possible to precisely identify the
+exact source of a log message and greatly simplifies debugging and diagnostics.
+
+Each component exposes a log prefix that uniquely identifies its instance. This prefix can be obtained via the
+`Component#getLogPrefix()` method and is also available to the `ViewModel` through `ComponentMediator#getLogPrefix()`.
+
+In the default implementation (`AbstractComponent`), the log prefix is determined during construction by calling the
+protected method `resolveLogPrefix()`. By default, this method delegates to a static
+`Function<AbstractComponent<?>, String> logPrefixResolver` (which can be customized), which defines a consistent
+application-wide policy for computing log prefixes. This design allows all components to share a uniform logging format
+by default, while still enabling subclasses to override `resolveLogPrefix()` and provide a custom log prefix when needed.
+The resolved log prefix is stored in the component instance and remains stable for the component's entire lifecycle.
 
 ### Component Code Example<a name="component-code"></a>
 

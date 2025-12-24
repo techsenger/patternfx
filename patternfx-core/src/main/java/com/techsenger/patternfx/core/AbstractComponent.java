@@ -16,7 +16,9 @@
 
 package com.techsenger.patternfx.core;
 
+import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Function;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -32,14 +34,15 @@ public abstract class AbstractComponent<T extends AbstractComponentView<?, ?>> i
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractComponent.class);
 
-    private static String logDelimiter = " :";
+    private static Function<AbstractComponent<?>, String> logPrefixResolver = (c) -> "[" + c.getFullName() + "]";
 
-    public static String getLogDelimiter() {
-        return logDelimiter;
+    public static Function<AbstractComponent<?>, String> getLogPrefixResolver() {
+        return logPrefixResolver;
     }
 
-    public static void setLogDelimiter(String logDelimiter) {
-        AbstractComponent.logDelimiter = logDelimiter;
+    public static void setLogPrefixResolver(Function<AbstractComponent<?>, String> logPrefixResolver) {
+        Objects.requireNonNull(logPrefixResolver, "logPrefixResolver can't be null");
+        AbstractComponent.logPrefixResolver = logPrefixResolver;
     }
 
     protected class Mediator implements ComponentMediator {
@@ -141,7 +144,7 @@ public abstract class AbstractComponent<T extends AbstractComponentView<?, ?>> i
         long least32bits = uuid.getLeastSignificantBits() & 0xFFFFFFFFL;
         String shortUuid = String.format("%08X", least32bits);
         this.fullName = getName().getText() + "@" + shortUuid;
-        this.logPrefix = resolveLogPrefix(fullName);
+        this.logPrefix = resolveLogPrefix();
     }
 
     @Override
@@ -253,8 +256,8 @@ public abstract class AbstractComponent<T extends AbstractComponentView<?, ?>> i
         }
     }
 
-    protected String resolveLogPrefix(String fullName) {
-        return fullName + logDelimiter;
+    protected String resolveLogPrefix() {
+        return getLogPrefixResolver().apply(this);
     }
 
     /**
