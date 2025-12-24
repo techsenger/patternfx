@@ -66,4 +66,12 @@ public interface ParentComponent<T extends ParentView<?, ?>> extends Component<T
      * @return a tree-formatted string representation of this component
      */
     String toTreeString(BiConsumer<ParentComponent<?>, StringBuilder> componentAppender);
+
+    /**
+     * Deinitializes this component and all its descendants as a sub-tree with this component as the root.
+     *
+     * The deinitialization is performed using a breadth-first traversal: the parent component is deinitialized first,
+     * followed by its children level by level.
+     */
+    void deinitializeTree();
 }

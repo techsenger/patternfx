@@ -82,6 +82,11 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?, ?>
         public ObservableList<ChildViewModel<?>> getChildren() {
             return children;
         }
+
+        @Override
+        public void deinitializeTree() {
+            component.deinitializeTree();
+        }
     }
 
     private final ObservableList<ChildComponent<?>> modifiableChildren = FXCollections.observableArrayList();
@@ -141,6 +146,14 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?, ?>
     @Override
     public String toTreeString(BiConsumer<ParentComponent<?>, StringBuilder> componentAppender) {
         return toTreeString(depthFirstIterator(), componentAppender);
+    }
+
+    @Override
+    public void deinitializeTree() {
+        var iterator = breadthFirstIterator();
+        while (iterator.hasNext()) {
+            iterator.next().deinitialize();
+        }
     }
 
     protected ObservableList<ChildComponent<?>> getModifiableChildren() {
