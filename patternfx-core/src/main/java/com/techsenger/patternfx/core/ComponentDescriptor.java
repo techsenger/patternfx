@@ -70,33 +70,6 @@ public interface ComponentDescriptor {
     ReadOnlyObjectProperty<ComponentState> stateProperty();
 
     /**
-     * Returns the property for the history policy.
-     *
-     * @return
-     */
-    ObjectProperty<HistoryPolicy> historyPolicyProperty();
-
-    /**
-     * Returns the history policy.
-     *
-     * @return
-     */
-    HistoryPolicy getHistoryPolicy();
-
-    /**
-     * Sets the history policy to the specified value.
-     *
-     * @param policy the history policy to set.
-     */
-    void setHistoryPolicy(HistoryPolicy policy);
-
-    /**
-     * Returns the history of the component.
-     * @return
-     */
-    ComponentHistory<?> getHistory();
-
-    /**
      * Returns the current {@link ComponentGroup}.
      *
      * @return the current component group

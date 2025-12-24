@@ -22,25 +22,9 @@ import java.io.Serializable;
  * Represents a serializable snapshot of a component's {@code ViewModel} state. A history object stores only the
  * information that must persist between component sessions and excludes all transient or runtime aspects.
  *
- * <p>The {@code ViewModel} itself may contain both persistent and non-persistent values. It also defines default
- * values for all of its properties, regardless of whether they are stored in the history or used only at runtime. The
- * {@code ViewModel} owns the meaning of those defaults, while the history is responsible solely for persisting and
- * restoring the subset of states that are marked as persistent.
- *
- * <p>The history defines the persistent structure of a component and acts as a container for all states that should be
- * restored when the component is reinitialized. It is completely independent of the {@code ViewModel} and does not
- * contain default values or presentation logic. Default values belong to the {@code ViewModel}, while the history
- * merely reflects the states that were last saved.
- *
- * <p>It is the responsibility of the history to save and restore all persistent states of the {@code ViewModel} at the
- * appropriate points in the component's lifecycle. When the component becomes deinitialized, the current states of the
- * {@code ViewModel} are copied into the history. When the component is constructed again, the history restores those
- * states back into the {@code ViewModel}. This deterministic synchronization ensures a consistent mapping between the
- * runtime state and its persisted representation.
- *
  * @author Pavel Castornii
  */
-public interface ComponentHistory<T extends ComponentViewModel<?>> extends Serializable {
+public interface ComponentHistory extends Serializable {
 
     /**
      * Returns whether this history instance is fresh, meaning it was newly created and has not yet been used to
@@ -65,40 +49,4 @@ public interface ComponentHistory<T extends ComponentViewModel<?>> extends Seria
      * after loading it from a binary format.
      */
     void postDeserialize();
-
-    /**
-     * Method copies all data from history to view model. This method is called when the component
-     * becomes {@link ComponentState#CONSTRUCTED} and the policy is {@link HistoryPolicy#ALL} or
-     * {@link HistoryPolicy#DATA}.
-     *
-     * @param viewModel
-     */
-    void restoreData(T viewModel);
-
-    /**
-     * Method copies all data from view model to history. This method is called when the component
-     * becomes {@link ComponentState#DEINITIALIZED} and the policy is {@link HistoryPolicy#ALL} or
-     * {@link HistoryPolicy#DATA}.
-     *
-     * @param viewModel
-     */
-    void saveData(T viewModel);
-
-    /**
-     * Method copies all appearance information from history to view model. This method is called when the component
-     * becomes {@link ComponentState#CONSTRUCTED} and the policy is {@link HistoryPolicy#ALL} or
-     * {@link HistoryPolicy#APPEARANCE}.
-     *
-     * @param viewModel
-     */
-    void restoreAppearance(T viewModel);
-
-    /**
-     * Method copies all data from view model to history. This method is called when the component
-     * becomes {@link ComponentState#DEINITIALIZED} and the policy is {@link HistoryPolicy#ALL} or
-     * {@link HistoryPolicy#APPEARANCE}.
-     *
-     * @param viewModel
-     */
-    void saveAppearance(T viewModel);
 }

@@ -80,26 +80,6 @@ public abstract class AbstractComponent<T extends AbstractComponentView<?, ?>> i
         }
 
         @Override
-        public ObjectProperty<HistoryPolicy> historyPolicyProperty() {
-            return component.historyPolicyProperty();
-        }
-
-        @Override
-        public HistoryPolicy getHistoryPolicy() {
-            return component.getHistoryPolicy();
-        }
-
-        @Override
-        public void setHistoryPolicy(HistoryPolicy policy) {
-            component.setHistoryPolicy(policy);
-        }
-
-        @Override
-        public ComponentHistory<?> getHistory() {
-            return component.getHistory();
-        }
-
-        @Override
         public ComponentGroup getGroup() {
             return component.getGroup();
         }
@@ -130,13 +110,7 @@ public abstract class AbstractComponent<T extends AbstractComponentView<?, ?>> i
 
     private final ReadOnlyObjectWrapper<ComponentState> state = new ReadOnlyObjectWrapper<>(ComponentState.CREATING);
 
-    private final ObjectProperty<HistoryPolicy> historyPolicy = new SimpleObjectProperty<>(HistoryPolicy.NONE);
-
     private final ObjectProperty<ComponentGroup> group = new SimpleObjectProperty<>();
-
-    private HistoryProvider<?> historyProvider;
-
-    private ComponentHistory<?> history;
 
     public AbstractComponent(T view) {
         this.view = view;
@@ -175,26 +149,6 @@ public abstract class AbstractComponent<T extends AbstractComponentView<?, ?>> i
     @Override
     public ReadOnlyObjectProperty<ComponentState> stateProperty() {
         return state.getReadOnlyProperty();
-    }
-
-    @Override
-    public ObjectProperty<HistoryPolicy> historyPolicyProperty() {
-        return historyPolicy;
-    }
-
-    @Override
-    public HistoryPolicy getHistoryPolicy() {
-        return historyPolicy.get();
-    }
-
-    @Override
-    public void setHistoryPolicy(HistoryPolicy policy) {
-        historyPolicy.set(policy);
-    }
-
-    @Override
-    public ComponentHistory<?> getHistory() {
-        return history;
     }
 
     @Override
@@ -266,11 +220,7 @@ public abstract class AbstractComponent<T extends AbstractComponentView<?, ?>> i
     protected void preInitialize() {
         var mediator = createMediator();
         this.view.getViewModel().setMediator(mediator);
-        if (this.historyProvider != null) {
-            this.history = this.historyProvider.provide();
-            this.historyProvider = null;
-        }
-        this.view.getViewModel().restoreHistory();
+        this.view.getViewModel().prepareHistory();
     }
 
     /**
@@ -286,15 +236,7 @@ public abstract class AbstractComponent<T extends AbstractComponentView<?, ?>> i
     /**
      * The last method called in deinitialization.
      */
-    protected void postDeinitialize() {
-        if (this.history != null) {
-            this.view.getViewModel().saveHistory();
-        }
-    }
-
-    protected void setHistoryProvider(HistoryProvider<? extends ComponentHistory<?>> historyProvider) {
-        this.historyProvider = historyProvider;
-    }
+    protected void postDeinitialize() { }
 
     protected abstract Mediator createMediator();
 }

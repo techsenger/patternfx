@@ -163,8 +163,6 @@ The `Component` is responsible for:
 1. Initializing and deinitializing the component.
 2. Providing component data and related objects that directly belong to the component:
    - Structural data (parent/children references);
-   - Persistence data (component history);
-   - Configuration data (component settings);
    - Lifecycle data (component state);
    - Metadata (component ID, type, version, etc.).
 3. Creating, initializing, adding to the component tree, removing from the component tree, and deinitializing
@@ -220,8 +218,8 @@ In addition to the four main classes, a component may include a `ComponentHistor
 state across its lifecycle. In the default implementation, the `ComponentHistory` instance is lazily provided via a
 `HistoryProvider` that is set before initialization. During the `preInitialize()` phase, the provider’s `provide()`
 method is called to obtain the history. After the history is obtained, the provider is cleared (set to null), and the
-component uses the history. State restoration occurs in the `preInitialize()` phase via the
-`AbstractComponentViewModel#restoreHistory()` method. State saving occurs in the `postDeinitialize()` phase via the
+component uses the history. State restoration occurs in the `initialize()` phase via the
+`AbstractComponentViewModel#restoreHistory()` method. State saving occurs in the `deinitialize()` phase via the
 `AbstractComponentViewModel#saveHistory()` method. The volume and type of state information that is restored and
 persisted are determined by the `HistoryPolicy` enum.
 

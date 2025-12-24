@@ -16,11 +16,39 @@
 
 package com.techsenger.patternfx.core;
 
+import javafx.beans.property.ObjectProperty;
+
 /**
  *
  * @author Pavel Castornii
  */
 public interface ComponentViewModel<T extends ComponentMediator> {
 
+    /**
+     * Returns the property for the history policy.
+     *
+     * @return
+     */
+    ObjectProperty<HistoryPolicy> historyPolicyProperty();
+
+    /**
+     * Returns the history policy.
+     *
+     * @return
+     */
+    HistoryPolicy getHistoryPolicy();
+
+    /**
+     * Sets the history policy to the specified value.
+     *
+     * @param policy the history policy to set.
+     */
+    void setHistoryPolicy(HistoryPolicy policy);
+
+    /**
+     * Returns the mediator of the component.
+     *
+     * @return
+     */
     T getMediator();
 }

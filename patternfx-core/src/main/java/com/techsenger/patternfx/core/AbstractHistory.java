@@ -20,7 +20,7 @@ package com.techsenger.patternfx.core;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractHistory<T extends AbstractComponentViewModel<?>> implements ComponentHistory<T> {
+public abstract class AbstractHistory implements ComponentHistory {
 
     private boolean fresh = true;
 
@@ -38,23 +38,7 @@ public abstract class AbstractHistory<T extends AbstractComponentViewModel<?>> i
 
     }
 
-    @Override
-    public void restoreData(T viewModel) {
-
-    }
-
-    @Override
-    public void saveData(T viewModel) {
-        this.fresh = false;
-    }
-
-    @Override
-    public void restoreAppearance(T viewModel) {
-
-    }
-
-    @Override
-    public void saveAppearance(T viewModel) {
-        this.fresh = false;
+    void setFresh(boolean fresh) {
+        this.fresh = fresh;
     }
 }
