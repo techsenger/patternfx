@@ -47,15 +47,16 @@ public interface ParentComponent<T extends ParentView<?, ?>> extends Component<T
     SubtreeIterator<ParentComponent<?>> breadthFirstIterator();
 
     /**
-     * Returns a string representation of this component and all its descendants formatted as a tree.
+     * Returns a string representation of this component and all its descendants as a sub-tree with this
+     * component as root.
      *
      * @return a tree-formatted string representation of this component
      */
     String toTreeString();
 
     /**
-     * Returns a string representation of this component and all its descendants formatted as a tree, allowing the
-     * caller to append an additional note for each component.
+     * Returns a string representation of this component and all its descendants as a sub-tree with this component
+     * as root, allowing the caller to customize the string output for each component.
      *
      * The provided {@code componentAppender} is invoked for each component and is responsible for appending the
      * complete string representation of that component to the given {@link StringBuilder}. The tree structure and
