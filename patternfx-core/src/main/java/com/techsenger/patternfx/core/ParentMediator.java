@@ -37,14 +37,14 @@ public interface ParentMediator extends ComponentMediator {
      *
      * @return an {@link Iterator} that iterates over this component and all of its descendants
      */
-    SubtreeIterator<ParentViewModel<?>> depthFirstIterator();
+    TreeIterator<ParentViewModel<?>> depthFirstIterator();
 
     /**
      * Returns an iterator that traverses the component subtree starting from this component in breadth-first order.
      *
      * @return an {@link Iterator} that iterates over this component and all of its descendants
      */
-    SubtreeIterator<ParentViewModel<?>> breadthFirstIterator();
+    TreeIterator<ParentViewModel<?>> breadthFirstIterator();
 
     /**
      * Returns a string representation of this component and all its descendants as a sub-tree with this

@@ -37,14 +37,14 @@ public interface ParentComponent<T extends ParentView<?, ?>> extends Component<T
      *
      * @return an {@link Iterator} that iterates over this component and all of its descendants
      */
-    SubtreeIterator<ParentComponent<?>> depthFirstIterator();
+    TreeIterator<ParentComponent<?>> depthFirstIterator();
 
     /**
      * Returns an iterator that traverses the component subtree starting from this component in breadth-first order.
      *
      * @return an {@link Iterator} that iterates over this component and all of its descendants
      */
-    SubtreeIterator<ParentComponent<?>> breadthFirstIterator();
+    TreeIterator<ParentComponent<?>> breadthFirstIterator();
 
     /**
      * Returns a string representation of this component and all its descendants as a sub-tree with this

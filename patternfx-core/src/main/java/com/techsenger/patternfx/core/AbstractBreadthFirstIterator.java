@@ -26,7 +26,7 @@ import javafx.util.Pair;
  *
  * @author Pavel Castornii
  */
-abstract class AbstractBreadthFirstIterator<T> implements SubtreeIterator<T> {
+abstract class AbstractBreadthFirstIterator<T> implements TreeIterator<T> {
 
     private final Queue<Pair<T, Integer>> queue = new LinkedList<>();
 

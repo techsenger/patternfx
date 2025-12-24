@@ -47,7 +47,7 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?, ?>
         }
 
         @Override
-        public SubtreeIterator<ParentViewModel<?>> depthFirstIterator() {
+        public TreeIterator<ParentViewModel<?>> depthFirstIterator() {
             return new AbstractDepthFirstIterator<ParentViewModel<?>>(getView().getViewModel()) {
 
                 @Override
@@ -58,7 +58,7 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?, ?>
         }
 
         @Override
-        public SubtreeIterator<ParentViewModel<?>> breadthFirstIterator() {
+        public TreeIterator<ParentViewModel<?>> breadthFirstIterator() {
             return new AbstractBreadthFirstIterator<ParentViewModel<?>>(getView().getViewModel()) {
 
                 @Override
@@ -107,7 +107,7 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?, ?>
     }
 
     @Override
-    public SubtreeIterator<ParentComponent<?>> depthFirstIterator() {
+    public TreeIterator<ParentComponent<?>> depthFirstIterator() {
         return new AbstractDepthFirstIterator<ParentComponent<?>>(this) {
 
             @Override
@@ -118,7 +118,7 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?, ?>
     }
 
     @Override
-    public SubtreeIterator<ParentComponent<?>> breadthFirstIterator() {
+    public TreeIterator<ParentComponent<?>> breadthFirstIterator() {
         return new AbstractBreadthFirstIterator<ParentComponent<?>>(this) {
 
             @Override
@@ -150,7 +150,7 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?, ?>
     @Override
     protected abstract Mediator createMediator();
 
-    public <T> String toTreeString(SubtreeIterator<T> iterator, BiConsumer<T, StringBuilder> componentAppender) {
+    public <T> String toTreeString(TreeIterator<T> iterator, BiConsumer<T, StringBuilder> componentAppender) {
         var builder = new StringBuilder();
         var sep = System.lineSeparator();
         while (iterator.hasNext()) {

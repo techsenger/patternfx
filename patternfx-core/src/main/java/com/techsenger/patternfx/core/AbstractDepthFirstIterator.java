@@ -25,7 +25,7 @@ import javafx.util.Pair;
  *
  * @author Pavel Castornii
  */
-abstract class AbstractDepthFirstIterator<T> implements SubtreeIterator<T> {
+abstract class AbstractDepthFirstIterator<T> implements TreeIterator<T> {
 
     private final Stack<Pair<T, Integer>> stack = new Stack<>();
 

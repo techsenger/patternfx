@@ -22,7 +22,7 @@ import java.util.Iterator;
  *
  * @author Pavel Castornii
  */
-public interface SubtreeIterator<T> extends Iterator<T> {
+public interface TreeIterator<T> extends Iterator<T> {
 
     int getDepth();
 }
