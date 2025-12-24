@@ -33,9 +33,8 @@ public class Demo extends Application {
         var view = new PersonRegistryView(stage, viewModel);
         var component = new PersonRegistryComponent(view);
         component.initialize();
-        // just to show that every component must be deinitialized,
-        // it has no effect on the demo application
-        stage.setOnCloseRequest(e -> component.deinitialize());
+        // the component will be deinitialized automatically when the stage
+        // is closed, via the handler registered with stage#setOnCloseRequest.
     }
 
 }

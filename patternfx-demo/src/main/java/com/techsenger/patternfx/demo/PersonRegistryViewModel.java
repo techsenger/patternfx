@@ -109,6 +109,10 @@ public class PersonRegistryViewModel extends AbstractParentViewModel<PersonRegis
         }
     }
 
+    void close() {
+        getMediator().deinitialize();
+    }
+
     private void add(Person person) {
         service.save(person);
         persons.add(person);

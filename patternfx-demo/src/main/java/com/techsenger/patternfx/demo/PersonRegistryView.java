@@ -88,19 +88,20 @@ public class PersonRegistryView extends AbstractParentView<PersonRegistryViewMod
     @Override
     protected void bind() {
         super.bind();
-        var vm = getViewModel();
-        stage.titleProperty().bind(vm.titleProperty());
-        vm.selectedPersonProperty().bind(personTable.getSelectionModel().selectedItemProperty());
-        removeButton.disableProperty().bind(vm.removeDisabledProperty());
+        var viewModel = getViewModel();
+        stage.titleProperty().bind(viewModel.titleProperty());
+        viewModel.selectedPersonProperty().bind(personTable.getSelectionModel().selectedItemProperty());
+        removeButton.disableProperty().bind(viewModel.removeDisabledProperty());
     }
 
     @Override
     protected void addHandlers() {
         super.addHandlers();
-        var vm = getViewModel();
-        addButton.setOnAction(e -> vm.add());
-        removeButton.setOnAction(e -> vm.remove());
-        refreshButton.setOnAction(e -> vm.refresh());
+        var viewModel = getViewModel();
+        addButton.setOnAction(e -> viewModel.add());
+        removeButton.setOnAction(e -> viewModel.remove());
+        refreshButton.setOnAction(e -> viewModel.refresh());
+        stage.setOnCloseRequest(e -> viewModel.close());
     }
 
     Stage getStage() {
