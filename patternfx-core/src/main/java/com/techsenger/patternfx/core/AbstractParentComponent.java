@@ -22,6 +22,8 @@ import java.util.function.BiConsumer;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -29,6 +31,8 @@ import javafx.collections.ObservableList;
  */
 public abstract class AbstractParentComponent<T extends AbstractParentView<?, ?>> extends AbstractComponent<T>
         implements ParentComponent<T> {
+
+    private static final Logger logger = LoggerFactory.getLogger(AbstractParentComponent.class);
 
     protected class Mediator extends AbstractComponent.Mediator implements ParentMediator {
 
@@ -150,6 +154,10 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?, ?>
 
     @Override
     public void deinitializeTree() {
+        if (logger.isDebugEnabled()) {
+            var tree = toTreeString();
+            logger.debug("{} Deinitializing this component tree:\n{}", getLogPrefix(), tree);
+        }
         var iterator = breadthFirstIterator();
         while (iterator.hasNext()) {
             iterator.next().deinitialize();
