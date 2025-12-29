@@ -14,17 +14,29 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.core;
+package com.techsenger.patternfx.demo.mvvmx;
+
+import com.techsenger.patternfx.core.Name;
+import com.techsenger.patternfx.demo.DemoNames;
+import com.techsenger.patternfx.mvvmx.AbstractComponent;
 
 /**
- * Provides a history instance for a component. This method is called during the {@code preInitialize()} phase. After
- * the history is obtained, the component uses the returned history, and the provider is cleared (set to null).
  *
- * @param <T> the type of {@link History} provided
  * @author Pavel Castornii
  */
-@FunctionalInterface
-public interface HistoryProvider<T extends History> {
+public class MvvmxDialogComponent extends AbstractComponent<MvvmxDialogView> {
 
-    T provide();
+    public MvvmxDialogComponent(MvvmxDialogView view) {
+        super(view);
+    }
+
+    @Override
+    public Name getName() {
+        return DemoNames.PERSON_DIALOG;
+    }
+
+    @Override
+    protected Mediator createMediator() {
+        return new AbstractComponent.Mediator() { };
+    }
 }

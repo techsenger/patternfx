@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.core;
+module com.techsenger.patternfx.mvvmx {
+    requires org.slf4j;
+    requires com.techsenger.patternfx.core;
+    requires com.techsenger.toolkit.fx;
+    requires javafx.base;
+    requires javafx.graphics;
 
-/**
- * Provides a history instance for a component. This method is called during the {@code preInitialize()} phase. After
- * the history is obtained, the component uses the returned history, and the provider is cleared (set to null).
- *
- * @param <T> the type of {@link History} provided
- * @author Pavel Castornii
- */
-@FunctionalInterface
-public interface HistoryProvider<T extends History> {
-
-    T provide();
+    exports com.techsenger.patternfx.mvvmx;
 }

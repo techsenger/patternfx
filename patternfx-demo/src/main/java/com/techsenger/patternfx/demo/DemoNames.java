@@ -14,17 +14,23 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.core;
+package com.techsenger.patternfx.demo;
+
+import com.techsenger.patternfx.core.Name;
 
 /**
- * Provides a history instance for a component. This method is called during the {@code preInitialize()} phase. After
- * the history is obtained, the component uses the returned history, and the provider is cleared (set to null).
  *
- * @param <T> the type of {@link History} provided
  * @author Pavel Castornii
  */
-@FunctionalInterface
-public interface HistoryProvider<T extends History> {
+public final class DemoNames {
 
-    T provide();
+    public static final Name PERSON_REGISTRY = new Name("PersonRegistry");
+
+    public static final Name PERSON_DIALOG = new Name("PersonDialog");
+
+    public static final Name PERSON_REPORT = new Name("PersonReport");
+
+    private DemoNames() {
+        //empty
+    }
 }

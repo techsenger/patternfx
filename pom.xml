@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.techsenger.maven.root</groupId>
         <artifactId>maven-root</artifactId>
-        <version>1.6.0-SNAPSHOT</version>
+        <version>1.6.0</version>
     </parent>
 
     <groupId>com.techsenger.patternfx</groupId>
@@ -43,6 +43,8 @@
 
     <properties>
         <publishing.plugin.exclusions>patternfx-demo</publishing.plugin.exclusions>
+        <!-- JavaFX 19 has a bug: it shows a system notification on Ubuntu when a dialog is closed -->
+        <javafx.version>18</javafx.version>
     </properties>
 
     <repositories>
@@ -63,9 +65,25 @@
             <dependency>
                 <groupId>com.techsenger.osp.bom</groupId>
                 <artifactId>osp-bom</artifactId>
-                <version>1.7.0-SNAPSHOT</version>
+                <version>1.8.0-SNAPSHOT</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-base</artifactId>
+                <version>${javafx.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-graphics</artifactId>
+                <version>${javafx.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-controls</artifactId>
+                <version>${javafx.version}</version>
             </dependency>
 
             <dependency>
@@ -73,12 +91,24 @@
                 <artifactId>patternfx-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.techsenger.patternfx</groupId>
+                <artifactId>patternfx-mvvm</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.techsenger.patternfx</groupId>
+                <artifactId>patternfx-mvvmx</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <modules>
         <module>patternfx-core</module>
+        <module>patternfx-mvvm</module>
         <module>patternfx-demo</module>
+        <module>patternfx-mvvmx</module>
     </modules>
 </project>
 

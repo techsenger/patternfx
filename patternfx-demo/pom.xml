@@ -15,8 +15,6 @@
 
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
-        <!-- JavaFX 19 has a bug: it shows a system notification on Ubuntu when a dialog is closed -->
-        <javafx.version>18</javafx.version>
     </properties>
 
     <dependencies>
@@ -29,19 +27,24 @@
             <artifactId>patternfx-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.techsenger.patternfx</groupId>
+            <artifactId>patternfx-mvvm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.techsenger.patternfx</groupId>
+            <artifactId>patternfx-mvvmx</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-base</artifactId>
-            <version>${javafx.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics</artifactId>
-            <version>${javafx.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>${javafx.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>

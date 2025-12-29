@@ -17,7 +17,20 @@
 package com.techsenger.patternfx.demo;
 
 import com.techsenger.patternfx.demo.model.PersonService;
+import com.techsenger.patternfx.demo.mvvm.MvvmRegistryView;
+import com.techsenger.patternfx.demo.mvvm.MvvmRegistryViewModel;
+import com.techsenger.patternfx.demo.mvvmx.MvvmxRegistryComponent;
+import com.techsenger.patternfx.demo.mvvmx.MvvmxRegistryView;
+import com.techsenger.patternfx.demo.mvvmx.MvvmxRegistryViewModel;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
@@ -26,15 +39,60 @@ import javafx.stage.Stage;
  */
 public class Demo extends Application {
 
+    private enum Pattern {
+        MVVM, MVVMX
+    }
+
+    private final Label label = new Label("Select Pattern:");
+
+    private final ObservableList<Pattern> patterns = FXCollections.observableArrayList(Pattern.values());
+
+    private final ListView<Pattern> patternListView = new ListView<>(patterns);
+
+    private final VBox root = new VBox(label, patternListView);
+
     @Override
     public void start(Stage stage) throws Exception {
-        var service = new PersonService();
-        var viewModel = new PersonRegistryViewModel(service);
-        var view = new PersonRegistryView(stage, viewModel);
-        var component = new PersonRegistryComponent(view);
-        component.initialize();
-        // the component will be deinitialized automatically when the stage
-        // is closed, via the handler registered with stage#setOnCloseRequest.
+        patternListView.setCellFactory(lv -> {
+            ListCell<Pattern> cell = new ListCell<>() {
+                @Override
+                protected void updateItem(Pattern item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText(empty || item == null ? null : item.toString());
+                }
+            };
+
+            cell.setOnMouseClicked(event -> {
+                if (!cell.isEmpty() && event.getClickCount() == 2) {
+                    Pattern pattern = cell.getItem();
+                    createDemo(pattern);
+                }
+            });
+            return cell;
+        });
+        root.setSpacing(Style.INSET);
+        root.setPadding(new Insets(Style.INSET));
+        var scene = new Scene(root, 300, 200);
+        stage.setTitle("PatternFX");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private void createDemo(Pattern pattern) {
+        // the unit will be deinitialized automatically when the stage
+        // is closed, via the handler registered with stage#setOnCloseRequest
+        if (pattern == Pattern.MVVM) {
+            var service = new PersonService();
+            var viewModel = new MvvmRegistryViewModel(service);
+            var view = new MvvmRegistryView(viewModel);
+            view.initialize();
+        } else if (pattern == Pattern.MVVMX) {
+            var service = new PersonService();
+            var viewModel = new MvvmxRegistryViewModel(service);
+            var view = new MvvmxRegistryView(viewModel);
+            var component = new MvvmxRegistryComponent(view);
+            component.initialize();
+        }
     }
 
 }

@@ -14,17 +14,24 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.core;
+package com.techsenger.patternfx.mvvmx;
 
 /**
- * Provides a history instance for a component. This method is called during the {@code preInitialize()} phase. After
- * the history is obtained, the component uses the returned history, and the provider is cleared (set to null).
+ * Nested component is any component.
  *
- * @param <T> the type of {@link History} provided
  * @author Pavel Castornii
  */
-@FunctionalInterface
-public interface HistoryProvider<T extends History> {
+public interface ChildView<T extends ChildViewModel<?>, S extends ChildComponent<?>> extends ParentView<T, S> {
 
-    T provide();
+    /**
+     * Requests focus. Child component implements this method via selecting FX node that will request focus.
+     */
+    void requestFocus();
+
+    /**
+     * Returns the main node of the component. It can be Tab, Node etc.
+     *
+     * @return
+     */
+    Object getNode();
 }

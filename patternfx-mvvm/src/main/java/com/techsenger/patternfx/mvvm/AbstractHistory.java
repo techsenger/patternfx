@@ -14,17 +14,34 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.core;
+package com.techsenger.patternfx.mvvm;
+
+import com.techsenger.patternfx.core.History;
 
 /**
- * Provides a history instance for a component. This method is called during the {@code preInitialize()} phase. After
- * the history is obtained, the component uses the returned history, and the provider is cleared (set to null).
  *
- * @param <T> the type of {@link History} provided
  * @author Pavel Castornii
  */
-@FunctionalInterface
-public interface HistoryProvider<T extends History> {
+public abstract class AbstractHistory implements History {
 
-    T provide();
+    private boolean fresh = true;
+
+    @Override
+    public boolean isFresh() {
+        return fresh;
+    }
+
+    @Override
+    public void postDeserialize() {
+
+    }
+
+    @Override
+    public void preSerialize() {
+
+    }
+
+    void setFresh(boolean fresh) {
+        this.fresh = fresh;
+    }
 }

@@ -25,13 +25,13 @@ import javafx.util.Pair;
  *
  * @author Pavel Castornii
  */
-abstract class AbstractDepthFirstIterator<T> implements TreeIterator<T> {
+public abstract class AbstractDepthFirstIterator<T> implements TreeIterator<T> {
 
     private final Stack<Pair<T, Integer>> stack = new Stack<>();
 
     private int currentDepth = -1;
 
-    AbstractDepthFirstIterator(T root) {
+    protected AbstractDepthFirstIterator(T root) {
         stack.push(new Pair<>(root, 0));
     }
 
@@ -64,5 +64,5 @@ abstract class AbstractDepthFirstIterator<T> implements TreeIterator<T> {
         return node;
     }
 
-    abstract List<T> getChildren(T parent);
+    protected abstract List<T> getChildren(T parent);
 }

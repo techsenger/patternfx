@@ -14,17 +14,30 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.core;
+package com.techsenger.patternfx.mvvm;
+
+import com.techsenger.patternfx.core.AbstractDescriptor;
+import com.techsenger.patternfx.core.Name;
+import com.techsenger.patternfx.core.State;
+import java.util.UUID;
 
 /**
- * Provides a history instance for a component. This method is called during the {@code preInitialize()} phase. After
- * the history is obtained, the component uses the returned history, and the provider is cleared (set to null).
  *
- * @param <T> the type of {@link History} provided
  * @author Pavel Castornii
  */
-@FunctionalInterface
-public interface HistoryProvider<T extends History> {
+public final class Descriptor extends AbstractDescriptor {
 
-    T provide();
+    public Descriptor(Name name) {
+        super(name);
+    }
+
+    public Descriptor(Name name, UUID uuid) {
+        super(name, uuid);
+    }
+
+    @Override
+    protected void setState(State state) {
+        super.setState(state);
+    }
+
 }

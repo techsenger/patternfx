@@ -14,17 +14,24 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.core;
+package com.techsenger.patternfx.demo.mvvmx;
+
+import com.techsenger.patternfx.mvvmx.ParentMediator;
+import javafx.beans.property.ReadOnlyObjectProperty;
 
 /**
- * Provides a history instance for a component. This method is called during the {@code preInitialize()} phase. After
- * the history is obtained, the component uses the returned history, and the provider is cleared (set to null).
  *
- * @param <T> the type of {@link History} provided
  * @author Pavel Castornii
  */
-@FunctionalInterface
-public interface HistoryProvider<T extends History> {
+public interface MvvmxRegistryMediator extends ParentMediator {
 
-    T provide();
+    ReadOnlyObjectProperty<MvvmxReportViewModel> reportProperty();
+
+    MvvmxReportViewModel getReport();
+
+    void addReport(MvvmxReportViewModel report);
+
+    void removeReport();
+
+    void openDialog(MvvmxDialogViewModel dialog);
 }

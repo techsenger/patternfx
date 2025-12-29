@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.core;
+package com.techsenger.patternfx.mvvmx;
 
 /**
- * Provides a history instance for a component. This method is called during the {@code preInitialize()} phase. After
- * the history is obtained, the component uses the returned history, and the provider is cleared (set to null).
  *
- * @param <T> the type of {@link History} provided
  * @author Pavel Castornii
  */
-@FunctionalInterface
-public interface HistoryProvider<T extends History> {
+public abstract class AbstractParentView<T extends AbstractParentViewModel<?>, S extends AbstractParentComponent<?>>
+        extends AbstractComponentView<T, S> implements ParentView<T, S> {
 
-    T provide();
+
+    public AbstractParentView(T viewModel) {
+        super(viewModel);
+    }
 }
