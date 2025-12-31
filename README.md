@@ -420,6 +420,8 @@ view.deinitialize();
 
 ## MVVMX Template <a name="mvvmx-template"></a>
 
+<img width="1217" height="542" alt="PatternFX" src="https://github.com/user-attachments/assets/21a63b51-f939-407c-b3ea-03e4f62815d7" />
+
 In this template, additional elements — `Component` and `Mediator` — are introduced to handle all additional tasks.
 
 | **Task**                                              | **Responsible**                    |
