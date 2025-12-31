@@ -408,6 +408,15 @@ public class FooView extends AbstractChildView<FooViewModel> {
     ...
 }
 ```
+This code demonstrates how to create the foo component instance:
+
+```java
+var viewModel = new FooViewModel();
+var view = new FooView(viewModel);
+view.initialize();
+... // use the component
+view.deinitialize();
+```
 
 ## MVVMX Template <a name="mvvmx-template"></a>
 
