@@ -267,6 +267,8 @@ manipulation of UI elements. This makes the code more flexible and scalable.
 
 ## MVVM Template <a name="mvvm-template"></a>
 
+<img width="1211" height="537" alt="PatternFX MVVM" src="https://github.com/user-attachments/assets/72e4465b-dac7-4320-92ed-247f7a062068" />
+
 In this template, additional tasks are distributed between the `View` and `ViewModel`. For tasks that cannot be
 performed without creating an additional element, a `Composer` is introduced:
 
@@ -420,7 +422,7 @@ view.deinitialize();
 
 ## MVVMX Template <a name="mvvmx-template"></a>
 
-<img width="1217" height="542" alt="PatternFX" src="https://github.com/user-attachments/assets/21a63b51-f939-407c-b3ea-03e4f62815d7" />
+<img width="1217" height="542" alt="PatternFX MVVMX" src="https://github.com/user-attachments/assets/21a63b51-f939-407c-b3ea-03e4f62815d7" />
 
 In this template, additional elements — `Component` and `Mediator` — are introduced to handle all additional tasks.
 
