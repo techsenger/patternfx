@@ -105,11 +105,12 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?, ?>
         super(view);
         modifiableChildren.addListener((ListChangeListener<ChildComponent<?>>) (e) -> {
             while (e.next()) {
-                if (e.wasAdded()) {
+                if (e.wasAdded() || e.wasReplaced()) {
                     for (var c: e.getAddedSubList()) {
                         c.setParent(this);
                     }
-                } else if (e.wasRemoved()) {
+                }
+                if (e.wasRemoved() || e.wasReplaced()) {
                     for (var c: e.getRemoved()) {
                         c.setParent(null);
                     }

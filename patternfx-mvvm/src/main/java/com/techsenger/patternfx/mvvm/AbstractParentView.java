@@ -48,11 +48,12 @@ public abstract class AbstractParentView<VM extends AbstractParentViewModel<?>>
         super(viewModel);
         modifiableChildren.addListener((ListChangeListener<ChildView<?>>) (e) -> {
             while (e.next()) {
-                if (e.wasAdded()) {
+                if (e.wasAdded() || e.wasReplaced()) {
                     for (var c: e.getAddedSubList()) {
                         c.setParent(this);
                     }
-                } else if (e.wasRemoved()) {
+                }
+                if (e.wasRemoved() || e.wasReplaced()) {
                     for (var c: e.getRemoved()) {
                         c.setParent(null);
                     }
