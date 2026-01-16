@@ -18,6 +18,7 @@ package com.techsenger.patternfx.demo.mvvm;
 
 import com.techsenger.patternfx.demo.DemoNames;
 import com.techsenger.patternfx.demo.model.Person;
+import com.techsenger.patternfx.demo.model.PersonValidator;
 import com.techsenger.patternfx.mvvm.AbstractViewModel;
 import com.techsenger.patternfx.mvvm.Descriptor;
 import java.util.function.Consumer;
@@ -121,24 +122,9 @@ public class MvvmDialogViewModel extends AbstractViewModel {
     }
 
     private boolean isPersonValid() {
-        firstNameValid.set(isFirstNameValid());
-        lastNameValid.set(isLastNameValid());
-        ageValid.set(isAgeValid());
+        firstNameValid.set(PersonValidator.isFirstNameValid(getFirstName()));
+        lastNameValid.set(PersonValidator.isLastNameValid(getLastName()));
+        ageValid.set(PersonValidator.isAgeValid(getAge()));
         return firstNameValid.get() && lastNameValid.get() && ageValid.get();
-    }
-
-    private boolean isFirstNameValid() {
-        var name = getFirstName();
-        return name != null && !name.isBlank();
-    }
-
-    private boolean isLastNameValid() {
-        var name = getLastName();
-        return name != null && !name.isBlank();
-    }
-
-    private boolean isAgeValid() {
-        var a = getAge();
-        return a != null && a >= 0 && a <= 125;
     }
 }
