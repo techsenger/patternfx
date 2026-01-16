@@ -30,6 +30,7 @@ As a real example of using this framework, see [TabShell](https://github.com/tec
 * [MVVM Pattern](#mvvm-pattern)
     * [MVVM Overview](#mvvm-pattern-overview)
     * [MVVM Advantages](#mvvm-pattern-advantages)
+    * [MVVM Disadvantages](#mvvm-pattern-disadvantages)
 * [MVVM Template](#mvvm-template)
     * [Component Structure](#mvvm-template-structure)
     * [Component Lifecycle](#mvvm-template-lifecycle)
@@ -252,18 +253,34 @@ display in the `View`. It can transform the data from the model into a format su
 
 * Separation of concerns. MVVM helps to clearly separate the presentation logic (`View`), business logic and data
 (`Model`), and interaction logic (`ViewModel`). This simplifies code maintenance and makes it more readable.
-
 * Testability. The `ViewModel` can be tested independently of the user interface (UI) because it is not tied to specific
 visual elements. This makes it easy to write unit tests for business logic.
-
 * Two-way data binding. In MVVM, data is automatically synchronized between the `View` and `ViewModel`, which reduces the
 amount of code required for managing UI state and simplifies updates.
-
 * Simplification of complex UIs. When an application has complex UIs with dynamic data, MVVM helps make the code more
 understandable and structured, easing management of UI element states.
-
 * UI updates without direct manipulation. The `ViewModel` manages updates to the `View` via data binding, avoiding direct
 manipulation of UI elements. This makes the code more flexible and scalable.
+
+### MVVM Disadvantages <a name="mvvm-pattern-disadvantages"></a>
+
+* The need to mirror UI state in the ViewModel. JavaFX nodes already contain their own state (properties like selected,
+disabled, and text). MVVM requires creating parallel state in the ViewModel and synchronizing it through data binding.
+This creates redundancy: the same state exists in two places—natively in the View's nodes and explicitly in the
+ViewModel's properties. It is important to note that this state must be explicitly exposed in the `ViewModel`
+due to MVVM's architecture, and is not required for any other purpose in JavaFX (unlike mobile application development,
+where it may be necessary to store state separately from the `View`). To illustrate, imagine you have a
+`ToggleButton foo` in the `View`. Then, in the `ViewModel`, you might have:
+
+```java
+BooleanProperty fooDisabled = new SimpleBooleanProperty();
+StringProperty fooText = new SimpleStringProperty();
+BooleanProperty fooSelected = new SimpleBooleanProperty();
+
++ 3 property accessors, 3 setters, 3 getters
+```
+* Some changes to the View are difficult to propagate through state. This occurs when JavaFX provides only read-only
+properties or special methods for performing actions, or when using controls from third-party libraries.
 
 ## MVVM Template <a name="mvvm-template"></a>
 
