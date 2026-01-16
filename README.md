@@ -50,8 +50,18 @@ As a real example of using this framework, see [TabShell](https://github.com/tec
 ## Overview <a name="overview"></a>
 
 Today, there are various architectural patterns available for developing JavaFX applications, which developers can
-choose depending on their goals and preferences. At the same time, when building real-world applications, developers
-often face challenges that standard patterns do not fully address. These include:
+choose depending on their goals and preferences. The most popular patterns are MVC, MVP, and MVVM. The core difference
+between them lies in how the presentation logic interacts with the `View`:
+
+* In MVC, the Controller holds a direct reference to the concrete View.
+* In MVP, the Presenter depends on the View only through an interface.
+* In MVVM, the ViewModel has no reference to the View at all.
+
+All other characteristics of these patterns—such as testability, use of bindings, and the way UI updates are
+performed — are direct consequences of this difference in dependency structure.
+
+At the same time, when building real-world applications, developers often face challenges that standard patterns do
+not fully address. These include:
 
 1. Storing metadata for a component.
 2. Managing the lifecycle of a component.
