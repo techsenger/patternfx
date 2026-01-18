@@ -553,8 +553,9 @@ method is called.
 ```java
 public interface FooComposer extends ParentComposer {
 
-    BarPort addBar();
+    void addBar();
 
+    BarPort getBar();
     ...
 }
 ```
@@ -577,7 +578,7 @@ public class FooPresenter<V extends FooView, C extends FooComposer> extends Abst
     }
 
     public void handleAction() {
-        var bar = getComposer().addBar();
+        getComposer().addBar();
         // use bar
     }
 
@@ -593,15 +594,23 @@ public class FooJfxView<P extends FooPresenter<?, ?>> extends AbstractParentJfxV
     protected class ComposerImpl implements FooComposer {
 
         @Override
-        public BarPort addBar() {
-            var v = new BarJfxView();
-            var p = new BarPresenter(v);
+        public void addBar() {
+            bar = new BarJfxView();
+            var p = new BarPresenter(bar);
             p.initialize();
-            getModifiableChildren().add(v);
-            someNode.getChildren().add(v.getNode()); // adding bar view into foo view
-            return p.getPort();
+            getModifiableChildren().add(bar);
+            someNode.getChildren().add(bar.getNode()); // adding bar view into foo view
+        }
+
+        @Override
+        public BarPort getBar() {
+            if (bar != null) {
+                return bar.getPresenter().getPort();
+            }
         }
     }
+
+    private BarJfxView bar;
 
     public FooJfxView() {
         ...
