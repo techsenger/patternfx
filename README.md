@@ -30,6 +30,7 @@ As a real example of using this framework, see [TabShell](https://github.com/tec
     * [MVC vs MVP vs MVVM](#patterns-mvc-mvp-mvvm)
 * [Templates](#templates)
     * [Component](#templates-component)
+        * [Component Types](#templates-component-types)
         * [Component Lifecycle](#templates-component-lifecycle)
         * [Component Tree](#templates-component-tree)
         * [Imperative Component Management](#templates-component-management)
@@ -287,7 +288,7 @@ for action-driven scenarios (e.g., navigation and complex editing tools).
 In PatternFX, a template is a complete, opinionated implementation of an architectural pattern adapted for JavaFX
 applications. A template defines:
 
-* The set of architectural roles involved (e.g., View, Presenter, ViewModel).
+* The set of architectural roles involved (e.g., `View`, `Presenter`, `ViewModel`).
 * The responsibilities and constraints of each role.
 * The allowed communication paths between components.
 * The component lifecycle and integration with the PatternFX application model
@@ -319,6 +320,29 @@ dynamically added and removed. In this case, there are two components. The first
 A natural question might arise: why is there no `Model` in the component? Firstly, a component is a building block
 for constructing a user interface, which might not be related to the application's business logic at all. Secondly,
 the `Model` exists independently of the UI and should have no knowledge of the component's existence.
+
+#### Component Types<a name="templates-component-types"></a>
+
+Each template in the framework provides base classes and interfaces for creating three types of components, which
+form a hierarchy of inheritance and composition:
+
+* **Base Component** — the fundamental implementation of the selected architectural pattern. This is the simplest and
+“purest” component type, providing only minimal functionality: lifecycle management and interaction between the core
+elements of the pattern. Base components do not support parent–child relationships and therefore cannot participate
+in a tree-like composition. They are intended for isolated, self-contained windows or dialogs.
+
+* **Parent Component** — extends the base component by adding the ability to act as a container for child components.
+This type is responsible for creating children, managing their lifecycle, and composing them. It is typically used
+for composite screens, forming the root of a component tree.
+
+* **Child Component** — extends the parent component by adding a reference to its parent and full integration into the
+composition tree. This is the most powerful and feature-rich component type, capable of participating in complex
+scenarios such as being dynamically added to or removed from the hierarchy. It is used to implement reusable,
+nested UI building blocks (for example, toolbars, forms, or widgets).
+
+This three-level system allows developers to flexibly choose the appropriate level of component complexity depending
+on its role — from a simple isolated dialog (Base Component) to a complex reusable control embedded into the
+overall application structure (Child Component).
 
 #### Component Lifecycle<a name="templates-component-lifecycle"></a>
 
