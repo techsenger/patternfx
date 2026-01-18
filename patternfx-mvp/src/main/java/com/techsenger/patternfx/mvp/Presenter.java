@@ -25,12 +25,6 @@ import com.techsenger.patternfx.core.HistoryPolicy;
 public interface Presenter {
 
     /**
-     * Returns the port.
-     * @return
-     */
-    Port getPort();
-
-    /**
      * Returns the descriptor.
      *
      * @return

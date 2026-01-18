@@ -34,23 +34,6 @@ public abstract class AbstractPresenter<T extends View> implements Presenter {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractPresenter.class);
 
-    protected class Port implements com.techsenger.patternfx.mvp.Port {
-
-        private final AbstractPresenter presenter = AbstractPresenter.this;
-
-        @Override
-        public Descriptor getDescriptor() {
-            return presenter.getDescriptor();
-        }
-
-        @Override
-        public void deinitialize() {
-            presenter.deinitialize();
-        }
-    }
-
-    private final Port port;
-
     private final Descriptor descriptor;
 
     private final T view;
@@ -63,7 +46,6 @@ public abstract class AbstractPresenter<T extends View> implements Presenter {
 
     public AbstractPresenter(T view) {
         this.descriptor = createDescriptor();
-        this.port = createPort();
         this.view = view;
         if (this.view instanceof AbstractJfxView<?>) {
             ((AbstractJfxView<?>) this.view).setPresenter(this);
@@ -130,11 +112,6 @@ public abstract class AbstractPresenter<T extends View> implements Presenter {
     @Override
     public void setHistoryPolicy(HistoryPolicy policy) {
         this.historyPolicy = policy;
-    }
-
-    @Override
-    public Port getPort() {
-        return this.port;
     }
 
     protected T getView() {
@@ -254,10 +231,6 @@ public abstract class AbstractPresenter<T extends View> implements Presenter {
     }
 
     protected abstract Descriptor createDescriptor();
-
-    protected Port createPort() {
-        return null;
-    }
 
     void prepareHistory() {
         if (this.historyProvider != null) {

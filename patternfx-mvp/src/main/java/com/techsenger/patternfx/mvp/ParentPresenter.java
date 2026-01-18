@@ -23,6 +23,12 @@ package com.techsenger.patternfx.mvp;
 public interface ParentPresenter extends Presenter {
 
     /**
+     * Returns the port.
+     * @return
+     */
+    Port getPort();
+
+    /**
      * Deinitializes this component and all its descendants as a sub-tree with this component as the root.
      *
      * The deinitialization is performed using a breadth-first traversal: the parent component is deinitialized first,

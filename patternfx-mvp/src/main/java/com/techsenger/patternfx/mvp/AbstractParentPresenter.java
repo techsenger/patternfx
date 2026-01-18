@@ -28,10 +28,33 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractParentPresenter.class);
 
+    protected class Port implements com.techsenger.patternfx.mvp.Port {
+
+        private final AbstractParentPresenter<?, ?> presenter = AbstractParentPresenter.this;
+
+        @Override
+        public Descriptor getDescriptor() {
+            return presenter.getDescriptor();
+        }
+
+        @Override
+        public void deinitialize() {
+            presenter.deinitialize();
+        }
+    }
+
+    private final Port port;
+
     private C composer;
 
     public AbstractParentPresenter(V view) {
         super(view);
+        this.port = createPort();
+    }
+
+    @Override
+    public com.techsenger.patternfx.mvp.Port getPort() {
+        return this.port;
     }
 
     @Override
@@ -52,5 +75,9 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
 
     protected void setComposer(ParentComposer composer) {
         this.composer = (C) composer;
+    }
+
+    protected Port createPort() {
+        return null;
     }
 }
