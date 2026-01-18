@@ -22,7 +22,7 @@ import javafx.beans.property.ReadOnlyObjectProperty;
  *
  * @author Pavel Castornii
  */
-public interface JfxChildView<P extends ChildPresenter> extends JfxParentView<P>, ChildView {
+public interface ChildJfxView<P extends ChildPresenter> extends ParentJfxView<P>, ChildView {
 
     /**
      * Returns the property representing the parent view of this view. The property holds a reference to the
@@ -30,14 +30,14 @@ public interface JfxChildView<P extends ChildPresenter> extends JfxParentView<P>
      *
      * @return the property containing the parent view
      */
-    ReadOnlyObjectProperty<? extends JfxParentView<?>> parentProperty();
+    ReadOnlyObjectProperty<? extends ParentJfxView<?>> parentProperty();
 
     /**
      * Returns the value of {@link #parentProperty()}.
      *
      * @return the parent view, or {@code null} if this view has no parent
      */
-     JfxParentView<?> getParent();
+     ParentJfxView<?> getParent();
 
     /**
      * Returns the value of {@link #parentProperty()} cast to the specified type.
@@ -47,7 +47,7 @@ public interface JfxChildView<P extends ChildPresenter> extends JfxParentView<P>
      * @return the parent view cast to the specified type, or {@code null} if this view has no parent
      * @throws ClassCastException if the parent exists but is not of the specified type
      */
-    <T extends JfxParentView<?>> T getParent(Class<T> parentClass);
+    <T extends ParentJfxView<?>> T getParent(Class<T> parentClass);
 
     /**
      * Sets the parent view of this view.
@@ -56,7 +56,7 @@ public interface JfxChildView<P extends ChildPresenter> extends JfxParentView<P>
      * implementations while managing the view hierarchy. Direct invocation by user code results in undefined
      * behavior.
      */
-    void setParent(JfxParentView<?> parent);
+    void setParent(ParentJfxView<?> parent);
 
     /**
      * Returns the main node of the view. It can be Tab, Node etc.

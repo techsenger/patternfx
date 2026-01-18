@@ -53,7 +53,7 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
     }
 
     @Override
-    public com.techsenger.patternfx.mvp.Port getPort() {
+    public Port getPort() {
         return this.port;
     }
 
