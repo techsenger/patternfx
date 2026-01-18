@@ -38,15 +38,15 @@ import javafx.stage.Stage;
  *
  * @author Pavel Castornii
  */
-public class MvpJfxRegistryView<T extends MvpRegistryPresenter<?, ?>>
-        extends AbstractJfxParentView<T> implements MvpRegistryView {
+public class JfxRegistryView<T extends RegistryPresenter<?, ?>>
+        extends AbstractJfxParentView<T> implements RegistryView {
 
-    protected class Composer extends AbstractJfxParentView.Composer implements MvpRegistryComposer {
+    protected class Composer extends AbstractJfxParentView.Composer implements RegistryComposer {
 
         @Override
-        public MvpDialogPort addDialog() {
-            var v = new MvpJfxDialogView(stage);
-            var p = new MvpDialogPresenter<>(v);
+        public DialogPort addDialog() {
+            var v = new JfxDialogView(stage);
+            var p = new DialogPresenter<>(v);
             p.initialize();
             v.getDialog().showAndWait();
             return p.getPort();
@@ -73,7 +73,7 @@ public class MvpJfxRegistryView<T extends MvpRegistryPresenter<?, ?>>
 
     private final Stage stage = new Stage();
 
-    public MvpJfxRegistryView() {
+    public JfxRegistryView() {
         super();
         setReportVisible(false);
     }
@@ -163,6 +163,6 @@ public class MvpJfxRegistryView<T extends MvpRegistryPresenter<?, ?>>
 
     @Override
     protected Composer createComposer() {
-        return new MvpJfxRegistryView.Composer();
+        return new JfxRegistryView.Composer();
     }
 }

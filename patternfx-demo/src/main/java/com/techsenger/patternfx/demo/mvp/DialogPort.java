@@ -23,7 +23,7 @@ import com.techsenger.patternfx.mvp.Port;
  *
  * @author Pavel Castornii
  */
-public interface MvpDialogPort extends Port {
+public interface DialogPort extends Port {
 
     Person getResult();
 }

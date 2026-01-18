@@ -14,30 +14,23 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.demo.mvvmx;
+package com.techsenger.patternfx.demo;
 
-import com.techsenger.patternfx.core.Name;
-import com.techsenger.patternfx.demo.DemoNames;
-import com.techsenger.patternfx.mvvmx.AbstractChildComponent;
+import com.techsenger.patternfx.demo.model.PersonService;
+import com.techsenger.patternfx.demo.mvvm.RegistryView;
+import com.techsenger.patternfx.demo.mvvm.RegistryViewModel;
 
 /**
  *
  * @author Pavel Castornii
  */
-public class MvvmxReportComponent extends AbstractChildComponent<MvvmxReportView> {
-
-    public MvvmxReportComponent(MvvmxReportView view) {
-        super(view);
-    }
+public class MvvmRunner implements Runnable {
 
     @Override
-    protected Mediator createMediator() {
-        return new AbstractChildComponent.Mediator();
+    public void run() {
+        var service = new PersonService();
+        var viewModel = new RegistryViewModel(service);
+        var view = new RegistryView(viewModel);
+        view.initialize();
     }
-
-    @Override
-    public Name getName() {
-        return DemoNames.PERSON_REPORT;
-    }
-
 }

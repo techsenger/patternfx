@@ -26,19 +26,19 @@ import com.techsenger.patternfx.mvp.Descriptor;
  *
  * @author Pavel Castornii
  */
-public class MvpDialogPresenter<T extends MvpDialogView> extends AbstractPresenter<T> {
+public class DialogPresenter<T extends DialogView> extends AbstractPresenter<T> {
 
-    protected class Port extends AbstractPresenter.Port implements MvpDialogPort {
+    protected class Port extends AbstractPresenter.Port implements DialogPort {
 
         @Override
         public Person getResult() {
-            return MvpDialogPresenter.this.result;
+            return DialogPresenter.this.result;
         }
     }
 
     private Person result;
 
-    public MvpDialogPresenter(T view) {
+    public DialogPresenter(T view) {
         super(view);
     }
 
@@ -68,7 +68,7 @@ public class MvpDialogPresenter<T extends MvpDialogView> extends AbstractPresent
 
     @Override
     protected Port createPort() {
-        return new MvpDialogPresenter.Port();
+        return new DialogPresenter.Port();
     }
 
     private boolean checkIfValid() {

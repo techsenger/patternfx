@@ -28,7 +28,7 @@ import javafx.scene.layout.Priority;
  *
  * @author Pavel Castornii
  */
-public class MvvmReportView extends AbstractLeafView<MvvmReportViewModel> {
+public class ReportView extends AbstractLeafView<ReportViewModel> {
 
     private final Label totalPeopleLabel = new Label("Total People:");
 
@@ -40,7 +40,7 @@ public class MvvmReportView extends AbstractLeafView<MvvmReportViewModel> {
 
     private final GridPane gridPane = new GridPane();
 
-    public MvvmReportView(MvvmReportViewModel viewModel) {
+    public ReportView(ReportViewModel viewModel) {
         super(viewModel);
     }
 

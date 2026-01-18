@@ -37,7 +37,7 @@ import javafx.stage.Stage;
  *
  * @author Pavel Castornii
  */
-public class MvvmxRegistryView extends AbstractParentView<MvvmxRegistryViewModel, MvvmxRegistryComponent> {
+public class RegistryView extends AbstractParentView<RegistryViewModel, RegistryComponent> {
 
     private final Button addButton = new Button("Add");
 
@@ -59,7 +59,7 @@ public class MvvmxRegistryView extends AbstractParentView<MvvmxRegistryViewModel
 
     private final Stage stage = new Stage();
 
-    public MvvmxRegistryView(MvvmxRegistryViewModel viewModel) {
+    public RegistryView(RegistryViewModel viewModel) {
         super(viewModel);
     }
 
@@ -118,7 +118,7 @@ public class MvvmxRegistryView extends AbstractParentView<MvvmxRegistryViewModel
         stage.setOnCloseRequest(e -> viewModel.close());
     }
 
-    void addReport(MvvmxReportView report) {
+    void addReport(ReportView report) {
         this.root.getChildren().add(report.getNode());
     }
 

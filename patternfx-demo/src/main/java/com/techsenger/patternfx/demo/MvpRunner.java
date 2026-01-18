@@ -14,15 +14,24 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.demo.mvp;
+package com.techsenger.patternfx.demo;
 
-import com.techsenger.patternfx.mvp.ParentComposer;
+import com.techsenger.patternfx.demo.model.PersonService;
+import com.techsenger.patternfx.demo.mvp.JfxRegistryView;
+import com.techsenger.patternfx.demo.mvp.RegistryPresenter;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface MvpRegistryComposer extends ParentComposer {
+public class MvpRunner implements Runnable {
 
-    MvpDialogPort addDialog();
+    @Override
+    public void run() {
+        var service = new PersonService();
+        var view = new JfxRegistryView<>();
+        var presenter = new RegistryPresenter<>(view, service);
+        presenter.initialize();
+    }
+
 }

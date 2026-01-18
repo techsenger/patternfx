@@ -40,21 +40,21 @@ import javafx.stage.Stage;
  *
  * @author Pavel Castornii
  */
-public class MvvmRegistryView extends AbstractParentView<MvvmRegistryViewModel> {
+public class RegistryView extends AbstractParentView<RegistryViewModel> {
 
-    private final class ComposerImpl implements MvvmRegistryComposer {
+    private final class ComposerImpl implements RegistryComposer {
 
         @Override
-        public void openDialog(MvvmDialogViewModel vm) {
-            var dialogV = new MvvmDialogView(vm, stage);
+        public void openDialog(DialogViewModel vm) {
+            var dialogV = new DialogView(vm, stage);
             dialogV.initialize();
             dialogV.getDialog().showAndWait();
             dialogV.deinitialize();
         }
 
         @Override
-        public void addReport(MvvmReportViewModel vm) {
-            var v = new MvvmReportView(vm);
+        public void addReport(ReportViewModel vm) {
+            var v = new ReportView(vm);
             v.initialize();
             root.getChildren().add(v.getNode());
             getModifiableChildren().add(v);
@@ -88,11 +88,11 @@ public class MvvmRegistryView extends AbstractParentView<MvvmRegistryViewModel> 
 
     private final VBox root = new VBox(toolBar, content);
 
-    private final ReadOnlyObjectWrapper<MvvmReportView> report = new ReadOnlyObjectWrapper<>();
+    private final ReadOnlyObjectWrapper<ReportView> report = new ReadOnlyObjectWrapper<>();
 
     private final Stage stage = new Stage();
 
-    public MvvmRegistryView(MvvmRegistryViewModel viewModel) {
+    public RegistryView(RegistryViewModel viewModel) {
         super(viewModel);
     }
 

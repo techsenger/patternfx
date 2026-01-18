@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.demo.mvp;
+package com.techsenger.patternfx.demo.mvvm;
 
-import com.techsenger.patternfx.mvp.AbstractJfxView;
+import com.techsenger.patternfx.mvvm.AbstractView;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -29,12 +31,13 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.converter.IntegerStringConverter;
 
 /**
  *
  * @author Pavel Castornii
  */
-public class MvpJfxDialogView extends AbstractJfxView<MvpDialogPresenter<?>> implements MvpDialogView {
+public class DialogView extends AbstractView<DialogViewModel> {
 
     private final Stage stage;
 
@@ -57,38 +60,9 @@ public class MvpJfxDialogView extends AbstractJfxView<MvpDialogPresenter<?>> imp
 
     private Button okButton;
 
-    public MvpJfxDialogView(Stage stage) {
+    public DialogView(DialogViewModel viewModel, Stage stage) {
+        super(viewModel);
         this.stage = stage;
-    }
-
-    @Override
-    public void setFirstNameValid(boolean value) {
-        updateValid(firstNameTextField, value);
-    }
-
-    @Override
-    public void setLastNameValid(boolean value) {
-        updateValid(lastNameTextField, value);
-    }
-
-    @Override
-    public void setAgeValid(boolean value) {
-        updateValid(ageTextField, value);
-    }
-
-    @Override
-    public String getFirstName() {
-        return this.firstNameTextField.getText();
-    }
-
-    @Override
-    public String getLastName() {
-        return this.lastNameTextField.getText();
-    }
-
-    @Override
-    public String getAge() {
-        return this.ageTextField.getText();
     }
 
     protected Dialog<ButtonType> getDialog() {
@@ -115,21 +89,33 @@ public class MvpJfxDialogView extends AbstractJfxView<MvpDialogPresenter<?>> imp
     }
 
     @Override
+    protected void bind() {
+        super.bind();
+        var vm = getViewModel();
+        dialog.titleProperty().bind(vm.titleProperty());
+
+        firstNameTextField.textProperty().bindBidirectional(vm.firstNameProperty());
+        bindValid(firstNameTextField, vm.firstNameValidProperty());
+        lastNameTextField.textProperty().bindBidirectional(vm.lastNameProperty());
+        bindValid(lastNameTextField, vm.lastNameValidProperty());
+        ageTextField.textProperty().bindBidirectional(vm.ageProperty(), new IntegerStringConverter());
+        bindValid(ageTextField, vm.ageValidProperty());
+    }
+
+    @Override
     protected void addHandlers() {
         super.addHandlers();
         okButton.addEventFilter(ActionEvent.ACTION, event -> {
-            if (!getPresenter().handleOkAction()) {
+            if (!getViewModel().addNewPerson()) {
                 event.consume();
             }
         });
     }
 
-    private void updateValid(TextField textField, boolean valid) {
-        if (valid) {
-            textField.setStyle("");
-        } else {
-            textField.setStyle("-fx-background-color: red, white; -fx-background-insets: 0, 1");
-        }
+    private void bindValid(TextField textField, BooleanProperty validProperty) {
+        textField.styleProperty().bind(Bindings.when(validProperty)
+                .then("")
+                .otherwise("-fx-background-color: red, white; -fx-background-insets: 0, 1"));
     }
 
 }

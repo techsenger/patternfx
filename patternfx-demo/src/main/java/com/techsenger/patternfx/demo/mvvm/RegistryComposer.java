@@ -14,29 +14,19 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.demo.mvvmx;
+package com.techsenger.patternfx.demo.mvvm;
 
-import com.techsenger.patternfx.core.Name;
-import com.techsenger.patternfx.demo.DemoNames;
-import com.techsenger.patternfx.mvvmx.AbstractComponent;
+import com.techsenger.patternfx.mvvm.Composer;
 
 /**
  *
  * @author Pavel Castornii
  */
-public class MvvmxDialogComponent extends AbstractComponent<MvvmxDialogView> {
+public interface RegistryComposer extends Composer {
 
-    public MvvmxDialogComponent(MvvmxDialogView view) {
-        super(view);
-    }
+    void openDialog(DialogViewModel dialog);
 
-    @Override
-    public Name getName() {
-        return DemoNames.PERSON_DIALOG;
-    }
+    void addReport(ReportViewModel report);
 
-    @Override
-    protected Mediator createMediator() {
-        return new AbstractComponent.Mediator() { };
-    }
+    void removeReport();
 }

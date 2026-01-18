@@ -27,41 +27,41 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
  *
  * @author Pavel Castornii
  */
-public class MvvmxRegistryComponent extends AbstractParentComponent<MvvmxRegistryView> {
+public class RegistryComponent extends AbstractParentComponent<RegistryView> {
 
-    private final class Mediator extends AbstractParentComponent.Mediator implements MvvmxRegistryMediator {
+    private final class Mediator extends AbstractParentComponent.Mediator implements RegistryMediator {
 
-        private final MvvmxRegistryComponent component = MvvmxRegistryComponent.this;
+        private final RegistryComponent component = RegistryComponent.this;
 
-        private final ReadOnlyObjectWrapper<MvvmxReportViewModel> report = new ReadOnlyObjectWrapper<>();
+        private final ReadOnlyObjectWrapper<ReportViewModel> report = new ReadOnlyObjectWrapper<>();
 
         Mediator() {
             BindingUtils.bind(report, component.report, c -> c.getView().getViewModel());
         }
 
         @Override
-        public void openDialog(MvvmxDialogViewModel vm) {
-            var dialogV = new MvvmxDialogView(vm, getView().getStage());
-            var dialogC = new MvvmxDialogComponent(dialogV);
+        public void openDialog(DialogViewModel vm) {
+            var dialogV = new DialogView(vm, getView().getStage());
+            var dialogC = new DialogComponent(dialogV);
             dialogC.initialize();
             dialogC.getView().getDialog().showAndWait();
             dialogC.deinitialize();
         }
 
         @Override
-        public ReadOnlyObjectProperty<MvvmxReportViewModel> reportProperty() {
+        public ReadOnlyObjectProperty<ReportViewModel> reportProperty() {
             return report.getReadOnlyProperty();
         }
 
         @Override
-        public MvvmxReportViewModel getReport() {
+        public ReportViewModel getReport() {
             return report.get();
         }
 
         @Override
-        public void addReport(MvvmxReportViewModel reportVm) {
-            var reportV = new MvvmxReportView(reportVm);
-            var reportC = new MvvmxReportComponent(reportV);
+        public void addReport(ReportViewModel reportVm) {
+            var reportV = new ReportView(reportVm);
+            var reportC = new ReportComponent(reportV);
             component.getModifiableChildren().add(reportC);
             component.setReport(reportC);
             reportC.initialize();
@@ -78,9 +78,9 @@ public class MvvmxRegistryComponent extends AbstractParentComponent<MvvmxRegistr
         }
     }
 
-    private final ReadOnlyObjectWrapper<MvvmxReportComponent> report = new ReadOnlyObjectWrapper<>();
+    private final ReadOnlyObjectWrapper<ReportComponent> report = new ReadOnlyObjectWrapper<>();
 
-    public MvvmxRegistryComponent(MvvmxRegistryView view) {
+    public RegistryComponent(RegistryView view) {
         super(view);
     }
 
@@ -89,11 +89,11 @@ public class MvvmxRegistryComponent extends AbstractParentComponent<MvvmxRegistr
         return DemoNames.PERSON_REGISTRY;
     }
 
-    public MvvmxReportComponent getReport() {
+    public ReportComponent getReport() {
         return report.get();
     }
 
-    public ReadOnlyObjectProperty<MvvmxReportComponent> reportProperty() {
+    public ReadOnlyObjectProperty<ReportComponent> reportProperty() {
         return report.getReadOnlyProperty();
     }
 
@@ -102,7 +102,7 @@ public class MvvmxRegistryComponent extends AbstractParentComponent<MvvmxRegistr
         return new Mediator();
     }
 
-    private void setReport(MvvmxReportComponent value) {
+    private void setReport(ReportComponent value) {
         report.set(value);
     }
 }

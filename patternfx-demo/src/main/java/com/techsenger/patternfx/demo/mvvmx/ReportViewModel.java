@@ -29,13 +29,13 @@ import javafx.beans.property.ReadOnlyIntegerWrapper;
  *
  * @author Pavel Castornii
  */
-public class MvvmxReportViewModel extends AbstractChildViewModel<ChildMediator> {
+public class ReportViewModel extends AbstractChildViewModel<ChildMediator> {
 
     private final ReadOnlyIntegerWrapper totalPeople = new ReadOnlyIntegerWrapper();
 
     private final ReadOnlyDoubleWrapper averageAge = new ReadOnlyDoubleWrapper();
 
-    public MvvmxReportViewModel() {
+    public ReportViewModel() {
 
     }
 

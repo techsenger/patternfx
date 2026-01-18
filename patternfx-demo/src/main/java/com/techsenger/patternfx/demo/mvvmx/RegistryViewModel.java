@@ -37,9 +37,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author Pavel Castornii
  */
-public class MvvmxRegistryViewModel extends AbstractParentViewModel<MvvmxRegistryMediator> {
+public class RegistryViewModel extends AbstractParentViewModel<RegistryMediator> {
 
-    private static final Logger logger = LoggerFactory.getLogger(MvvmxRegistryViewModel.class);
+    private static final Logger logger = LoggerFactory.getLogger(RegistryViewModel.class);
 
     private final PersonService service;
 
@@ -51,7 +51,7 @@ public class MvvmxRegistryViewModel extends AbstractParentViewModel<MvvmxRegistr
 
     private final ReadOnlyStringWrapper reportButtonText = new ReadOnlyStringWrapper();
 
-    public MvvmxRegistryViewModel(PersonService service) {
+    public RegistryViewModel(PersonService service) {
         this.service = service;
     }
 
@@ -103,7 +103,7 @@ public class MvvmxRegistryViewModel extends AbstractParentViewModel<MvvmxRegistr
     }
 
     void add() {
-        var dialogVM = new MvvmxDialogViewModel((p) -> add(p));
+        var dialogVM = new DialogViewModel((p) -> add(p));
         getMediator().openDialog(dialogVM);
     }
 
@@ -121,7 +121,7 @@ public class MvvmxRegistryViewModel extends AbstractParentViewModel<MvvmxRegistr
 
     void toggleReport() {
         if (getMediator().getReport() == null) {
-            getMediator().addReport(new MvvmxReportViewModel());
+            getMediator().addReport(new ReportViewModel());
             getMediator().getReport().refresh(persons);
             updateReportButtonText(true);
         } else {

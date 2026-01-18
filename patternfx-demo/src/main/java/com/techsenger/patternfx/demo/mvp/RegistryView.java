@@ -16,23 +16,27 @@
 
 package com.techsenger.patternfx.demo.mvp;
 
-import com.techsenger.patternfx.mvp.View;
+import com.techsenger.patternfx.demo.model.Person;
+import com.techsenger.patternfx.mvp.ParentView;
+import java.util.List;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface MvpDialogView extends View {
+public interface RegistryView extends ParentView {
 
-    String getFirstName();
+    void setRemoveDisable(boolean value);
 
-    String getLastName();
+    void setReportVisible(boolean shown);
 
-    String getAge();
+    void showStage();
 
-    void setFirstNameValid(boolean value);
+    void addPersons(List<Person> persons);
 
-    void setLastNameValid(boolean value);
+    List<Person> getPersons();
 
-    void setAgeValid(boolean value);
+    int getSelectedIndex();
+
+    void clearPersons();
 }

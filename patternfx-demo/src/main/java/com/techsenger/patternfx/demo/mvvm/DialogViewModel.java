@@ -33,7 +33,7 @@ import javafx.beans.property.StringProperty;
  *
  * @author Pavel Castornii
  */
-public class MvvmDialogViewModel extends AbstractViewModel {
+public class DialogViewModel extends AbstractViewModel {
 
     private final StringProperty title = new SimpleStringProperty("New Person");
 
@@ -51,7 +51,7 @@ public class MvvmDialogViewModel extends AbstractViewModel {
 
     private final Consumer<Person> resultCallback;
 
-    public MvvmDialogViewModel(Consumer<Person> resultCallback) {
+    public DialogViewModel(Consumer<Person> resultCallback) {
         this.resultCallback = resultCallback;
     }
 

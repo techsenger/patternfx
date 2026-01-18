@@ -14,19 +14,26 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.demo.mvvm;
+package com.techsenger.patternfx.demo;
 
-import com.techsenger.patternfx.mvvm.Composer;
+import com.techsenger.patternfx.demo.model.PersonService;
+import com.techsenger.patternfx.demo.mvvmx.RegistryComponent;
+import com.techsenger.patternfx.demo.mvvmx.RegistryView;
+import com.techsenger.patternfx.demo.mvvmx.RegistryViewModel;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface MvvmRegistryComposer extends Composer {
+public class MvvmxRunner implements Runnable {
 
-    void openDialog(MvvmDialogViewModel dialog);
+    @Override
+    public void run() {
+        var service = new PersonService();
+        var viewModel = new RegistryViewModel(service);
+        var view = new RegistryView(viewModel);
+        var component = new RegistryComponent(view);
+        component.initialize();
+    }
 
-    void addReport(MvvmReportViewModel report);
-
-    void removeReport();
 }

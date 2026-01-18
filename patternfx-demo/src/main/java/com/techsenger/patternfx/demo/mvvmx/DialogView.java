@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.demo.mvvm;
+package com.techsenger.patternfx.demo.mvvmx;
 
-import com.techsenger.patternfx.mvvm.AbstractView;
+import com.techsenger.patternfx.mvvmx.AbstractComponentView;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.event.ActionEvent;
@@ -37,7 +37,7 @@ import javafx.util.converter.IntegerStringConverter;
  *
  * @author Pavel Castornii
  */
-public class MvvmDialogView extends AbstractView<MvvmDialogViewModel> {
+public class DialogView extends AbstractComponentView<DialogViewModel, DialogComponent> {
 
     private final Stage stage;
 
@@ -60,7 +60,7 @@ public class MvvmDialogView extends AbstractView<MvvmDialogViewModel> {
 
     private Button okButton;
 
-    public MvvmDialogView(MvvmDialogViewModel viewModel, Stage stage) {
+    public DialogView(DialogViewModel viewModel, Stage stage) {
         super(viewModel);
         this.stage = stage;
     }

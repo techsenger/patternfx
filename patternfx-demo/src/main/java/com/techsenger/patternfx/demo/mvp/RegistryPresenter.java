@@ -21,21 +21,17 @@ import com.techsenger.patternfx.demo.model.PersonService;
 import com.techsenger.patternfx.mvp.AbstractParentPresenter;
 import com.techsenger.patternfx.mvp.Descriptor;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Pavel Castornii
  */
-public class MvpRegistryPresenter<V extends MvpRegistryView, C extends MvpRegistryComposer>
+public class RegistryPresenter<V extends RegistryView, C extends RegistryComposer>
         extends AbstractParentPresenter<V, C> {
-
-    private static final Logger logger = LoggerFactory.getLogger(MvpRegistryPresenter.class);
 
     private final PersonService service;
 
-    public MvpRegistryPresenter(V view, PersonService service) {
+    public RegistryPresenter(V view, PersonService service) {
         super(view);
         this.service = service;
     }

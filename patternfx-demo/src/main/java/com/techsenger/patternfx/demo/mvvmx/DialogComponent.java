@@ -14,29 +14,29 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.demo.mvp;
+package com.techsenger.patternfx.demo.mvvmx;
 
-import com.techsenger.patternfx.demo.model.Person;
-import com.techsenger.patternfx.mvp.ParentView;
-import java.util.List;
+import com.techsenger.patternfx.core.Name;
+import com.techsenger.patternfx.demo.DemoNames;
+import com.techsenger.patternfx.mvvmx.AbstractComponent;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface MvpRegistryView extends ParentView {
+public class DialogComponent extends AbstractComponent<DialogView> {
 
-    void setRemoveDisable(boolean value);
+    public DialogComponent(DialogView view) {
+        super(view);
+    }
 
-    void setReportVisible(boolean shown);
+    @Override
+    public Name getName() {
+        return DemoNames.PERSON_DIALOG;
+    }
 
-    void showStage();
-
-    void addPersons(List<Person> persons);
-
-    List<Person> getPersons();
-
-    int getSelectedIndex();
-
-    void clearPersons();
+    @Override
+    protected Mediator createMediator() {
+        return new AbstractComponent.Mediator() { };
+    }
 }

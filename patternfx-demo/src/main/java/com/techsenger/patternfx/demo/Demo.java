@@ -16,14 +16,6 @@
 
 package com.techsenger.patternfx.demo;
 
-import com.techsenger.patternfx.demo.model.PersonService;
-import com.techsenger.patternfx.demo.mvp.MvpJfxRegistryView;
-import com.techsenger.patternfx.demo.mvp.MvpRegistryPresenter;
-import com.techsenger.patternfx.demo.mvvm.MvvmRegistryView;
-import com.techsenger.patternfx.demo.mvvm.MvvmRegistryViewModel;
-import com.techsenger.patternfx.demo.mvvmx.MvvmxRegistryComponent;
-import com.techsenger.patternfx.demo.mvvmx.MvvmxRegistryView;
-import com.techsenger.patternfx.demo.mvvmx.MvvmxRegistryViewModel;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -42,7 +34,17 @@ import javafx.stage.Stage;
 public class Demo extends Application {
 
     private enum Pattern {
-        MVP, MVVM, MVVMX
+        MVP(new MvpRunner()), MVVM(new MvvmRunner()), MVVMX(new MvvmxRunner());
+
+        private final Runnable runner;
+
+        Pattern(Runnable runner) {
+            this.runner = runner;
+        }
+
+        public Runnable getRunner() {
+            return runner;
+        }
     }
 
     private final Label label = new Label("Select Pattern:");
@@ -67,7 +69,9 @@ public class Demo extends Application {
             cell.setOnMouseClicked(event -> {
                 if (!cell.isEmpty() && event.getClickCount() == 2) {
                     Pattern pattern = cell.getItem();
-                    createDemo(pattern);
+                    // the unit will be deinitialized automatically when the stage
+                    // is closed, via the handler registered with stage#setOnCloseRequest
+                    pattern.getRunner().run();
                 }
             });
             return cell;
@@ -79,25 +83,4 @@ public class Demo extends Application {
         stage.setScene(scene);
         stage.show();
     }
-
-    private void createDemo(Pattern pattern) {
-        // the unit will be deinitialized automatically when the stage
-        // is closed, via the handler registered with stage#setOnCloseRequest
-        var service = new PersonService();
-        if (pattern == Pattern.MVP) {
-            var view = new MvpJfxRegistryView<>();
-            var presenter = new MvpRegistryPresenter<>(view, service);
-            presenter.initialize();
-        } else if (pattern == Pattern.MVVM) {
-            var viewModel = new MvvmRegistryViewModel(service);
-            var view = new MvvmRegistryView(viewModel);
-            view.initialize();
-        } else if (pattern == Pattern.MVVMX) {
-            var viewModel = new MvvmxRegistryViewModel(service);
-            var view = new MvvmxRegistryView(viewModel);
-            var component = new MvvmxRegistryComponent(view);
-            component.initialize();
-        }
-    }
-
 }

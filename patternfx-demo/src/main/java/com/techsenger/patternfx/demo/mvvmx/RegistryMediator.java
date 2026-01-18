@@ -23,15 +23,15 @@ import javafx.beans.property.ReadOnlyObjectProperty;
  *
  * @author Pavel Castornii
  */
-public interface MvvmxRegistryMediator extends ParentMediator {
+public interface RegistryMediator extends ParentMediator {
 
-    ReadOnlyObjectProperty<MvvmxReportViewModel> reportProperty();
+    ReadOnlyObjectProperty<ReportViewModel> reportProperty();
 
-    MvvmxReportViewModel getReport();
+    ReportViewModel getReport();
 
-    void addReport(MvvmxReportViewModel report);
+    void addReport(ReportViewModel report);
 
     void removeReport();
 
-    void openDialog(MvvmxDialogViewModel dialog);
+    void openDialog(DialogViewModel dialog);
 }

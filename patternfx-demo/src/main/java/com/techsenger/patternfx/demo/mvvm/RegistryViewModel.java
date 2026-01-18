@@ -41,9 +41,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author Pavel Castornii
  */
-public class MvvmRegistryViewModel extends AbstractParentViewModel<MvvmRegistryComposer> {
+public class RegistryViewModel extends AbstractParentViewModel<RegistryComposer> {
 
-    private static final Logger logger = LoggerFactory.getLogger(MvvmRegistryViewModel.class);
+    private static final Logger logger = LoggerFactory.getLogger(RegistryViewModel.class);
 
     private final PersonService service;
 
@@ -55,9 +55,9 @@ public class MvvmRegistryViewModel extends AbstractParentViewModel<MvvmRegistryC
 
     private final ReadOnlyStringWrapper reportButtonText = new ReadOnlyStringWrapper();
 
-    private final ReadOnlyObjectWrapper<MvvmReportViewModel> report = new ReadOnlyObjectWrapper<>();
+    private final ReadOnlyObjectWrapper<ReportViewModel> report = new ReadOnlyObjectWrapper<>();
 
-    public MvvmRegistryViewModel(PersonService service) {
+    public RegistryViewModel(PersonService service) {
         this.service = service;
     }
 
@@ -104,7 +104,7 @@ public class MvvmRegistryViewModel extends AbstractParentViewModel<MvvmRegistryC
         return reportButtonText.getReadOnlyProperty();
     }
 
-    ReadOnlyObjectProperty<MvvmReportViewModel> reportProperty() {
+    ReadOnlyObjectProperty<ReportViewModel> reportProperty() {
         return report.getReadOnlyProperty();
     }
 
@@ -112,11 +112,11 @@ public class MvvmRegistryViewModel extends AbstractParentViewModel<MvvmRegistryC
         return reportButtonText.get();
     }
 
-    MvvmReportViewModel getReport() {
+    ReportViewModel getReport() {
         return report.get();
     }
 
-    ReadOnlyObjectWrapper<MvvmReportViewModel> getReportWrapper() {
+    ReadOnlyObjectWrapper<ReportViewModel> getReportWrapper() {
         return report;
     }
 
@@ -126,7 +126,7 @@ public class MvvmRegistryViewModel extends AbstractParentViewModel<MvvmRegistryC
     }
 
     void add() {
-        var dialogVM = new MvvmDialogViewModel((p) -> add(p));
+        var dialogVM = new DialogViewModel((p) -> add(p));
         getComposer().openDialog(dialogVM);
     }
 
@@ -144,7 +144,7 @@ public class MvvmRegistryViewModel extends AbstractParentViewModel<MvvmRegistryC
 
     void toggleReport() {
         if (getReport() == null) {
-            getComposer().addReport(new MvvmReportViewModel());
+            getComposer().addReport(new ReportViewModel());
             getReport().refresh(persons);
             updateReportButtonText(true);
         } else {
