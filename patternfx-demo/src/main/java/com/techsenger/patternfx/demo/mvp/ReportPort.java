@@ -14,24 +14,16 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.demo;
+package com.techsenger.patternfx.demo.mvp;
 
-import com.techsenger.patternfx.demo.model.PersonService;
-import com.techsenger.patternfx.demo.mvp.RegistryJfxView;
-import com.techsenger.patternfx.demo.mvp.RegistryPresenter;
+import com.techsenger.patternfx.demo.model.Person;
+import java.util.List;
 
 /**
  *
  * @author Pavel Castornii
  */
-public class MvpRunner implements Runnable {
+public interface ReportPort {
 
-    @Override
-    public void run() {
-        var service = new PersonService();
-        var view = new RegistryJfxView<>();
-        var presenter = new RegistryPresenter<>(view, service);
-        presenter.initialize();
-    }
-
+    void refresh(List<Person> persons);
 }

@@ -19,16 +19,17 @@ package com.techsenger.patternfx.demo.mvp;
 import com.techsenger.patternfx.demo.DemoNames;
 import com.techsenger.patternfx.demo.model.Person;
 import com.techsenger.patternfx.demo.model.PersonValidator;
-import com.techsenger.patternfx.mvp.AbstractPresenter;
+import com.techsenger.patternfx.mvp.AbstractParentPresenter;
 import com.techsenger.patternfx.mvp.Descriptor;
+import com.techsenger.patternfx.mvp.ParentComposer;
 
 /**
  *
  * @author Pavel Castornii
  */
-public class DialogPresenter<T extends DialogView> extends AbstractPresenter<T> {
+public class DialogPresenter<T extends DialogView> extends AbstractParentPresenter<T, ParentComposer> {
 
-    protected class Port extends AbstractPresenter.Port implements DialogPort {
+    protected class Port extends AbstractParentPresenter.Port implements DialogPort {
 
         @Override
         public Person getResult() {

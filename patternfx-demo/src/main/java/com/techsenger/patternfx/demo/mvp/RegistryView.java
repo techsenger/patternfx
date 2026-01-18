@@ -34,6 +34,8 @@ public interface RegistryView extends ParentView {
 
     void addPersons(List<Person> persons);
 
+    void removePerson(int index);
+
     List<Person> getPersons();
 
     int getSelectedIndex();

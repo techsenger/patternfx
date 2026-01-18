@@ -16,13 +16,13 @@
 
 package com.techsenger.patternfx.demo.mvp;
 
-import com.techsenger.patternfx.mvp.View;
+import com.techsenger.patternfx.mvp.ParentView;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface DialogView extends View {
+public interface DialogView extends ParentView {
 
     String getFirstName();
 

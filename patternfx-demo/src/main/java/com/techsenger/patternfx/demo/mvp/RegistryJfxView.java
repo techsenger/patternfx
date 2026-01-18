@@ -18,7 +18,7 @@ package com.techsenger.patternfx.demo.mvp;
 
 import com.techsenger.patternfx.demo.Style;
 import com.techsenger.patternfx.demo.model.Person;
-import com.techsenger.patternfx.mvp.AbstractJfxParentView;
+import com.techsenger.patternfx.mvp.AbstractParentJfxView;
 import java.util.List;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -38,18 +38,44 @@ import javafx.stage.Stage;
  *
  * @author Pavel Castornii
  */
-public class JfxRegistryView<T extends RegistryPresenter<?, ?>>
-        extends AbstractJfxParentView<T> implements RegistryView {
+public class RegistryJfxView<T extends RegistryPresenter<?, ?>>
+        extends AbstractParentJfxView<T> implements RegistryView {
 
-    protected class Composer extends AbstractJfxParentView.Composer implements RegistryComposer {
+    protected class Composer extends AbstractParentJfxView.Composer implements RegistryComposer {
 
         @Override
-        public DialogPort addDialog() {
-            var v = new JfxDialogView(stage);
+        public DialogPort showDialog() {
+            var v = new DialogJfxView(stage);
             var p = new DialogPresenter<>(v);
             p.initialize();
             v.getDialog().showAndWait();
             return p.getPort();
+        }
+
+        @Override
+        public ReportPort getReport() {
+            if (report == null) {
+                return null;
+            }
+            return report.getPresenter().getPort();
+        }
+
+        @Override
+        public void addReport() {
+            var v = new ReportJfxView();
+            var p = new ReportPresenter(v);
+            p.initialize();
+            root.getChildren().add(v.getNode());
+            getModifiableChildren().add(v);
+            report = v;
+        }
+
+        @Override
+        public void removeReport() {
+            getModifiableChildren().remove(report);
+            root.getChildren().remove(report.getNode());
+            report.getPresenter().deinitialize();
+            report = null;
         }
     }
 
@@ -73,9 +99,10 @@ public class JfxRegistryView<T extends RegistryPresenter<?, ?>>
 
     private final Stage stage = new Stage();
 
-    public JfxRegistryView() {
+    private ReportJfxView report;
+
+    public RegistryJfxView() {
         super();
-        setReportVisible(false);
     }
 
     @Override
@@ -105,6 +132,11 @@ public class JfxRegistryView<T extends RegistryPresenter<?, ?>>
     @Override
     public List<Person> getPersons() {
         return this.personTable.getItems();
+    }
+
+    @Override
+    public void removePerson(int index) {
+        this.personTable.getItems().remove(index);
     }
 
     @Override
@@ -141,6 +173,9 @@ public class JfxRegistryView<T extends RegistryPresenter<?, ?>>
 
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
+        setReportVisible(false);
+        setRemoveDisable(true);
+
         stage.setTitle("PatternFX - MVP");
         stage.setScene(new Scene(root, 800, 500));
     }
@@ -156,6 +191,13 @@ public class JfxRegistryView<T extends RegistryPresenter<?, ?>>
         stage.setOnCloseRequest(e -> presenter.handleCloseRequest());
     }
 
+    @Override
+    protected void addListeners() {
+        super.addListeners();
+        personTable.getSelectionModel().selectedIndexProperty()
+                .addListener((ov, oldV, newV) -> getPresenter().handleSelectedChange(newV.intValue()));
+    }
+
     private void setupColumn(TableColumn<?, ?> column) {
         column.setResizable(false);
         column.prefWidthProperty().bind(personTable.widthProperty().multiply(0.25).subtract(1));
@@ -163,6 +205,6 @@ public class JfxRegistryView<T extends RegistryPresenter<?, ?>>
 
     @Override
     protected Composer createComposer() {
-        return new JfxRegistryView.Composer();
+        return new RegistryJfxView.Composer();
     }
 }

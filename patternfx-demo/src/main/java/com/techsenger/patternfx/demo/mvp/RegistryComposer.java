@@ -24,5 +24,11 @@ import com.techsenger.patternfx.mvp.ParentComposer;
  */
 public interface RegistryComposer extends ParentComposer {
 
-    DialogPort addDialog();
+    DialogPort showDialog();
+
+    ReportPort getReport();
+
+    void addReport();
+
+    void removeReport();
 }

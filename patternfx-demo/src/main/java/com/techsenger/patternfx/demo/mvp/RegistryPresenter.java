@@ -41,18 +41,30 @@ public class RegistryPresenter<V extends RegistryView, C extends RegistryCompose
         return new Descriptor(DemoNames.PERSON_REGISTRY);
     }
 
+    protected void handleSelectedChange(int value) {
+        getView().setRemoveDisable(value < 0);
+    }
+
     protected void handleAddAction() {
-        var dialog = getComposer().addDialog();
+        var dialog = getComposer().showDialog();
         var newPerson = dialog.getResult();
         dialog.deinitialize();
         if (newPerson != null) {
             service.save(newPerson);
             getView().addPersons(List.of(newPerson));
+            updateReport();
         }
     }
 
     protected void handleRemoveAction() {
-
+        var selectedIndex = getView().getSelectedIndex();
+        if (selectedIndex < 0) {
+            return;
+        }
+        var person = getView().getPersons().get(selectedIndex);
+        service.delete(person.getId());
+        getView().removePerson(selectedIndex);
+        updateReport();
     }
 
     protected void handleRefreshAction() {
@@ -61,7 +73,14 @@ public class RegistryPresenter<V extends RegistryView, C extends RegistryCompose
     }
 
     protected void handleReportAction() {
-
+        if (getComposer().getReport() == null) {
+            getComposer().addReport();
+            getComposer().getReport().refresh(getView().getPersons());
+            getView().setReportVisible(true);
+        } else {
+            getComposer().removeReport();
+            getView().setReportVisible(false);
+        }
     }
 
     protected void handleCloseRequest() {
@@ -73,5 +92,12 @@ public class RegistryPresenter<V extends RegistryView, C extends RegistryCompose
         super.postInitialize();
         getView().showStage();
         handleRefreshAction();
+    }
+
+    private void updateReport() {
+        var report = getComposer().getReport();
+        if (report != null) {
+            report.refresh(getView().getPersons());
+        }
     }
 }
