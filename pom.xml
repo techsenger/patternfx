@@ -93,6 +93,11 @@
             </dependency>
             <dependency>
                 <groupId>com.techsenger.patternfx</groupId>
+                <artifactId>patternfx-mvp</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.techsenger.patternfx</groupId>
                 <artifactId>patternfx-mvvm</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -109,6 +114,7 @@
         <module>patternfx-mvvm</module>
         <module>patternfx-demo</module>
         <module>patternfx-mvvmx</module>
+        <module>patternfx-mvp</module>
     </modules>
 </project>
 

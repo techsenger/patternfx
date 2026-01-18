@@ -26,13 +26,13 @@ import javafx.util.Pair;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractBreadthFirstIterator<T> implements TreeIterator<T> {
+public abstract class AbstractBreadthFirstIterator<T, S> implements TreeIterator<T> {
 
-    private final Queue<Pair<T, Integer>> queue = new LinkedList<>();
+    private final Queue<Pair<S, Integer>> queue = new LinkedList<>();
 
     private int currentDepth = -1;
 
-    protected AbstractBreadthFirstIterator(T root) {
+    protected AbstractBreadthFirstIterator(S root) {
         queue.offer(new Pair<>(root, 0));
     }
 
@@ -58,12 +58,14 @@ public abstract class AbstractBreadthFirstIterator<T> implements TreeIterator<T>
         var pair = queue.poll();
         var node = pair.getKey();
         currentDepth = pair.getValue();
-        List<T> children = getChildren(node);
-        for (T child : children) {
+        List<S> children = getChildren(node);
+        for (S child : children) {
             queue.offer(new Pair<>(child, currentDepth + 1));
         }
-        return node;
+        return map(node);
     }
 
-    protected abstract List<T> getChildren(T parent);
+    protected abstract List<S> getChildren(S parent);
+
+    protected abstract T map(S value);
 }

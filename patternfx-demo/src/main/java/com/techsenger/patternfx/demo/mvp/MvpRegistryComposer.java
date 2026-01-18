@@ -14,30 +14,15 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.mvvmx;
+package com.techsenger.patternfx.demo.mvp;
 
-import com.techsenger.patternfx.core.ObservableDescriptorBase;
+import com.techsenger.patternfx.mvp.ParentComposer;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface Component<T extends ComponentView<?, ?>> extends ObservableDescriptorBase {
+public interface MvpRegistryComposer extends ParentComposer {
 
-    /**
-     * Returns the view of the component.
-     *
-     * @return
-     */
-    T getView();
-
-    /**
-     * Initializes the component.
-     */
-    void initialize();
-
-    /**
-     * Deinitializes the component.
-     */
-    void deinitialize();
+    MvpDialogPort addDialog();
 }

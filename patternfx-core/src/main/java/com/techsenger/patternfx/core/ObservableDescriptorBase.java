@@ -14,30 +14,28 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.mvvmx;
+package com.techsenger.patternfx.core;
 
-import com.techsenger.patternfx.core.ObservableDescriptorBase;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface Component<T extends ComponentView<?, ?>> extends ObservableDescriptorBase {
+public interface ObservableDescriptorBase extends DescriptorBase {
 
     /**
-     * Returns the view of the component.
+     * Returns the state property of the component.
      *
      * @return
      */
-    T getView();
+    ReadOnlyObjectProperty<State> stateProperty();
 
     /**
-     * Initializes the component.
+     * Returns the {@link ObjectProperty} for the component group.
+     *
+     * @return the property representing the component group
      */
-    void initialize();
-
-    /**
-     * Deinitializes the component.
-     */
-    void deinitialize();
+    ObjectProperty<Group> groupProperty();
 }

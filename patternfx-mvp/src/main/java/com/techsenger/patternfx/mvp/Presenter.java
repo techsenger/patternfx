@@ -14,30 +14,50 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.mvvmx;
+package com.techsenger.patternfx.mvp;
 
-import com.techsenger.patternfx.core.ObservableDescriptorBase;
+import com.techsenger.patternfx.core.HistoryPolicy;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface Component<T extends ComponentView<?, ?>> extends ObservableDescriptorBase {
+public interface Presenter {
 
     /**
-     * Returns the view of the component.
+     * Returns the port.
+     * @return
+     */
+    Port getPort();
+
+    /**
+     * Returns the descriptor.
      *
      * @return
      */
-    T getView();
+    Descriptor getDescriptor();
 
     /**
-     * Initializes the component.
+     * Returns the history policy.
+     *
+     * @return
+     */
+    HistoryPolicy getHistoryPolicy();
+
+    /**
+     * Sets the history policy to the specified value.
+     *
+     * @param policy the history policy to set.
+     */
+    void setHistoryPolicy(HistoryPolicy policy);
+
+    /**
+     * Initializes both the presenter and its associated view.
      */
     void initialize();
 
     /**
-     * Deinitializes the component.
+     * Deinitializes both the presenter and its associated view.
      */
     void deinitialize();
 }

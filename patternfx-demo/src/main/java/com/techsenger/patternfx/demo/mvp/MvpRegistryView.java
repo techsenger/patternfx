@@ -14,30 +14,29 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.mvvmx;
+package com.techsenger.patternfx.demo.mvp;
 
-import com.techsenger.patternfx.core.ObservableDescriptorBase;
+import com.techsenger.patternfx.demo.model.Person;
+import com.techsenger.patternfx.mvp.ParentView;
+import java.util.List;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface Component<T extends ComponentView<?, ?>> extends ObservableDescriptorBase {
+public interface MvpRegistryView extends ParentView {
 
-    /**
-     * Returns the view of the component.
-     *
-     * @return
-     */
-    T getView();
+    void setRemoveDisable(boolean value);
 
-    /**
-     * Initializes the component.
-     */
-    void initialize();
+    void setReportVisible(boolean shown);
 
-    /**
-     * Deinitializes the component.
-     */
-    void deinitialize();
+    void showStage();
+
+    void addPersons(List<Person> persons);
+
+    List<Person> getPersons();
+
+    int getSelectedIndex();
+
+    void clearPersons();
 }

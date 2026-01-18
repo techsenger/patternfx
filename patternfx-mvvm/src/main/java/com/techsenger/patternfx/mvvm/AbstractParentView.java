@@ -72,22 +72,32 @@ public abstract class AbstractParentView<VM extends AbstractParentViewModel<?>>
 
     @Override
     public TreeIterator<ParentView<?>> depthFirstIterator() {
-        return new AbstractDepthFirstIterator<ParentView<?>>(this) {
+        return new AbstractDepthFirstIterator<ParentView<?>, ParentView<?>>(this) {
 
             @Override
             protected List<ParentView<?>> getChildren(ParentView<?> parent) {
                 return (List) parent.getChildren();
+            }
+
+            @Override
+            protected ParentView<?> map(ParentView<?> value) {
+                return value;
             }
         };
     }
 
     @Override
     public TreeIterator<ParentView<?>> breadthFirstIterator() {
-        return new AbstractBreadthFirstIterator<ParentView<?>>(this) {
+        return new AbstractBreadthFirstIterator<ParentView<?>, ParentView<?>>(this) {
 
             @Override
             protected List<ParentView<?>> getChildren(ParentView<?> parent) {
                 return (List) parent.getChildren();
+            }
+
+            @Override
+            protected ParentView<?> map(ParentView<?> value) {
+                return value;
             }
         };
     }

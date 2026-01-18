@@ -14,30 +14,19 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.mvvmx;
-
-import com.techsenger.patternfx.core.ObservableDescriptorBase;
+package com.techsenger.patternfx.mvp;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface Component<T extends ComponentView<?, ?>> extends ObservableDescriptorBase {
+public interface ParentPresenter extends Presenter {
 
     /**
-     * Returns the view of the component.
+     * Deinitializes this component and all its descendants as a sub-tree with this component as the root.
      *
-     * @return
+     * The deinitialization is performed using a breadth-first traversal: the parent component is deinitialized first,
+     * followed by its children level by level.
      */
-    T getView();
-
-    /**
-     * Initializes the component.
-     */
-    void initialize();
-
-    /**
-     * Deinitializes the component.
-     */
-    void deinitialize();
+    void deinitializeTree();
 }

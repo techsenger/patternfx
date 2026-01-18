@@ -14,30 +14,16 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.mvvmx;
-
-import com.techsenger.patternfx.core.ObservableDescriptorBase;
+package com.techsenger.patternfx.mvp;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface Component<T extends ComponentView<?, ?>> extends ObservableDescriptorBase {
+public abstract class AbstractChildPresenter<V extends ChildView, C extends ChildComposer>
+        extends AbstractParentPresenter<V, C> implements ChildPresenter {
 
-    /**
-     * Returns the view of the component.
-     *
-     * @return
-     */
-    T getView();
-
-    /**
-     * Initializes the component.
-     */
-    void initialize();
-
-    /**
-     * Deinitializes the component.
-     */
-    void deinitialize();
+    public AbstractChildPresenter(V view) {
+        super(view);
+    }
 }

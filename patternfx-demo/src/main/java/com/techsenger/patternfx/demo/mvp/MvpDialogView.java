@@ -14,30 +14,25 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.mvvmx;
+package com.techsenger.patternfx.demo.mvp;
 
-import com.techsenger.patternfx.core.ObservableDescriptorBase;
+import com.techsenger.patternfx.mvp.View;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface Component<T extends ComponentView<?, ?>> extends ObservableDescriptorBase {
+public interface MvpDialogView extends View {
 
-    /**
-     * Returns the view of the component.
-     *
-     * @return
-     */
-    T getView();
+    String getFirstName();
 
-    /**
-     * Initializes the component.
-     */
-    void initialize();
+    String getLastName();
 
-    /**
-     * Deinitializes the component.
-     */
-    void deinitialize();
+    String getAge();
+
+    void setFirstNameValid(boolean value);
+
+    void setLastNameValid(boolean value);
+
+    void setAgeValid(boolean value);
 }

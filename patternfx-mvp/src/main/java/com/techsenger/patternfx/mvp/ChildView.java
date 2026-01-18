@@ -14,30 +14,16 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.mvvmx;
-
-import com.techsenger.patternfx.core.ObservableDescriptorBase;
+package com.techsenger.patternfx.mvp;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface Component<T extends ComponentView<?, ?>> extends ObservableDescriptorBase {
+public interface ChildView extends ParentView {
 
     /**
-     * Returns the view of the component.
-     *
-     * @return
+     * Requests focus. Child view implements this method via selecting FX node that will request focus.
      */
-    T getView();
-
-    /**
-     * Initializes the component.
-     */
-    void initialize();
-
-    /**
-     * Deinitializes the component.
-     */
-    void deinitialize();
+    void requestFocus();
 }

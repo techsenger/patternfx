@@ -16,13 +16,13 @@
 
 package com.techsenger.patternfx.mvvmx;
 
-import com.techsenger.patternfx.core.DescriptorBase;
+import com.techsenger.patternfx.core.ObservableDescriptorBase;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface ComponentMediator extends DescriptorBase {
+public interface ComponentMediator extends ObservableDescriptorBase {
 
     void deinitialize();
 }

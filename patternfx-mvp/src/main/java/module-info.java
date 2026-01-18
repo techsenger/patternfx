@@ -14,30 +14,11 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.mvvmx;
+module com.techsenger.patternfx.mvp {
+    requires org.slf4j;
+    requires com.techsenger.patternfx.core;
+    requires javafx.base;
+    requires javafx.graphics;
 
-import com.techsenger.patternfx.core.ObservableDescriptorBase;
-
-/**
- *
- * @author Pavel Castornii
- */
-public interface Component<T extends ComponentView<?, ?>> extends ObservableDescriptorBase {
-
-    /**
-     * Returns the view of the component.
-     *
-     * @return
-     */
-    T getView();
-
-    /**
-     * Initializes the component.
-     */
-    void initialize();
-
-    /**
-     * Deinitializes the component.
-     */
-    void deinitialize();
+    exports com.techsenger.patternfx.mvp;
 }

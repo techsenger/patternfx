@@ -28,6 +28,10 @@
         </dependency>
         <dependency>
             <groupId>com.techsenger.patternfx</groupId>
+            <artifactId>patternfx-mvp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.techsenger.patternfx</groupId>
             <artifactId>patternfx-mvvm</artifactId>
         </dependency>
         <dependency>

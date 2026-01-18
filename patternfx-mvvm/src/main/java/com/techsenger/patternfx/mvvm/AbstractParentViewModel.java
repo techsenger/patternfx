@@ -58,22 +58,32 @@ public abstract class AbstractParentViewModel<C extends Composer> extends Abstra
 
     @Override
     public TreeIterator<ParentViewModel<?>> depthFirstIterator() {
-        return new AbstractDepthFirstIterator<ParentViewModel<?>>(this) {
+        return new AbstractDepthFirstIterator<ParentViewModel<?>, ParentViewModel<?>>(this) {
 
             @Override
             protected List<ParentViewModel<?>> getChildren(ParentViewModel<?> parent) {
                 return (List) parent.getChildren();
+            }
+
+            @Override
+            protected ParentViewModel<?> map(ParentViewModel<?> value) {
+                return value;
             }
         };
     }
 
     @Override
     public TreeIterator<ParentViewModel<?>> breadthFirstIterator() {
-        return new AbstractBreadthFirstIterator<ParentViewModel<?>>(this) {
+        return new AbstractBreadthFirstIterator<ParentViewModel<?>, ParentViewModel<?>>(this) {
 
             @Override
             protected List<ParentViewModel<?>> getChildren(ParentViewModel<?> parent) {
                 return (List) parent.getChildren();
+            }
+
+            @Override
+            protected ParentViewModel<?> map(ParentViewModel<?> value) {
+                return value;
             }
         };
     }

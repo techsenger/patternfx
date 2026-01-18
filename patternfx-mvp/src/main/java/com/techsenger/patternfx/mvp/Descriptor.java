@@ -14,30 +14,30 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.mvvmx;
+package com.techsenger.patternfx.mvp;
 
-import com.techsenger.patternfx.core.ObservableDescriptorBase;
+import com.techsenger.patternfx.core.AbstractDescriptorBase;
+import com.techsenger.patternfx.core.Name;
+import com.techsenger.patternfx.core.State;
+import java.util.UUID;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface Component<T extends ComponentView<?, ?>> extends ObservableDescriptorBase {
+public final class Descriptor extends AbstractDescriptorBase {
 
-    /**
-     * Returns the view of the component.
-     *
-     * @return
-     */
-    T getView();
+    public Descriptor(Name name) {
+        super(name);
+    }
 
-    /**
-     * Initializes the component.
-     */
-    void initialize();
+    public Descriptor(Name name, UUID uuid) {
+        super(name, uuid);
+    }
 
-    /**
-     * Deinitializes the component.
-     */
-    void deinitialize();
+    @Override
+    protected void setState(State state) {
+        super.setState(state);
+    }
+
 }

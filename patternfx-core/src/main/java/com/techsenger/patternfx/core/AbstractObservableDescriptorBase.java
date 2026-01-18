@@ -14,30 +14,34 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.mvvm;
+package com.techsenger.patternfx.core;
 
-import com.techsenger.patternfx.core.AbstractObservableDescriptorBase;
-import com.techsenger.patternfx.core.Name;
-import com.techsenger.patternfx.core.State;
 import java.util.UUID;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 
 /**
  *
  * @author Pavel Castornii
  */
-public final class Descriptor extends AbstractObservableDescriptorBase {
+public abstract class AbstractObservableDescriptorBase extends AbstractDescriptorBase
+        implements ObservableDescriptorBase {
 
-    public Descriptor(Name name) {
+    public AbstractObservableDescriptorBase(Name name) {
         super(name);
     }
 
-    public Descriptor(Name name, UUID uuid) {
+    public AbstractObservableDescriptorBase(Name name, UUID uuid) {
         super(name, uuid);
     }
 
     @Override
-    protected void setState(State state) {
-        super.setState(state);
+    public ReadOnlyObjectProperty<State> stateProperty() {
+        return super.stateProperty();
     }
 
+    @Override
+    public ObjectProperty<Group> groupProperty() {
+       return super.groupProperty();
+    }
 }

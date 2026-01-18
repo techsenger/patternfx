@@ -55,22 +55,32 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?, ?>
 
         @Override
         public TreeIterator<ParentViewModel<?>> depthFirstIterator() {
-            return new AbstractDepthFirstIterator<ParentViewModel<?>>(getView().getViewModel()) {
+            return new AbstractDepthFirstIterator<ParentViewModel<?>, ParentComponent<?>>(component) {
 
                 @Override
-                protected List<ParentViewModel<?>> getChildren(ParentViewModel<?> parent) {
-                    return (List) parent.getMediator().getChildren();
+                protected List<ParentComponent<?>> getChildren(ParentComponent<?> parent) {
+                    return (List) parent.getChildren();
+                }
+
+                @Override
+                protected ParentViewModel<?> map(ParentComponent<?> value) {
+                    return value.getView().getViewModel();
                 }
             };
         }
 
         @Override
         public TreeIterator<ParentViewModel<?>> breadthFirstIterator() {
-            return new AbstractBreadthFirstIterator<ParentViewModel<?>>(getView().getViewModel()) {
+            return new AbstractBreadthFirstIterator<ParentViewModel<?>, ParentComponent<?>>(component) {
 
                 @Override
-                protected List<ParentViewModel<?>> getChildren(ParentViewModel<?> parent) {
-                    return (List) parent.getMediator().getChildren();
+                protected List<ParentComponent<?>> getChildren(ParentComponent<?> parent) {
+                    return (List) parent.getChildren();
+                }
+
+                @Override
+                protected ParentViewModel<?> map(ParentComponent<?> value) {
+                    return value.getView().getViewModel();
                 }
             };
         }
@@ -121,22 +131,32 @@ public abstract class AbstractParentComponent<T extends AbstractParentView<?, ?>
 
     @Override
     public TreeIterator<ParentComponent<?>> depthFirstIterator() {
-        return new AbstractDepthFirstIterator<ParentComponent<?>>(this) {
+        return new AbstractDepthFirstIterator<ParentComponent<?>, ParentComponent<?>>(this) {
 
             @Override
             protected List<ParentComponent<?>> getChildren(ParentComponent<?> parent) {
                 return (List) parent.getChildren();
+            }
+
+            @Override
+            protected ParentComponent<?> map(ParentComponent<?> value) {
+                return value;
             }
         };
     }
 
     @Override
     public TreeIterator<ParentComponent<?>> breadthFirstIterator() {
-        return new AbstractBreadthFirstIterator<ParentComponent<?>>(this) {
+        return new AbstractBreadthFirstIterator<ParentComponent<?>, ParentComponent<?>>(this) {
 
             @Override
             protected List<ParentComponent<?>> getChildren(ParentComponent<?> parent) {
                 return (List) parent.getChildren();
+            }
+
+            @Override
+            protected ParentComponent<?> map(ParentComponent<?> value) {
+                return value;
             }
         };
     }

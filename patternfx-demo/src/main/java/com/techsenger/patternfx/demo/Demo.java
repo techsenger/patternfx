@@ -17,6 +17,8 @@
 package com.techsenger.patternfx.demo;
 
 import com.techsenger.patternfx.demo.model.PersonService;
+import com.techsenger.patternfx.demo.mvp.MvpJfxRegistryView;
+import com.techsenger.patternfx.demo.mvp.MvpRegistryPresenter;
 import com.techsenger.patternfx.demo.mvvm.MvvmRegistryView;
 import com.techsenger.patternfx.demo.mvvm.MvvmRegistryViewModel;
 import com.techsenger.patternfx.demo.mvvmx.MvvmxRegistryComponent;
@@ -40,7 +42,7 @@ import javafx.stage.Stage;
 public class Demo extends Application {
 
     private enum Pattern {
-        MVVM, MVVMX
+        MVP, MVVM, MVVMX
     }
 
     private final Label label = new Label("Select Pattern:");
@@ -81,13 +83,16 @@ public class Demo extends Application {
     private void createDemo(Pattern pattern) {
         // the unit will be deinitialized automatically when the stage
         // is closed, via the handler registered with stage#setOnCloseRequest
-        if (pattern == Pattern.MVVM) {
-            var service = new PersonService();
+        var service = new PersonService();
+        if (pattern == Pattern.MVP) {
+            var view = new MvpJfxRegistryView<>();
+            var presenter = new MvpRegistryPresenter<>(view, service);
+            presenter.initialize();
+        } else if (pattern == Pattern.MVVM) {
             var viewModel = new MvvmRegistryViewModel(service);
             var view = new MvvmRegistryView(viewModel);
             view.initialize();
         } else if (pattern == Pattern.MVVMX) {
-            var service = new PersonService();
             var viewModel = new MvvmxRegistryViewModel(service);
             var view = new MvvmxRegistryView(viewModel);
             var component = new MvvmxRegistryComponent(view);

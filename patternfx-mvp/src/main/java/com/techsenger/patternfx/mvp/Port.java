@@ -14,30 +14,15 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.mvvmx;
-
-import com.techsenger.patternfx.core.ObservableDescriptorBase;
+package com.techsenger.patternfx.mvp;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface Component<T extends ComponentView<?, ?>> extends ObservableDescriptorBase {
+public interface Port {
 
-    /**
-     * Returns the view of the component.
-     *
-     * @return
-     */
-    T getView();
+    Descriptor getDescriptor();
 
-    /**
-     * Initializes the component.
-     */
-    void initialize();
-
-    /**
-     * Deinitializes the component.
-     */
     void deinitialize();
 }

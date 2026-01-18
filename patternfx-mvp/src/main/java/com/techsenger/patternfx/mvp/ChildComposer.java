@@ -14,30 +14,19 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.mvvmx;
-
-import com.techsenger.patternfx.core.ObservableDescriptorBase;
+package com.techsenger.patternfx.mvp;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface Component<T extends ComponentView<?, ?>> extends ObservableDescriptorBase {
+public interface ChildComposer extends ParentComposer {
 
     /**
-     * Returns the view of the component.
+     * Returns the parent if the component is currently added as a child to another component, or {@code null}
+     * if it has no parent.
      *
-     * @return
+     * @return the Port of the parent component, or {@code null} if this component has no parent
      */
-    T getView();
-
-    /**
-     * Initializes the component.
-     */
-    void initialize();
-
-    /**
-     * Deinitializes the component.
-     */
-    void deinitialize();
+    Port getParent();
 }

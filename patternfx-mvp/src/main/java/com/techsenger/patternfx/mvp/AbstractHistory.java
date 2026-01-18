@@ -14,30 +14,34 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.mvvmx;
+package com.techsenger.patternfx.mvp;
 
-import com.techsenger.patternfx.core.ObservableDescriptorBase;
+import com.techsenger.patternfx.core.History;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface Component<T extends ComponentView<?, ?>> extends ObservableDescriptorBase {
+public abstract class AbstractHistory implements History {
 
-    /**
-     * Returns the view of the component.
-     *
-     * @return
-     */
-    T getView();
+    private boolean fresh = true;
 
-    /**
-     * Initializes the component.
-     */
-    void initialize();
+    @Override
+    public boolean isFresh() {
+        return fresh;
+    }
 
-    /**
-     * Deinitializes the component.
-     */
-    void deinitialize();
+    @Override
+    public void postDeserialize() {
+
+    }
+
+    @Override
+    public void preSerialize() {
+
+    }
+
+    void setFresh(boolean fresh) {
+        this.fresh = fresh;
+    }
 }

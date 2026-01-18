@@ -28,7 +28,7 @@ import javafx.beans.property.SimpleObjectProperty;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractDescriptor implements DescriptorBase {
+public abstract class AbstractDescriptorBase implements DescriptorBase {
 
     private static Function<DescriptorBase, String> logPrefixResolver = (d) -> "[" + d.getFullName() + "]";
 
@@ -38,7 +38,7 @@ public abstract class AbstractDescriptor implements DescriptorBase {
 
     public static void setLogPrefixResolver(Function<DescriptorBase, String> logPrefixResolver) {
         Objects.requireNonNull(logPrefixResolver, "logPrefixResolver can't be null");
-        AbstractDescriptor.logPrefixResolver = logPrefixResolver;
+        AbstractDescriptorBase.logPrefixResolver = logPrefixResolver;
     }
 
     private final Name name;
@@ -56,11 +56,11 @@ public abstract class AbstractDescriptor implements DescriptorBase {
 
     private final ObjectProperty<Group> group = new SimpleObjectProperty<>();
 
-    public AbstractDescriptor(Name name) {
+    public AbstractDescriptorBase(Name name) {
         this(name, UUID.randomUUID());
     }
 
-    public AbstractDescriptor(Name name, UUID uuid) {
+    public AbstractDescriptorBase(Name name, UUID uuid) {
         this.name = name;
         this.uuid = uuid;
         long least32bits = uuid.getLeastSignificantBits() & 0xFFFFFFFFL;
@@ -95,11 +95,6 @@ public abstract class AbstractDescriptor implements DescriptorBase {
     }
 
     @Override
-    public ReadOnlyObjectProperty<State> stateProperty() {
-        return state.getReadOnlyProperty();
-    }
-
-    @Override
     public Group getGroup() {
        return group.get();
     }
@@ -109,16 +104,19 @@ public abstract class AbstractDescriptor implements DescriptorBase {
        group.set(value);
     }
 
-    @Override
-    public ObjectProperty<Group> groupProperty() {
-       return group;
-    }
-
     protected String resolveLogPrefix(String fullName) {
         return logPrefixResolver.apply(this);
     }
 
     protected void setState(State state) {
         this.state.set(state);
+    }
+
+    ReadOnlyObjectProperty<State> stateProperty() {
+        return state.getReadOnlyProperty();
+    }
+
+    ObjectProperty<Group> groupProperty() {
+       return group;
     }
 }

@@ -17,8 +17,6 @@
 package com.techsenger.patternfx.core;
 
 import java.util.UUID;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
 
 /**
  * Represents the internal metadata and platform-level state of a component. The descriptor serves as a technical
@@ -71,13 +69,6 @@ public interface DescriptorBase {
     State getState();
 
     /**
-     * Returns the state property of the component.
-     *
-     * @return
-     */
-    ReadOnlyObjectProperty<State> stateProperty();
-
-    /**
      * Returns the current {@link ComponentGroup}.
      *
      * @return the current component group
@@ -90,11 +81,4 @@ public interface DescriptorBase {
      * @param value the new component group to set
      */
     void setGroup(Group value);
-
-    /**
-     * Returns the {@link ObjectProperty} for the component group.
-     *
-     * @return the property representing the component group
-     */
-    ObjectProperty<Group> groupProperty();
 }
