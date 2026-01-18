@@ -564,7 +564,7 @@ public class FooPresenter<V extends FooView, C extends FooComposer> extends Abst
 `JfxView` class:
 
 ```java
-public class FooJfxView<P extends FooPresenter<?, ?>> extends AbstractJfxParentView<P> implements FooView {
+public class FooJfxView<P extends FooPresenter<?, ?>> extends AbstractParentJfxView<P> implements FooView {
 
     protected class ComposerImpl implements FooComposer {
 
