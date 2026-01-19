@@ -30,12 +30,12 @@ public interface View<VM extends ViewModel> {
     VM getViewModel();
 
     /**
-     * Initializes the view.
+     * Initializes the component.
      */
     void initialize();
 
     /**
-     * Deinitializes the view.
+     * Deinitializes the component.
      */
     void deinitialize();
 }
