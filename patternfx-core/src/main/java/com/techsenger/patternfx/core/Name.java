@@ -17,20 +17,28 @@
 package com.techsenger.patternfx.core;
 
 /**
- * Represents a logical name of a component.
- *
- * <p>A {@code ComponentName} defines the type identity of a component within the platform. It is typically declared
- * in the public API so that other components can reference it, even when the actual implementation classes are
- * located in internal or deeply nested packages.
- *
- * <p>Each component has exactly one {@code ComponentName}, which serves as a symbolic identifier shared between its
- * elements. Component names are usually defined as constants within interfaces representing the module's public API.
  *
  * @author Pavel Castornii
  */
-public class ComponentName extends Name {
+public class Name {
 
-    public ComponentName(String text) {
-        super(text);
+    private final String text;
+
+    public Name(String text) {
+        this.text = text;
+    }
+
+    /**
+     * Returns the human-readable name.
+     *
+     * @return the component name text
+     */
+    public String getText() {
+        return text;
+    }
+
+    @Override
+    public String toString() {
+        return this.text;
     }
 }
