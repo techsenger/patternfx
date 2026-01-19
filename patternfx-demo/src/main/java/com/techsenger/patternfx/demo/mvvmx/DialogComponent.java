@@ -16,7 +16,7 @@
 
 package com.techsenger.patternfx.demo.mvvmx;
 
-import com.techsenger.patternfx.core.Name;
+import com.techsenger.patternfx.core.ComponentName;
 import com.techsenger.patternfx.demo.DemoNames;
 import com.techsenger.patternfx.mvvmx.AbstractComponent;
 
@@ -31,7 +31,7 @@ public class DialogComponent extends AbstractComponent<DialogView> {
     }
 
     @Override
-    public Name getName() {
+    public ComponentName getName() {
         return DemoNames.PERSON_DIALOG;
     }
 

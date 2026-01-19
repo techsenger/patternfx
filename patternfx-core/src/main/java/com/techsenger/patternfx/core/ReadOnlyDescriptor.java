@@ -21,11 +21,8 @@ import java.util.UUID;
 /**
  * Represents the internal metadata and platform-level state of a component. The descriptor serves as a technical
  * identity card, containing all platform-related information while completely separating it from business data.
- *
- * <p>The descriptor is a pure data container - it exposes component metadata through simple accessor methods but
- * contains no business logic or behavior. All behavioral aspects (history management, component interactions)
- * are handled separately by the component's ViewModel and other behavioral contracts.
- *
+ * The descriptor is a pure data container - it contains no business logic or behavior.
+ * 
  * @author Pavel Castornii
  */
 public interface ReadOnlyDescriptor {
@@ -35,7 +32,7 @@ public interface ReadOnlyDescriptor {
      *
      * @return the component name
      */
-    Name getName();
+    ComponentName getName();
 
     /**
      * Returns the unique {@link UUID} of this component instance.
@@ -66,12 +63,12 @@ public interface ReadOnlyDescriptor {
      * Returns the state of the component.
      * @return
      */
-    State getState();
+    ComponentState getState();
 
     /**
      * Returns the current {@link ComponentGroup}.
      *
      * @return the current component group
      */
-    Group getGroup();
+    ComponentGroup getGroup();
 }

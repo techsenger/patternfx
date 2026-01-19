@@ -19,12 +19,12 @@ package com.techsenger.patternfx.core;
 import java.io.Serializable;
 
 /**
- * Represents a serializable snapshot of a component's {@code ViewModel} state. A history object stores only the
- * information that must persist between component sessions and excludes all transient or runtime aspects.
+ * Represents a serializable snapshot of a component's state. A history object stores only the information that
+ * must persist between component sessions and excludes all transient or runtime aspects.
  *
  * @author Pavel Castornii
  */
-public interface History extends Serializable {
+public interface ComponentHistory extends Serializable {
 
     /**
      * Returns whether this history instance is fresh, meaning it was newly created and has not yet been used to

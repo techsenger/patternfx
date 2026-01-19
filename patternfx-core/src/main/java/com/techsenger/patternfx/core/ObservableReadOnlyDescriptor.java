@@ -30,12 +30,12 @@ public interface ObservableReadOnlyDescriptor extends ReadOnlyDescriptor {
      *
      * @return
      */
-    ReadOnlyObjectProperty<State> stateProperty();
+    ReadOnlyObjectProperty<ComponentState> stateProperty();
 
     /**
      * Returns the {@link ObjectProperty} for the component group.
      *
      * @return the property representing the component group
      */
-    ReadOnlyObjectProperty<Group> groupProperty();
+    ReadOnlyObjectProperty<ComponentGroup> groupProperty();
 }

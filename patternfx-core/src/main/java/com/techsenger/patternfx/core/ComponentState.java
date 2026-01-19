@@ -21,45 +21,35 @@ package com.techsenger.patternfx.core;
  *
  * @author Pavel Castornii
  */
-public enum State {
+public enum ComponentState {
 
     /**
      * The component is currently being created.
      *
-     * <p>During this phase, the {@code ComponentViewModel}, {@code ComponentView}, and {@code Component}
-     * objects are being constructed, but the initialization process has not yet begun.
-     * This is the earliest detectable phase of the component’s lifecycle.
+     * <p>During this phase, the component objects are being constructed, but the initialization process has not
+     * yet begun. This is the earliest detectable phase of the component’s lifecycle.
      */
     CREATING,
 
     /**
      * The component is in the process of initialization.
-     *
-     * <p>This state indicates that the component is initializing its {@code ComponentViewModel},
-     * {@code ComponentView}, and other internal parts.
      */
     INITIALIZING,
 
     /**
      * The component has been fully initialized and is ready for use.
-     *
-     * <p>This is the stable operational state in which the component, its view, and its view-model
-     * are fully active, bound, and synchronized.
      */
     INITIALIZED,
 
     /**
      * The component is in the process of deinitialization.
-     *
-     * <p>This state indicates that the component is deinitializing its {@code ComponentView},
-     * {@code ComponentViewModel}, and other internal parts.
      */
     DEINITIALIZING,
 
     /**
      * The component has been completely deinitialized and can no longer be used.
      *
-     * <p>At this point, the component, its view, and its view-model have released all resources and performed all
+     * <p>At this point, the component, its view, and its elements have released all resources and performed all
      * necessary cleanup. This is the terminal state of the component lifecycle.
      */
     DEINITIALIZED

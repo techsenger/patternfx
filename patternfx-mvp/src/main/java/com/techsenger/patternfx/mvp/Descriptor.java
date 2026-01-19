@@ -17,10 +17,10 @@
 package com.techsenger.patternfx.mvp;
 
 import com.techsenger.patternfx.core.AbstractDescriptor;
-import com.techsenger.patternfx.core.Group;
-import com.techsenger.patternfx.core.Name;
-import com.techsenger.patternfx.core.State;
+import com.techsenger.patternfx.core.ComponentName;
+import com.techsenger.patternfx.core.ComponentState;
 import java.util.UUID;
+import com.techsenger.patternfx.core.ComponentGroup;
 
 /**
  *
@@ -28,21 +28,21 @@ import java.util.UUID;
  */
 public final class Descriptor extends AbstractDescriptor {
 
-    public Descriptor(Name name) {
+    public Descriptor(ComponentName name) {
         super(name);
     }
 
-    public Descriptor(Name name, UUID uuid) {
+    public Descriptor(ComponentName name, UUID uuid) {
         super(name, uuid);
     }
 
     @Override
-    public void setGroup(Group group) {
+    public void setGroup(ComponentGroup group) {
         super.setGroup(group);
     }
 
     @Override
-    protected void setState(State state) {
+    protected void setState(ComponentState state) {
         super.setState(state);
     }
 }

@@ -26,21 +26,21 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 public abstract class AbstractObservableDescriptor extends AbstractDescriptor
         implements ObservableReadOnlyDescriptor {
 
-    protected AbstractObservableDescriptor(Name name) {
+    protected AbstractObservableDescriptor(ComponentName name) {
         super(name);
     }
 
-    protected AbstractObservableDescriptor(Name name, UUID uuid) {
+    protected AbstractObservableDescriptor(ComponentName name, UUID uuid) {
         super(name, uuid);
     }
 
     @Override
-    public ReadOnlyObjectProperty<State> stateProperty() {
+    public ReadOnlyObjectProperty<ComponentState> stateProperty() {
         return getStateWrapper().getReadOnlyProperty();
     }
 
     @Override
-    public ReadOnlyObjectProperty<Group> groupProperty() {
+    public ReadOnlyObjectProperty<ComponentGroup> groupProperty() {
        return getGroupWrapper().getReadOnlyProperty();
     }
 }

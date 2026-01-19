@@ -17,11 +17,11 @@
 package com.techsenger.patternfx.mvvm;
 
 import com.techsenger.patternfx.core.AbstractObservableDescriptor;
-import com.techsenger.patternfx.core.Group;
-import com.techsenger.patternfx.core.Name;
-import com.techsenger.patternfx.core.State;
+import com.techsenger.patternfx.core.ComponentName;
+import com.techsenger.patternfx.core.ComponentState;
 import java.util.UUID;
 import javafx.beans.property.ObjectProperty;
+import com.techsenger.patternfx.core.ComponentGroup;
 
 /**
  *
@@ -29,26 +29,26 @@ import javafx.beans.property.ObjectProperty;
  */
 public final class Descriptor extends AbstractObservableDescriptor {
 
-    public Descriptor(Name name) {
+    public Descriptor(ComponentName name) {
         super(name);
     }
 
-    public Descriptor(Name name, UUID uuid) {
+    public Descriptor(ComponentName name, UUID uuid) {
         super(name, uuid);
     }
 
     @Override
-    public ObjectProperty<Group> groupProperty() {
+    public ObjectProperty<ComponentGroup> groupProperty() {
         return getGroupWrapper();
     }
 
     @Override
-    public void setGroup(Group group) {
+    public void setGroup(ComponentGroup group) {
         super.setGroup(group);
     }
 
     @Override
-    protected void setState(State state) {
+    protected void setState(ComponentState state) {
         super.setState(state);
     }
 

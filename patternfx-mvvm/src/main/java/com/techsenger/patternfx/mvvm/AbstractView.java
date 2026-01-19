@@ -16,7 +16,7 @@
 
 package com.techsenger.patternfx.mvvm;
 
-import com.techsenger.patternfx.core.State;
+import com.techsenger.patternfx.core.ComponentState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,19 +43,19 @@ public abstract class AbstractView<T extends AbstractViewModel> implements View<
     public final void initialize() {
         try {
             var descriptor = viewModel.getDescriptor();
-            if (descriptor.getState() != State.CREATING) {
+            if (descriptor.getState() != ComponentState.CREATING) {
                 throw new IllegalStateException("Unexpected state of the view - " + descriptor.getState().name());
             }
             // pre-initialization
             preInitialize();
             // initialization
-            descriptor.setState(State.INITIALIZING);
+            descriptor.setState(ComponentState.INITIALIZING);
             viewModel.initialize();
             build();
             bind();
             addListeners();
             addHandlers();
-            descriptor.setState(State.INITIALIZED);
+            descriptor.setState(ComponentState.INITIALIZED);
             logger.debug("{} Initialized view", getDescriptor().getLogPrefix());
             // post-initialization
             postInitialize();
@@ -68,19 +68,19 @@ public abstract class AbstractView<T extends AbstractViewModel> implements View<
     public final void deinitialize() {
         try {
             var descriptor = getDescriptor();
-            if (descriptor.getState() != State.INITIALIZED) {
+            if (descriptor.getState() != ComponentState.INITIALIZED) {
                 throw new IllegalStateException("Unexpected state of the view - " + descriptor.getState().name());
             }
             // pre-deinitialization
             preDeinitialize();
             // deinitialization
-            descriptor.setState(State.DEINITIALIZING);
+            descriptor.setState(ComponentState.DEINITIALIZING);
             removeHandlers();
             removeListeners();
             unbind();
             unbuild();
             viewModel.deinitialize();
-            descriptor.setState(State.DEINITIALIZED);
+            descriptor.setState(ComponentState.DEINITIALIZED);
             logger.debug("{} Deinitialized view", getDescriptor().getLogPrefix());
             // post-deinitialization
             postDeinitialize();

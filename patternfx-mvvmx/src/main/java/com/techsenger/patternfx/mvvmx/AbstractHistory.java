@@ -16,13 +16,13 @@
 
 package com.techsenger.patternfx.mvvmx;
 
-import com.techsenger.patternfx.core.History;
+import com.techsenger.patternfx.core.ComponentHistory;
 
 /**
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractHistory implements History {
+public abstract class AbstractHistory implements ComponentHistory {
 
     private boolean fresh = true;
 

@@ -16,7 +16,7 @@
 
 package com.techsenger.patternfx.demo.mvvm;
 
-import com.techsenger.patternfx.core.State;
+import com.techsenger.patternfx.core.ComponentState;
 import com.techsenger.patternfx.demo.DemoNames;
 import com.techsenger.patternfx.demo.model.Person;
 import com.techsenger.patternfx.demo.model.PersonService;
@@ -70,7 +70,7 @@ public class RegistryViewModel extends AbstractParentViewModel<RegistryComposer>
             logger.debug("{} Selected person property changed", getDescriptor().getLogPrefix());
         });
         getDescriptor().stateProperty().addListener((ov, oldV, newV) -> {
-            if (newV == State.INITIALIZED) {
+            if (newV == ComponentState.INITIALIZED) {
                 refresh();
             }
         });

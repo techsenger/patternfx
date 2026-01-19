@@ -16,9 +16,8 @@
 
 package com.techsenger.patternfx.mvvmx;
 
-import com.techsenger.patternfx.core.Group;
-import com.techsenger.patternfx.core.Name;
-import com.techsenger.patternfx.core.State;
+import com.techsenger.patternfx.core.ComponentName;
+import com.techsenger.patternfx.core.ComponentState;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
@@ -28,6 +27,7 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.techsenger.patternfx.core.ComponentGroup;
 
 /**
  *
@@ -53,7 +53,7 @@ public abstract class AbstractComponent<T extends AbstractComponentView<?, ?>> i
         private final AbstractComponent<?> component = AbstractComponent.this;
 
         @Override
-        public Name getName() {
+        public ComponentName getName() {
             return component.getName();
         }
 
@@ -73,27 +73,27 @@ public abstract class AbstractComponent<T extends AbstractComponentView<?, ?>> i
         }
 
         @Override
-        public State getState() {
+        public ComponentState getState() {
             return component.getState();
         }
 
         @Override
-        public ReadOnlyObjectProperty<State> stateProperty() {
+        public ReadOnlyObjectProperty<ComponentState> stateProperty() {
             return component.stateProperty();
         }
 
         @Override
-        public Group getGroup() {
+        public ComponentGroup getGroup() {
             return component.getGroup();
         }
 
         @Override
-        public void setGroup(Group value) {
+        public void setGroup(ComponentGroup value) {
             component.setGroup(value);
         }
 
         @Override
-        public ObjectProperty<Group> groupProperty() {
+        public ObjectProperty<ComponentGroup> groupProperty() {
             return component.groupProperty();
         }
 
@@ -111,9 +111,9 @@ public abstract class AbstractComponent<T extends AbstractComponentView<?, ?>> i
 
     private final String logPrefix;
 
-    private final ReadOnlyObjectWrapper<State> state = new ReadOnlyObjectWrapper<>(State.CREATING);
+    private final ReadOnlyObjectWrapper<ComponentState> state = new ReadOnlyObjectWrapper<>(ComponentState.CREATING);
 
-    private final ObjectProperty<Group> group = new SimpleObjectProperty<>();
+    private final ObjectProperty<ComponentGroup> group = new SimpleObjectProperty<>();
 
     public AbstractComponent(T view) {
         this.view = view;
@@ -145,27 +145,27 @@ public abstract class AbstractComponent<T extends AbstractComponentView<?, ?>> i
     }
 
     @Override
-    public State getState() {
+    public ComponentState getState() {
         return this.state.get();
     }
 
     @Override
-    public ReadOnlyObjectProperty<State> stateProperty() {
+    public ReadOnlyObjectProperty<ComponentState> stateProperty() {
         return state.getReadOnlyProperty();
     }
 
     @Override
-    public Group getGroup() {
+    public ComponentGroup getGroup() {
        return group.get();
     }
 
     @Override
-    public void setGroup(Group value) {
+    public void setGroup(ComponentGroup value) {
        group.set(value);
     }
 
     @Override
-    public ObjectProperty<Group> groupProperty() {
+    public ObjectProperty<ComponentGroup> groupProperty() {
        return group;
     }
 
@@ -173,16 +173,16 @@ public abstract class AbstractComponent<T extends AbstractComponentView<?, ?>> i
     public final void initialize() {
         var viewModel = this.view.getViewModel();
         try {
-            if (getState() != State.CREATING) {
+            if (getState() != ComponentState.CREATING) {
                 throw new IllegalStateException("Unexpected state of the component - " + getState().name());
             }
             // pre-initialization
             preInitialize();
             // initialization
-            state.set(State.INITIALIZING);
+            state.set(ComponentState.INITIALIZING);
             viewModel.initialize();
             this.view.initialize();
-            state.set(State.INITIALIZED);
+            state.set(ComponentState.INITIALIZED);
             logger.debug("{} Initialized component", logPrefix);
             // post-initialization
             postInitialize();
@@ -195,16 +195,16 @@ public abstract class AbstractComponent<T extends AbstractComponentView<?, ?>> i
     public final void deinitialize() {
         var viewModel = this.view.getViewModel();
         try {
-            if (getState() != State.INITIALIZED) {
+            if (getState() != ComponentState.INITIALIZED) {
                 throw new IllegalStateException("Unexpected state of the component - " + getState().name());
             }
             // pre-deinitialization
             preDeinitialize();
             // deinitialization
-            state.set(State.DEINITIALIZING);
+            state.set(ComponentState.DEINITIALIZING);
             this.view.deinitialize();
             viewModel.deinitialize();
-            state.set(State.DEINITIALIZED);
+            state.set(ComponentState.DEINITIALIZED);
             logger.debug("{} Deinitialized component", logPrefix);
             // post-deinitialization
             postDeinitialize();

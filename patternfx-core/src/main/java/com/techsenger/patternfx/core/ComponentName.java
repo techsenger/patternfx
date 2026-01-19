@@ -17,23 +17,22 @@
 package com.techsenger.patternfx.core;
 
 /**
- * Represents a logical name of a component that unites both its {@link ComponentView} and {@link ComponentViewModel}
- * counterparts.
+ * Represents a logical name of a component.
+ *
  * <p>A {@code ComponentName} defines the type identity of a component within the platform. It is typically declared
  * in the public API so that other components can reference it, even when the actual implementation classes are
  * located in internal or deeply nested packages.
  *
  * <p>Each component has exactly one {@code ComponentName}, which serves as a symbolic identifier shared between its
- * {@link ComponentView} and {@link ComponentViewModel}. Component names are usually defined as constants within
- * interfaces representing the module's public API.
+ * elements. Component names are usually defined as constants within interfaces representing the module's public API.
  *
  * @author Pavel Castornii
  */
-public class Name {
+public class ComponentName {
 
     private final String text;
 
-    public Name(String text) {
+    public ComponentName(String text) {
         this.text = text;
     }
 

@@ -22,7 +22,7 @@ import static com.techsenger.patternfx.core.HistoryPolicy.APPEARANCE;
 import static com.techsenger.patternfx.core.HistoryPolicy.DATA;
 import static com.techsenger.patternfx.core.HistoryPolicy.NONE;
 import com.techsenger.patternfx.core.HistoryProvider;
-import com.techsenger.patternfx.core.State;
+import com.techsenger.patternfx.core.ComponentState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,18 +55,18 @@ public abstract class AbstractPresenter<T extends View> implements Presenter {
     @Override
     public final void initialize() {
         try {
-            if (descriptor.getState() != State.CREATING) {
+            if (descriptor.getState() != ComponentState.CREATING) {
                 throw new IllegalStateException("Unexpected state of the view - " + descriptor.getState().name());
             }
             // pre-initialization
             preInitialize();
             // initialization
-            descriptor.setState(State.INITIALIZING);
+            descriptor.setState(ComponentState.INITIALIZING);
             this.view.initialize();
             if (this.history != null) {
                 restoreHistory();
             }
-            descriptor.setState(State.INITIALIZED);
+            descriptor.setState(ComponentState.INITIALIZED);
             logger.debug("{} Initialized view", getDescriptor().getLogPrefix());
             // post-initialization
             postInitialize();
@@ -79,18 +79,18 @@ public abstract class AbstractPresenter<T extends View> implements Presenter {
     public final void deinitialize() {
         try {
             var descriptor = getDescriptor();
-            if (descriptor.getState() != State.INITIALIZED) {
+            if (descriptor.getState() != ComponentState.INITIALIZED) {
                 throw new IllegalStateException("Unexpected state of the view - " + descriptor.getState().name());
             }
             // pre-deinitialization
             preDeinitialize();
             // deinitialization
-            descriptor.setState(State.DEINITIALIZING);
+            descriptor.setState(ComponentState.DEINITIALIZING);
             if (this.history != null) {
                 saveHistory();
             }
             this.view.deinitialize();
-            descriptor.setState(State.DEINITIALIZED);
+            descriptor.setState(ComponentState.DEINITIALIZED);
             logger.debug("{} Deinitialized view", getDescriptor().getLogPrefix());
             // post-deinitialization
             postDeinitialize();

@@ -16,7 +16,7 @@
 
 package com.techsenger.patternfx.demo.mvvmx;
 
-import com.techsenger.patternfx.core.Name;
+import com.techsenger.patternfx.core.ComponentName;
 import com.techsenger.patternfx.demo.DemoNames;
 import com.techsenger.patternfx.mvvmx.AbstractChildComponent;
 
@@ -36,7 +36,7 @@ public class ReportComponent extends AbstractChildComponent<ReportView> {
     }
 
     @Override
-    public Name getName() {
+    public ComponentName getName() {
         return DemoNames.PERSON_REPORT;
     }
 

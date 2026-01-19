@@ -38,7 +38,7 @@ public abstract class AbstractDescriptor implements ReadOnlyDescriptor {
         AbstractDescriptor.logPrefixResolver = logPrefixResolver;
     }
 
-    private final Name name;
+    private final ComponentName name;
 
     private final UUID uuid;
 
@@ -46,15 +46,15 @@ public abstract class AbstractDescriptor implements ReadOnlyDescriptor {
 
     private final String logPrefix;
 
-    private final ReadOnlyObjectWrapper<State> state = new ReadOnlyObjectWrapper<>(State.CREATING);
+    private final ReadOnlyObjectWrapper<ComponentState> state = new ReadOnlyObjectWrapper<>(ComponentState.CREATING);
 
-    private final  ReadOnlyObjectWrapper<Group> group = new ReadOnlyObjectWrapper<>();
+    private final  ReadOnlyObjectWrapper<ComponentGroup> group = new ReadOnlyObjectWrapper<>();
 
-    protected AbstractDescriptor(Name name) {
+    protected AbstractDescriptor(ComponentName name) {
         this(name, UUID.randomUUID());
     }
 
-    protected AbstractDescriptor(Name name, UUID uuid) {
+    protected AbstractDescriptor(ComponentName name, UUID uuid) {
         this.name = name;
         this.uuid = uuid;
         long least32bits = uuid.getLeastSignificantBits() & 0xFFFFFFFFL;
@@ -64,7 +64,7 @@ public abstract class AbstractDescriptor implements ReadOnlyDescriptor {
     }
 
     @Override
-    public Name getName() {
+    public ComponentName getName() {
         return name;
     }
 
@@ -84,28 +84,28 @@ public abstract class AbstractDescriptor implements ReadOnlyDescriptor {
     }
 
     @Override
-    public State getState() {
+    public ComponentState getState() {
         return this.state.get();
     }
 
     @Override
-    public Group getGroup() {
+    public ComponentGroup getGroup() {
        return group.get();
     }
 
-    protected void setState(State state) {
+    protected void setState(ComponentState state) {
         this.state.set(state);
     }
 
-    protected void setGroup(Group group) {
+    protected void setGroup(ComponentGroup group) {
         this.group.set(group);
     }
 
-    protected  ReadOnlyObjectWrapper<State> getStateWrapper() {
+    protected  ReadOnlyObjectWrapper<ComponentState> getStateWrapper() {
         return state;
     }
 
-    protected ReadOnlyObjectWrapper<Group> getGroupWrapper() {
+    protected ReadOnlyObjectWrapper<ComponentGroup> getGroupWrapper() {
        return group;
     }
 }

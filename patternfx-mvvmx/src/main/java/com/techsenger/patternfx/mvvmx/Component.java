@@ -16,9 +16,9 @@
 
 package com.techsenger.patternfx.mvvmx;
 
-import com.techsenger.patternfx.core.Group;
 import javafx.beans.property.ObjectProperty;
 import com.techsenger.patternfx.core.ObservableReadOnlyDescriptor;
+import com.techsenger.patternfx.core.ComponentGroup;
 
 /**
  *
@@ -27,9 +27,9 @@ import com.techsenger.patternfx.core.ObservableReadOnlyDescriptor;
 public interface Component<T extends ComponentView<?, ?>> extends ObservableReadOnlyDescriptor {
 
     @Override
-    ObjectProperty<Group> groupProperty();
+    ObjectProperty<ComponentGroup> groupProperty();
 
-    void setGroup(Group group);
+    void setGroup(ComponentGroup group);
 
     /**
      * Returns the view of the component.

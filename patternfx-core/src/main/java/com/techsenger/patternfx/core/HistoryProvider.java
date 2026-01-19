@@ -24,7 +24,7 @@ package com.techsenger.patternfx.core;
  * @author Pavel Castornii
  */
 @FunctionalInterface
-public interface HistoryProvider<T extends History> {
+public interface HistoryProvider<T extends ComponentHistory> {
 
     T provide();
 }

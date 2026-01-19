@@ -21,12 +21,12 @@ package com.techsenger.patternfx.core;
  *
  * @author Pavel Castornii
  */
-public interface Group {
+public interface ComponentGroup {
 
     /**
      * Returns the name of this component group.
      *
      * @return the {@link GroupName} representing this group's name
      */
-    GroupName getName();
+    ComponentGroupName getName();
 }

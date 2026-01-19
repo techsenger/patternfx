@@ -16,7 +16,7 @@
 
 package com.techsenger.patternfx.demo;
 
-import com.techsenger.patternfx.core.Name;
+import com.techsenger.patternfx.core.ComponentName;
 
 /**
  *
@@ -24,11 +24,11 @@ import com.techsenger.patternfx.core.Name;
  */
 public final class DemoNames {
 
-    public static final Name PERSON_REGISTRY = new Name("PersonRegistry");
+    public static final ComponentName PERSON_REGISTRY = new ComponentName("PersonRegistry");
 
-    public static final Name PERSON_DIALOG = new Name("PersonDialog");
+    public static final ComponentName PERSON_DIALOG = new ComponentName("PersonDialog");
 
-    public static final Name PERSON_REPORT = new Name("PersonReport");
+    public static final ComponentName PERSON_REPORT = new ComponentName("PersonReport");
 
     private DemoNames() {
         //empty
