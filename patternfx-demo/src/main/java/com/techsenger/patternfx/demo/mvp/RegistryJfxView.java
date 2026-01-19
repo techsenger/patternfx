@@ -38,7 +38,7 @@ import javafx.stage.Stage;
  *
  * @author Pavel Castornii
  */
-public class RegistryJfxView<P extends RegistryPresenter<?, ?>, C extends RegistryJfxComposer<?>>
+public class RegistryJfxView<P extends RegistryPresenter<?, C>, C extends RegistryJfxComposer<?>>
         extends AbstractParentJfxView<P, C> implements RegistryView {
 
     private final Button addButton = new Button("Add");
