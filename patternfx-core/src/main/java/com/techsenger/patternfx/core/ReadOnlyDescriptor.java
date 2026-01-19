@@ -22,7 +22,7 @@ import java.util.UUID;
  * Represents the internal metadata and platform-level state of a component. The descriptor serves as a technical
  * identity card, containing all platform-related information while completely separating it from business data.
  * The descriptor is a pure data container - it contains no business logic or behavior.
- * 
+ *
  * @author Pavel Castornii
  */
 public interface ReadOnlyDescriptor {
