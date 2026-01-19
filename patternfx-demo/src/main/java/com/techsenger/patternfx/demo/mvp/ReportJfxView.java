@@ -18,6 +18,7 @@ package com.techsenger.patternfx.demo.mvp;
 
 import com.techsenger.patternfx.demo.Style;
 import com.techsenger.patternfx.mvp.AbstractChildJfxView;
+import com.techsenger.patternfx.mvp.ChildJfxComposer;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
@@ -28,7 +29,7 @@ import javafx.scene.layout.Priority;
  *
  * @author Pavel Castornii
  */
-public class ReportJfxView extends AbstractChildJfxView<ReportPresenter> implements ReportView {
+public class ReportJfxView extends AbstractChildJfxView<ReportPresenter, ChildJfxComposer> implements ReportView {
 
     private final Label totalPeopleLabel = new Label("Total People:");
 
@@ -86,7 +87,7 @@ public class ReportJfxView extends AbstractChildJfxView<ReportPresenter> impleme
     }
 
     @Override
-    protected Composer createComposer() {
+    protected ChildJfxComposer createComposer() {
         return null;
     }
 }

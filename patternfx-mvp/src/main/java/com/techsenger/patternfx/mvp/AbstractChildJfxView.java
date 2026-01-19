@@ -23,8 +23,8 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractChildJfxView<P extends ChildPresenter> extends AbstractParentJfxView<P>
-        implements ChildJfxView<P> {
+public abstract class AbstractChildJfxView<P extends ChildPresenter, C extends ChildJfxComposer>
+        extends AbstractParentJfxView<P, C> implements ChildJfxView<P> {
 
     private final ReadOnlyObjectWrapper<ParentJfxView<?>> parent = new ReadOnlyObjectWrapper<>();
 

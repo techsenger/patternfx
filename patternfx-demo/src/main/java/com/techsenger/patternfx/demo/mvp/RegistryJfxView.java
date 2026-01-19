@@ -38,46 +38,8 @@ import javafx.stage.Stage;
  *
  * @author Pavel Castornii
  */
-public class RegistryJfxView<T extends RegistryPresenter<?, ?>>
-        extends AbstractParentJfxView<T> implements RegistryView {
-
-    protected class Composer extends AbstractParentJfxView.Composer implements RegistryComposer {
-
-        @Override
-        public DialogPort showDialog() {
-            var v = new DialogJfxView(stage);
-            var p = new DialogPresenter<>(v);
-            p.initialize();
-            v.getDialog().showAndWait();
-            return p.getPort();
-        }
-
-        @Override
-        public ReportPort getReport() {
-            if (report == null) {
-                return null;
-            }
-            return report.getPresenter().getPort();
-        }
-
-        @Override
-        public void addReport() {
-            var v = new ReportJfxView();
-            var p = new ReportPresenter(v);
-            p.initialize();
-            root.getChildren().add(v.getNode());
-            getModifiableChildren().add(v);
-            report = v;
-        }
-
-        @Override
-        public void removeReport() {
-            getModifiableChildren().remove(report);
-            root.getChildren().remove(report.getNode());
-            report.getPresenter().deinitialize();
-            report = null;
-        }
-    }
+public class RegistryJfxView<P extends RegistryPresenter<?, ?>, C extends RegistryJfxComposer<?>>
+        extends AbstractParentJfxView<P, C> implements RegistryView {
 
     private final Button addButton = new Button("Add");
 
@@ -204,7 +166,27 @@ public class RegistryJfxView<T extends RegistryPresenter<?, ?>>
     }
 
     @Override
-    protected Composer createComposer() {
-        return new RegistryJfxView.Composer();
+    protected C createComposer() {
+        return (C) new RegistryJfxComposer<>(this);
+    }
+
+    Stage getStage() {
+        return stage;
+    }
+
+    ReportJfxView getReport() {
+        return report;
+    }
+
+    void addReport(ReportJfxView r) {
+        root.getChildren().add(r.getNode());
+        getModifiableChildren().add(r);
+        report = r;
+    }
+
+    void removeReport() {
+        getModifiableChildren().remove(report);
+        root.getChildren().remove(report.getNode());
+        report = null;
     }
 }

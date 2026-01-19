@@ -21,81 +21,27 @@ import com.techsenger.patternfx.core.AbstractDepthFirstIterator;
 import com.techsenger.patternfx.core.TreeIterator;
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractParentJfxView<T extends ParentPresenter>
-        extends AbstractJfxView<T> implements ParentJfxView<T> {
-
-    private static final Logger logger = LoggerFactory.getLogger(AbstractParentJfxView.class);
-
-    protected class Composer implements ParentComposer {
-
-        private final AbstractParentJfxView<?> view = AbstractParentJfxView.this;
-
-        @Override
-        public List<Port> getChildren() {
-            return view.children.stream().map(v -> v.getPresenter().getPort()).collect(Collectors.toList());
-        }
-
-        @Override
-        public TreeIterator<Port> depthFirstIterator() {
-            return new AbstractDepthFirstIterator<Port, ParentJfxView<?>>(view) {
-
-                @Override
-                protected List<ParentJfxView<?>> getChildren(ParentJfxView<?> parent) {
-                    return (List) parent.getChildren();
-                }
-
-                @Override
-                protected Port map(ParentJfxView<?> value) {
-                    return value.getPresenter().getPort();
-                }
-            };
-        }
-
-        @Override
-        public TreeIterator<Port> breadthFirstIterator() {
-            return new AbstractBreadthFirstIterator<Port, ParentJfxView<?>>(view) {
-
-                @Override
-                protected List<ParentJfxView<?>> getChildren(ParentJfxView<?> parent) {
-                    return (List) parent.getChildren();
-                }
-
-                @Override
-                protected Port map(ParentJfxView<?> value) {
-                    return value.getPresenter().getPort();
-                }
-            };
-        }
-
-        @Override
-        public String toTreeString() {
-            return view.toTreeString();
-        }
-
-        @Override
-        public String toTreeString(BiConsumer<Port, StringBuilder> appender) {
-            return view.toTreeString(depthFirstIterator(), appender);
-        }
-    }
+public abstract class AbstractParentJfxView<P extends ParentPresenter, C extends ParentJfxComposer>
+        extends AbstractJfxView<P> implements ParentJfxView<P> {
 
     private final ObservableList<ChildJfxView<?>> modifiableChildren = FXCollections.observableArrayList();
 
     private final ObservableList<ChildJfxView<?>> children =
             FXCollections.unmodifiableObservableList(modifiableChildren);
 
+    private final C composer;
+
     public AbstractParentJfxView() {
         super();
+        this.composer = createComposer();
         modifiableChildren.addListener((ListChangeListener<ChildJfxView<?>>) (e) -> {
             while (e.next()) {
                 if (e.wasAdded() || e.wasReplaced()) {
@@ -160,7 +106,11 @@ public abstract class AbstractParentJfxView<T extends ParentPresenter>
         return toTreeString(depthFirstIterator(), appender);
     }
 
-    protected abstract Composer createComposer();
+    public C getComposer() {
+        return composer;
+    }
+
+    protected abstract C createComposer();
 
     protected ObservableList<ChildJfxView<?>> getModifiableChildren() {
         return modifiableChildren;

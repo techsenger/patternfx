@@ -499,8 +499,7 @@ the `JfxView`. However, the `Presenter` may need to initiate the creation of new
 dialog) and their composition — which is impossible without interacting with the `JfxView`.
 
 This contradiction is resolved as follows: the `Presenter` works with the `Composer` interface, which knows nothing
-about the `JfxView`, while the implementation of this interface is provided in the nested non-static class
-`JfxView.Composer`.
+about the `JfxView`, while the implementation of this interface creates `JfxView`s.
 
 Advantages of this approach:
 

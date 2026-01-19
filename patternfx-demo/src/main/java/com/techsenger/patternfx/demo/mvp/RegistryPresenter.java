@@ -70,6 +70,7 @@ public class RegistryPresenter<V extends RegistryView, C extends RegistryCompose
     protected void handleRefreshAction() {
         getView().clearPersons();
         getView().addPersons(service.readAll());
+        updateReport();
     }
 
     protected void handleReportAction() {
