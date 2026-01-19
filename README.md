@@ -459,7 +459,7 @@ than improving clarity.
 
 ### MVP Template <a name="templates-mvp"></a>
 
-<img width="1213" height="537" alt="PatternFX MVP" src="https://github.com/user-attachments/assets/88470708-b988-4200-899c-224262a1a67e" />
+<img width="1211" height="535" alt="PatternFX MVP" src="https://github.com/user-attachments/assets/7c1ed31c-70fd-4310-af52-85476627044d" />
 
 In this template, additional responsibilities are distributed between the `View` and `Presenter`. For responsibilities
 that cannot be performed without creating an additional element, a `Composer` is introduced:
