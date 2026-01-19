@@ -58,7 +58,8 @@ public class ReportPresenter extends AbstractChildPresenter<ReportView, ChildCom
     }
 
     private void refresh(List<Person> persons) {
-        getView().setAverageAge(String.valueOf(persons.stream().mapToDouble(p -> p.getAge()).sum()  /  persons.size()));
+        double average = persons.stream().mapToDouble(Person::getAge).average().orElse(0.0);
+        getView().setAverageAge(String.valueOf(average));
         getView().setTotalPeople(String.valueOf(persons.size()));
     }
 }

@@ -65,6 +65,7 @@ public class ReportViewModel extends AbstractChildViewModel<ChildMediator> {
 
     void refresh(List<Person> persons) {
         setTotalPeople(persons.size());
-        setAverageAge(persons.stream().mapToDouble(p -> p.getAge()).sum() / persons.size());
+        double average = persons.stream().mapToDouble(Person::getAge).average().orElse(0.0);
+        setAverageAge(average);
     }
 }
