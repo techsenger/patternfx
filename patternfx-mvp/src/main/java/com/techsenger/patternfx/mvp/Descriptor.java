@@ -16,7 +16,7 @@
 
 package com.techsenger.patternfx.mvp;
 
-import com.techsenger.patternfx.core.AbstractDescriptorBase;
+import com.techsenger.patternfx.core.AbstractDescriptor;
 import com.techsenger.patternfx.core.Group;
 import com.techsenger.patternfx.core.Name;
 import com.techsenger.patternfx.core.State;
@@ -26,7 +26,7 @@ import java.util.UUID;
  *
  * @author Pavel Castornii
  */
-public final class Descriptor extends AbstractDescriptorBase {
+public final class Descriptor extends AbstractDescriptor {
 
     public Descriptor(Name name) {
         super(name);

@@ -16,7 +16,7 @@
 
 package com.techsenger.patternfx.mvvm;
 
-import com.techsenger.patternfx.core.AbstractObservableDescriptorBase;
+import com.techsenger.patternfx.core.AbstractObservableDescriptor;
 import com.techsenger.patternfx.core.Group;
 import com.techsenger.patternfx.core.Name;
 import com.techsenger.patternfx.core.State;
@@ -27,7 +27,7 @@ import javafx.beans.property.ObjectProperty;
  *
  * @author Pavel Castornii
  */
-public final class Descriptor extends AbstractObservableDescriptorBase {
+public final class Descriptor extends AbstractObservableDescriptor {
 
     public Descriptor(Name name) {
         super(name);

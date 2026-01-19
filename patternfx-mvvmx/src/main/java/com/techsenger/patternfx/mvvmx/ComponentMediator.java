@@ -17,14 +17,14 @@
 package com.techsenger.patternfx.mvvmx;
 
 import com.techsenger.patternfx.core.Group;
-import com.techsenger.patternfx.core.ObservableDescriptorBase;
 import javafx.beans.property.ObjectProperty;
+import com.techsenger.patternfx.core.ObservableReadOnlyDescriptor;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface ComponentMediator extends ObservableDescriptorBase {
+public interface ComponentMediator extends ObservableReadOnlyDescriptor {
 
     @Override
     ObjectProperty<Group> groupProperty();

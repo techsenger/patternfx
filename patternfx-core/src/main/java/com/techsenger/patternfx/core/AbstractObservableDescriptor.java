@@ -16,26 +16,31 @@
 
 package com.techsenger.patternfx.core;
 
-import javafx.beans.property.ObjectProperty;
+import java.util.UUID;
 import javafx.beans.property.ReadOnlyObjectProperty;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface ObservableDescriptorBase extends DescriptorBase {
+public abstract class AbstractObservableDescriptor extends AbstractDescriptor
+        implements ObservableReadOnlyDescriptor {
 
-    /**
-     * Returns the state property of the component.
-     *
-     * @return
-     */
-    ReadOnlyObjectProperty<State> stateProperty();
+    protected AbstractObservableDescriptor(Name name) {
+        super(name);
+    }
 
-    /**
-     * Returns the {@link ObjectProperty} for the component group.
-     *
-     * @return the property representing the component group
-     */
-    ReadOnlyObjectProperty<Group> groupProperty();
+    protected AbstractObservableDescriptor(Name name, UUID uuid) {
+        super(name, uuid);
+    }
+
+    @Override
+    public ReadOnlyObjectProperty<State> stateProperty() {
+        return getStateWrapper().getReadOnlyProperty();
+    }
+
+    @Override
+    public ReadOnlyObjectProperty<Group> groupProperty() {
+       return getGroupWrapper().getReadOnlyProperty();
+    }
 }

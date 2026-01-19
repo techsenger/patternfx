@@ -16,7 +16,7 @@
 
 package com.techsenger.patternfx.mvp;
 
-import com.techsenger.patternfx.core.DescriptorBase;
+import com.techsenger.patternfx.core.ReadOnlyDescriptor;
 
 /**
  *
@@ -24,7 +24,7 @@ import com.techsenger.patternfx.core.DescriptorBase;
  */
 public interface Port {
 
-    DescriptorBase getDescriptor();
+    ReadOnlyDescriptor getDescriptor();
 
     void deinitialize();
 }

@@ -25,17 +25,17 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractDescriptorBase implements DescriptorBase {
+public abstract class AbstractDescriptor implements ReadOnlyDescriptor {
 
-    private static Function<DescriptorBase, String> logPrefixResolver = (d) -> "[" + d.getFullName() + "]";
+    private static Function<ReadOnlyDescriptor, String> logPrefixResolver = (d) -> "[" + d.getFullName() + "]";
 
-    public static Function<DescriptorBase, String> getLogPrefixResolver() {
+    public static Function<ReadOnlyDescriptor, String> getLogPrefixResolver() {
         return logPrefixResolver;
     }
 
-    public static void setLogPrefixResolver(Function<DescriptorBase, String> logPrefixResolver) {
+    public static void setLogPrefixResolver(Function<ReadOnlyDescriptor, String> logPrefixResolver) {
         Objects.requireNonNull(logPrefixResolver, "logPrefixResolver can't be null");
-        AbstractDescriptorBase.logPrefixResolver = logPrefixResolver;
+        AbstractDescriptor.logPrefixResolver = logPrefixResolver;
     }
 
     private final Name name;
@@ -50,11 +50,11 @@ public abstract class AbstractDescriptorBase implements DescriptorBase {
 
     private final  ReadOnlyObjectWrapper<Group> group = new ReadOnlyObjectWrapper<>();
 
-    protected AbstractDescriptorBase(Name name) {
+    protected AbstractDescriptor(Name name) {
         this(name, UUID.randomUUID());
     }
 
-    protected AbstractDescriptorBase(Name name, UUID uuid) {
+    protected AbstractDescriptor(Name name, UUID uuid) {
         this.name = name;
         this.uuid = uuid;
         long least32bits = uuid.getLeastSignificantBits() & 0xFFFFFFFFL;
