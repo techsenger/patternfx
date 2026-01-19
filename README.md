@@ -438,8 +438,7 @@ dialogs, editors, or background components). Component-scoped logging makes it p
 exact source of a log message and greatly simplifies debugging and diagnostics.
 
 Each component exposes a log prefix that uniquely identifies its instance. The way this prefix is obtained depends
-on the template implementation. The framework also allows customization of the log prefix both at the template level
-and for individual component instances.
+on the template implementation - see `Descriptor` or `Component`.
 
 #### When to Create a Component? <a name="templates-component-when-to-create"></a>
 * The element has independent testable state or business logic that can exist without a `View`.

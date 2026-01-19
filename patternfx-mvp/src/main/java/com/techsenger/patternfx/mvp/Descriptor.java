@@ -17,6 +17,7 @@
 package com.techsenger.patternfx.mvp;
 
 import com.techsenger.patternfx.core.AbstractDescriptorBase;
+import com.techsenger.patternfx.core.Group;
 import com.techsenger.patternfx.core.Name;
 import com.techsenger.patternfx.core.State;
 import java.util.UUID;
@@ -36,8 +37,12 @@ public final class Descriptor extends AbstractDescriptorBase {
     }
 
     @Override
+    public void setGroup(Group group) {
+        super.setGroup(group);
+    }
+
+    @Override
     protected void setState(State state) {
         super.setState(state);
     }
-
 }

@@ -37,5 +37,5 @@ public interface ObservableDescriptorBase extends DescriptorBase {
      *
      * @return the property representing the component group
      */
-    ObjectProperty<Group> groupProperty();
+    ReadOnlyObjectProperty<Group> groupProperty();
 }

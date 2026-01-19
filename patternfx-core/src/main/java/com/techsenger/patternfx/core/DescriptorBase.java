@@ -74,11 +74,4 @@ public interface DescriptorBase {
      * @return the current component group
      */
     Group getGroup();
-
-    /**
-     * Sets a new {@link ComponentGroup}.
-     *
-     * @param value the new component group to set
-     */
-    void setGroup(Group value);
 }

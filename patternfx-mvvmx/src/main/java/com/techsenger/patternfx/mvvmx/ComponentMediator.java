@@ -16,13 +16,20 @@
 
 package com.techsenger.patternfx.mvvmx;
 
+import com.techsenger.patternfx.core.Group;
 import com.techsenger.patternfx.core.ObservableDescriptorBase;
+import javafx.beans.property.ObjectProperty;
 
 /**
  *
  * @author Pavel Castornii
  */
 public interface ComponentMediator extends ObservableDescriptorBase {
+
+    @Override
+    ObjectProperty<Group> groupProperty();
+
+    void setGroup(Group group);
 
     void deinitialize();
 }

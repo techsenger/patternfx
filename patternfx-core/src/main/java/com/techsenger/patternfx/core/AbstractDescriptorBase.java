@@ -19,10 +19,7 @@ package com.techsenger.patternfx.core;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleObjectProperty;
 
 /**
  *
@@ -49,24 +46,21 @@ public abstract class AbstractDescriptorBase implements DescriptorBase {
 
     private final String logPrefix;
 
-    private final ReadOnlyObjectWrapper<State> state =
-            new ReadOnlyObjectWrapper<>(State.CREATING);
+    private final ReadOnlyObjectWrapper<State> state = new ReadOnlyObjectWrapper<>(State.CREATING);
 
-    private final ObjectProperty<HistoryPolicy> historyPolicy = new SimpleObjectProperty<>(HistoryPolicy.NONE);
+    private final  ReadOnlyObjectWrapper<Group> group = new ReadOnlyObjectWrapper<>();
 
-    private final ObjectProperty<Group> group = new SimpleObjectProperty<>();
-
-    public AbstractDescriptorBase(Name name) {
+    protected AbstractDescriptorBase(Name name) {
         this(name, UUID.randomUUID());
     }
 
-    public AbstractDescriptorBase(Name name, UUID uuid) {
+    protected AbstractDescriptorBase(Name name, UUID uuid) {
         this.name = name;
         this.uuid = uuid;
         long least32bits = uuid.getLeastSignificantBits() & 0xFFFFFFFFL;
         String shortUuid = String.format("%08X", least32bits);
         this.fullName = name.getText() + "@" + shortUuid;
-        this.logPrefix = resolveLogPrefix(fullName);
+        this.logPrefix = logPrefixResolver.apply(this);
     }
 
     @Override
@@ -99,24 +93,19 @@ public abstract class AbstractDescriptorBase implements DescriptorBase {
        return group.get();
     }
 
-    @Override
-    public void setGroup(Group value) {
-       group.set(value);
-    }
-
-    protected String resolveLogPrefix(String fullName) {
-        return logPrefixResolver.apply(this);
-    }
-
     protected void setState(State state) {
         this.state.set(state);
     }
 
-    ReadOnlyObjectProperty<State> stateProperty() {
-        return state.getReadOnlyProperty();
+    protected void setGroup(Group group) {
+        this.group.set(group);
     }
 
-    ObjectProperty<Group> groupProperty() {
+    protected  ReadOnlyObjectWrapper<State> getStateWrapper() {
+        return state;
+    }
+
+    protected ReadOnlyObjectWrapper<Group> getGroupWrapper() {
        return group;
     }
 }

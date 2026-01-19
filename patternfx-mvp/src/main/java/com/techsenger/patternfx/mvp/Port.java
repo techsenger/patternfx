@@ -16,13 +16,15 @@
 
 package com.techsenger.patternfx.mvp;
 
+import com.techsenger.patternfx.core.DescriptorBase;
+
 /**
  *
  * @author Pavel Castornii
  */
 public interface Port {
 
-    Descriptor getDescriptor();
+    DescriptorBase getDescriptor();
 
     void deinitialize();
 }
