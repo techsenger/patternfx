@@ -16,13 +16,13 @@
 
 package com.techsenger.patternfx.mvp;
 
+import com.techsenger.patternfx.core.ComponentState;
 import com.techsenger.patternfx.core.HistoryPolicy;
 import static com.techsenger.patternfx.core.HistoryPolicy.ALL;
 import static com.techsenger.patternfx.core.HistoryPolicy.APPEARANCE;
 import static com.techsenger.patternfx.core.HistoryPolicy.DATA;
 import static com.techsenger.patternfx.core.HistoryPolicy.NONE;
 import com.techsenger.patternfx.core.HistoryProvider;
-import com.techsenger.patternfx.core.ComponentState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,13 +30,13 @@ import org.slf4j.LoggerFactory;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractPresenter<T extends View> implements Presenter {
+public abstract class AbstractPresenter<V extends View> implements Presenter<V> {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractPresenter.class);
 
     private final Descriptor descriptor;
 
-    private final T view;
+    private final V view;
 
     private HistoryPolicy historyPolicy = HistoryPolicy.NONE;
 
@@ -44,7 +44,7 @@ public abstract class AbstractPresenter<T extends View> implements Presenter {
 
     private AbstractHistory history;
 
-    public AbstractPresenter(T view) {
+    public AbstractPresenter(V view) {
         this.descriptor = createDescriptor();
         this.view = view;
         if (this.view instanceof AbstractJfxView<?>) {
@@ -114,7 +114,7 @@ public abstract class AbstractPresenter<T extends View> implements Presenter {
         this.historyPolicy = policy;
     }
 
-    protected T getView() {
+    public V getView() {
         return view;
     }
 

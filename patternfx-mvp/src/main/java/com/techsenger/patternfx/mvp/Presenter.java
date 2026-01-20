@@ -22,7 +22,14 @@ import com.techsenger.patternfx.core.HistoryPolicy;
  *
  * @author Pavel Castornii
  */
-public interface Presenter {
+public interface Presenter<V extends View> {
+
+    /**
+     * Returns the view.
+     *
+     * @return
+     */
+    V getView();
 
     /**
      * Returns the descriptor.

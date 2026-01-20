@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
  * @author Pavel Castornii
  */
 public abstract class AbstractParentPresenter<V extends ParentView, C extends ParentComposer>
-        extends AbstractPresenter<V> implements ParentPresenter {
+        extends AbstractPresenter<V> implements ParentPresenter<V, C> {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractParentPresenter.class);
 
@@ -52,6 +52,10 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
         this.port = createPort();
     }
 
+    public C getComposer() {
+        return this.composer;
+    }
+
     @Override
     public Port getPort() {
         return this.port;
@@ -67,10 +71,6 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
         while (iterator.hasNext()) {
             iterator.next().deinitialize();
         }
-    }
-
-    protected C getComposer() {
-        return this.composer;
     }
 
     protected void setComposer(ParentComposer composer) {
