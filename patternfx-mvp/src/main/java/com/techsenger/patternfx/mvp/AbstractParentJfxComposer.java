@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractParentJfxComposer<V extends AbstractParentJfxView<?, ?>> implements ParentJfxComposer {
+public abstract class AbstractParentJfxComposer<V extends AbstractParentJfxView<?, ?>> implements ParentComposer {
 
     private final V view;
 

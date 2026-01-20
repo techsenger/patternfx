@@ -21,7 +21,7 @@ package com.techsenger.patternfx.mvp;
  * @author Pavel Castornii
  */
 public abstract class AbstractChildJfxComposer<V extends AbstractChildJfxView<?, ?>>
-        extends AbstractParentJfxComposer<V> implements ChildJfxComposer {
+        extends AbstractParentJfxComposer<V> implements ChildComposer {
 
     public AbstractChildJfxComposer(V view) {
         super(view);
