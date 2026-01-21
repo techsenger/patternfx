@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractPresenter<V extends View> implements Presenter<V> {
+public abstract class AbstractPresenter<V extends View> {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractPresenter.class);
 
@@ -52,7 +52,9 @@ public abstract class AbstractPresenter<V extends View> implements Presenter<V> 
         }
     }
 
-    @Override
+    /**
+     * Initializes both the component.
+     */
     public final void initialize() {
         try {
             if (descriptor.getState() != ComponentState.CREATING) {
@@ -75,7 +77,9 @@ public abstract class AbstractPresenter<V extends View> implements Presenter<V> 
         }
     }
 
-    @Override
+    /**
+     * Deinitializes both the component.
+     */
     public final void deinitialize() {
         try {
             var descriptor = getDescriptor();
@@ -99,21 +103,38 @@ public abstract class AbstractPresenter<V extends View> implements Presenter<V> 
         }
     }
 
-    @Override
+    /**
+     * Returns the descriptor.
+     *
+     * @return
+     */
     public Descriptor getDescriptor() {
         return descriptor;
     }
 
-    @Override
+    /**
+     * Returns the history policy.
+     *
+     * @return
+     */
     public HistoryPolicy getHistoryPolicy() {
         return historyPolicy;
     }
 
-    @Override
+    /**
+     * Sets the history policy to the specified value.
+     *
+     * @param policy the history policy to set.
+     */
     public void setHistoryPolicy(HistoryPolicy policy) {
         this.historyPolicy = policy;
     }
 
+    /**
+     * Returns the view.
+     *
+     * @return
+     */
     public V getView() {
         return view;
     }

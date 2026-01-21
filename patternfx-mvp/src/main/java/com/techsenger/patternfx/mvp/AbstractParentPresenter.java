@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
  * @author Pavel Castornii
  */
 public abstract class AbstractParentPresenter<V extends ParentView, C extends ParentComposer>
-        extends AbstractPresenter<V> implements ParentPresenter<V, C> {
+        extends AbstractPresenter<V> {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractParentPresenter.class);
 
@@ -52,16 +52,28 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
         this.port = createPort();
     }
 
+    /**
+     * Returns the composer.
+     * @return
+     */
     public C getComposer() {
         return this.composer;
     }
 
-    @Override
+    /**
+     * Returns the port.
+     * @return
+     */
     public Port getPort() {
         return this.port;
     }
 
-    @Override
+    /**
+     * Deinitializes this component and all its descendants as a sub-tree with this component as the root.
+     *
+     * The deinitialization is performed using a breadth-first traversal: the parent component is deinitialized first,
+     * followed by its children level by level.
+     */
     public void deinitializeTree() {
         if (logger.isDebugEnabled()) {
             var tree = composer.toTreeString();

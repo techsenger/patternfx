@@ -24,7 +24,7 @@ import javafx.collections.ObservableList;
  *
  * @author Pavel Castornii
  */
-public interface ParentFxView<P extends ParentPresenter> extends JfxView<P>, ParentView {
+public interface ParentFxView<P extends AbstractParentPresenter<?, ?>> extends JfxView<P>, ParentView {
 
     /**
      * Returns an unmodifiable list of child Views.

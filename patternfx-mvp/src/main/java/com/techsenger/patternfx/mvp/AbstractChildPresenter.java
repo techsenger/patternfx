@@ -21,7 +21,7 @@ package com.techsenger.patternfx.mvp;
  * @author Pavel Castornii
  */
 public abstract class AbstractChildPresenter<V extends ChildView, C extends ChildComposer>
-        extends AbstractParentPresenter<V, C> implements ChildPresenter<V, C> {
+        extends AbstractParentPresenter<V, C> {
 
     public AbstractChildPresenter(V view) {
         super(view);

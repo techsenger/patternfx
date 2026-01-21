@@ -20,7 +20,7 @@ package com.techsenger.patternfx.mvp;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractView<T extends Presenter> implements JfxView<T> {
+public abstract class AbstractView<T extends AbstractPresenter<?>> implements JfxView<T> {
 
     private T presenter;
 
@@ -104,7 +104,7 @@ public abstract class AbstractView<T extends Presenter> implements JfxView<T> {
         return this.presenter.getDescriptor();
     }
 
-    protected void setPresenter(Presenter presenter) {
+    protected void setPresenter(AbstractPresenter<?> presenter) {
         this.presenter = (T) presenter;
     }
 }
