@@ -110,7 +110,9 @@ public abstract class AbstractParentJfxView<P extends ParentPresenter, C extends
         return composer;
     }
 
-    protected abstract C createComposer();
+    protected C createComposer() {
+        return (C) new DefaultParentJfxComposer<>(this);
+    }
 
     protected ObservableList<ChildJfxView<?>> getModifiableChildren() {
         return modifiableChildren;

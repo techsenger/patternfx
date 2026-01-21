@@ -16,14 +16,14 @@
 
 package com.techsenger.patternfx.demo.mvp;
 
-import com.techsenger.patternfx.mvp.AbstractParentJfxComposer;
+import com.techsenger.patternfx.mvp.DefaultParentJfxComposer;
 
 /**
  *
  * @author Pavel Castornii
  */
 public class RegistryJfxComposer<V extends RegistryJfxView<?, ?>>
-        extends AbstractParentJfxComposer<V> implements RegistryComposer {
+        extends DefaultParentJfxComposer<V> implements RegistryComposer {
 
     public RegistryJfxComposer(V view) {
         super(view);

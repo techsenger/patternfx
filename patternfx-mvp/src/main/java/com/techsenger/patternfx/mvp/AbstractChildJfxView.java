@@ -47,4 +47,9 @@ public abstract class AbstractChildJfxView<P extends ChildPresenter, C extends C
     public void setParent(ParentJfxView<?> parent) {
         this.parent.set(parent);
     }
+
+    @Override
+    protected C createComposer() {
+        return (C) new DefaultChildJfxComposer<>(this);
+    }
 }

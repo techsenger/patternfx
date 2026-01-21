@@ -78,6 +78,6 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
     }
 
     protected Port createPort() {
-        return null;
+        return new Port();
     }
 }
