@@ -29,7 +29,7 @@ import javafx.collections.ObservableList;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractParentFxView<P extends AbstractParentPresenter<?, C>, C extends ParentComposer>
+public abstract class AbstractParentFxView<P extends AbstractParentPresenter<?, ?>, C extends ParentFxComposer<?>>
         extends AbstractView<P> implements ParentFxView<P, C> {
 
     private final ObservableList<ChildFxView<?, ?>> modifiableChildren = FXCollections.observableArrayList();

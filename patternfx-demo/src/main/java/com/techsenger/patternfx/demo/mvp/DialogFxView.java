@@ -17,7 +17,7 @@
 package com.techsenger.patternfx.demo.mvp;
 
 import com.techsenger.patternfx.mvp.AbstractParentFxView;
-import com.techsenger.patternfx.mvp.ParentComposer;
+import com.techsenger.patternfx.mvp.ParentFxComposer;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -35,7 +35,7 @@ import javafx.stage.Stage;
  *
  * @author Pavel Castornii
  */
-public class DialogFxView extends AbstractParentFxView<DialogPresenter<?>, ParentComposer> implements DialogView {
+public class DialogFxView extends AbstractParentFxView<DialogPresenter<?>, ParentFxComposer<?>> implements DialogView {
 
     private final Stage stage;
 
@@ -90,11 +90,6 @@ public class DialogFxView extends AbstractParentFxView<DialogPresenter<?>, Paren
     @Override
     public String getAge() {
         return this.ageTextField.getText();
-    }
-
-    @Override
-    protected ParentComposer createComposer() {
-        return null;
     }
 
     protected Dialog<ButtonType> getDialog() {
