@@ -24,7 +24,7 @@ import javafx.collections.ObservableList;
  *
  * @author Pavel Castornii
  */
-public interface ParentJfxView<P extends ParentPresenter> extends JfxView<P>, ParentView {
+public interface ParentFxView<P extends ParentPresenter> extends JfxView<P>, ParentView {
 
     /**
      * Returns an unmodifiable list of child Views.
@@ -38,14 +38,14 @@ public interface ParentJfxView<P extends ParentPresenter> extends JfxView<P>, Pa
      *
      * @return an {@link Iterator} that iterates over this View and all of its descendants
      */
-    TreeIterator<ParentJfxView<?>> depthFirstIterator();
+    TreeIterator<ParentFxView<?>> depthFirstIterator();
 
     /**
      * Returns an iterator that traverses the View subtree starting from this View in breadth-first order.
      *
      * @return an {@link Iterator} that iterates over this View and all of its descendants
      */
-    TreeIterator<ParentJfxView<?>> breadthFirstIterator();
+    TreeIterator<ParentFxView<?>> breadthFirstIterator();
 
     /**
      * Returns a string representation of this View and all its descendants as a sub-tree with this
@@ -66,5 +66,5 @@ public interface ParentJfxView<P extends ParentPresenter> extends JfxView<P>, Pa
      * @param appender a callback used to append the full string representation of each View.
      * @return a tree-formatted string representation of this View
      */
-    String toTreeString(BiConsumer<ParentJfxView<?>, StringBuilder> appender);
+    String toTreeString(BiConsumer<ParentFxView<?>, StringBuilder> appender);
 }

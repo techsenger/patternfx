@@ -47,8 +47,8 @@ public abstract class AbstractPresenter<V extends View> implements Presenter<V> 
     public AbstractPresenter(V view) {
         this.descriptor = createDescriptor();
         this.view = view;
-        if (this.view instanceof AbstractJfxView<?>) {
-            ((AbstractJfxView<?>) this.view).setPresenter(this);
+        if (this.view instanceof AbstractView<?>) {
+            ((AbstractView<?>) this.view).setPresenter(this);
         }
     }
 

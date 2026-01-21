@@ -18,7 +18,7 @@ package com.techsenger.patternfx.demo.mvp;
 
 import com.techsenger.patternfx.demo.Style;
 import com.techsenger.patternfx.demo.model.Person;
-import com.techsenger.patternfx.mvp.AbstractParentJfxView;
+import com.techsenger.patternfx.mvp.AbstractParentFxView;
 import java.util.List;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -38,8 +38,8 @@ import javafx.stage.Stage;
  *
  * @author Pavel Castornii
  */
-public class RegistryJfxView<P extends RegistryPresenter<?, C>, C extends RegistryJfxComposer<?>>
-        extends AbstractParentJfxView<P, C> implements RegistryView {
+public class RegistryFxView<P extends RegistryPresenter<?, C>, C extends RegistryFxComposer<?>>
+        extends AbstractParentFxView<P, C> implements RegistryView {
 
     private final Button addButton = new Button("Add");
 
@@ -61,9 +61,9 @@ public class RegistryJfxView<P extends RegistryPresenter<?, C>, C extends Regist
 
     private final Stage stage = new Stage();
 
-    private ReportJfxView report;
+    private ReportFxView report;
 
-    public RegistryJfxView() {
+    public RegistryFxView() {
         super();
     }
 
@@ -167,18 +167,18 @@ public class RegistryJfxView<P extends RegistryPresenter<?, C>, C extends Regist
 
     @Override
     protected C createComposer() {
-        return (C) new RegistryJfxComposer<>(this);
+        return (C) new RegistryFxComposer<>(this);
     }
 
     Stage getStage() {
         return stage;
     }
 
-    ReportJfxView getReport() {
+    ReportFxView getReport() {
         return report;
     }
 
-    void addReport(ReportJfxView r) {
+    void addReport(ReportFxView r) {
         root.getChildren().add(r.getNode());
         getModifiableChildren().add(r);
         report = r;

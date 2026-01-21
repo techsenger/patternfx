@@ -20,10 +20,10 @@ package com.techsenger.patternfx.mvp;
  *
  * @author Pavel Castornii
  */
-public class DefaultChildJfxComposer<V extends AbstractChildJfxView<?, ?>>
-        extends DefaultParentJfxComposer<V> implements ChildComposer {
+public class ChildFxComposer<V extends AbstractChildFxView<?, ?>>
+        extends ParentFxComposer<V> implements ChildComposer {
 
-    public DefaultChildJfxComposer(V view) {
+    public ChildFxComposer(V view) {
         super(view);
     }
 

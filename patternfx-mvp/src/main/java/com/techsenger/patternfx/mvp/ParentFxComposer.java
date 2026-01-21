@@ -27,11 +27,11 @@ import java.util.stream.Collectors;
  *
  * @author Pavel Castornii
  */
-public class DefaultParentJfxComposer<V extends AbstractParentJfxView<?, ?>> implements ParentComposer {
+public class ParentFxComposer<V extends AbstractParentFxView<?, ?>> implements ParentComposer {
 
     private final V view;
 
-    public DefaultParentJfxComposer(V view) {
+    public ParentFxComposer(V view) {
         this.view = view;
     }
 
@@ -42,15 +42,15 @@ public class DefaultParentJfxComposer<V extends AbstractParentJfxView<?, ?>> imp
 
     @Override
     public TreeIterator<Port> depthFirstIterator() {
-        return new AbstractDepthFirstIterator<Port, ParentJfxView<?>>(view) {
+        return new AbstractDepthFirstIterator<Port, ParentFxView<?>>(view) {
 
             @Override
-            protected List<ParentJfxView<?>> getChildren(ParentJfxView<?> parent) {
+            protected List<ParentFxView<?>> getChildren(ParentFxView<?> parent) {
                 return (List) parent.getChildren();
             }
 
             @Override
-            protected Port map(ParentJfxView<?> value) {
+            protected Port map(ParentFxView<?> value) {
                 return value.getPresenter().getPort();
             }
         };
@@ -58,15 +58,15 @@ public class DefaultParentJfxComposer<V extends AbstractParentJfxView<?, ?>> imp
 
     @Override
     public TreeIterator<Port> breadthFirstIterator() {
-        return new AbstractBreadthFirstIterator<Port, ParentJfxView<?>>(view) {
+        return new AbstractBreadthFirstIterator<Port, ParentFxView<?>>(view) {
 
             @Override
-            protected List<ParentJfxView<?>> getChildren(ParentJfxView<?> parent) {
+            protected List<ParentFxView<?>> getChildren(ParentFxView<?> parent) {
                 return (List) parent.getChildren();
             }
 
             @Override
-            protected Port map(ParentJfxView<?> value) {
+            protected Port map(ParentFxView<?> value) {
                 return value.getPresenter().getPort();
             }
         };

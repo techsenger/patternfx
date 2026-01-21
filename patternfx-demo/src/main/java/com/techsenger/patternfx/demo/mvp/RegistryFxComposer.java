@@ -16,22 +16,22 @@
 
 package com.techsenger.patternfx.demo.mvp;
 
-import com.techsenger.patternfx.mvp.DefaultParentJfxComposer;
+import com.techsenger.patternfx.mvp.ParentFxComposer;
 
 /**
  *
  * @author Pavel Castornii
  */
-public class RegistryJfxComposer<V extends RegistryJfxView<?, ?>>
-        extends DefaultParentJfxComposer<V> implements RegistryComposer {
+public class RegistryFxComposer<V extends RegistryFxView<?, ?>>
+        extends ParentFxComposer<V> implements RegistryComposer {
 
-    public RegistryJfxComposer(V view) {
+    public RegistryFxComposer(V view) {
         super(view);
     }
 
     @Override
     public DialogPort showDialog() {
-        var v = new DialogJfxView(getView().getStage());
+        var v = new DialogFxView(getView().getStage());
         var p = new DialogPresenter<>(v);
         p.initialize();
         v.getDialog().showAndWait();
@@ -51,7 +51,7 @@ public class RegistryJfxComposer<V extends RegistryJfxView<?, ?>>
         if (getView().getReport() != null) {
             throw new IllegalStateException("Report has been added");
         }
-        var v = new ReportJfxView();
+        var v = new ReportFxView();
         var p = new ReportPresenter(v);
         p.initialize();
         getView().addReport(v);
