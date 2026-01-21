@@ -36,21 +36,21 @@ public class ParentFxComposer<V extends AbstractParentFxView<?, ?>> implements P
     }
 
     @Override
-    public List<ChildPort> getChildren() {
+    public List<? extends ChildPort> getChildren() {
         return view.getChildren().stream().map(v -> v.getPresenter().getPort()).collect(Collectors.toList());
     }
 
     @Override
     public TreeIterator<ParentPort> depthFirstIterator() {
-        return new AbstractDepthFirstIterator<ParentPort, ParentFxView<?>>(view) {
+        return new AbstractDepthFirstIterator<ParentPort, ParentFxView<?, ?>>(view) {
 
             @Override
-            protected List<ParentFxView<?>> getChildren(ParentFxView<?> parent) {
+            protected List<ParentFxView<?, ?>> getChildren(ParentFxView<?, ?> parent) {
                 return (List) parent.getChildren();
             }
 
             @Override
-            protected ParentPort map(ParentFxView<?> value) {
+            protected ParentPort map(ParentFxView<?, ?> value) {
                 return value.getPresenter().getPort();
             }
         };
@@ -58,15 +58,15 @@ public class ParentFxComposer<V extends AbstractParentFxView<?, ?>> implements P
 
     @Override
     public TreeIterator<ParentPort> breadthFirstIterator() {
-        return new AbstractBreadthFirstIterator<ParentPort, ParentFxView<?>>(view) {
+        return new AbstractBreadthFirstIterator<ParentPort, ParentFxView<?, ?>>(view) {
 
             @Override
-            protected List<ParentFxView<?>> getChildren(ParentFxView<?> parent) {
+            protected List<ParentFxView<?, ?>> getChildren(ParentFxView<?, ?> parent) {
                 return (List) parent.getChildren();
             }
 
             @Override
-            protected ParentPort map(ParentFxView<?> value) {
+            protected ParentPort map(ParentFxView<?, ?> value) {
                 return value.getPresenter().getPort();
             }
         };
