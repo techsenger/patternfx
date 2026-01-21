@@ -16,23 +16,22 @@
 
 package com.techsenger.patternfx.mvp;
 
+import com.techsenger.patternfx.core.ReadOnlyDescriptor;
+import java.util.List;
+
 /**
  *
  * @author Pavel Castornii
  */
-public class ChildFxComposer<V extends AbstractChildFxView<?, ?>>
-        extends ParentFxComposer<V> implements ChildComposer {
+public interface ParentPort {
 
-    public ChildFxComposer(V view) {
-        super(view);
-    }
+    /**
+     * Returns an unmodifiable list of child components.
+     * @return
+     */
+    List<? extends ChildPort> getChildren();
 
-    @Override
-    public ParentPort getParent() {
-        var parent = getView().getParent();
-        if (parent == null) {
-            return null;
-        }
-        return parent.getPresenter().getPort();
-    }
+    ReadOnlyDescriptor getDescriptor();
+
+    void deinitialize();
 }

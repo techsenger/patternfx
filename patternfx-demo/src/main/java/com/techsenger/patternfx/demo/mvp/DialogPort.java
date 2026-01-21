@@ -17,13 +17,13 @@
 package com.techsenger.patternfx.demo.mvp;
 
 import com.techsenger.patternfx.demo.model.Person;
-import com.techsenger.patternfx.mvp.Port;
+import com.techsenger.patternfx.mvp.ParentPort;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface DialogPort extends Port {
+public interface DialogPort extends ParentPort {
 
     Person getResult();
 }

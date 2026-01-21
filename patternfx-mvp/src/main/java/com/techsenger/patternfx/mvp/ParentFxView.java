@@ -31,7 +31,7 @@ public interface ParentFxView<P extends AbstractParentPresenter<?, ?>> extends F
      *
      * @return an unmodifiable list of child Views (never {@code null})
      */
-    ObservableList<ChildFxView<?>> getChildren();
+    ObservableList<? extends ChildFxView<?>> getChildren();
 
     /**
      * Returns an iterator that traverses the View subtree starting from this View in depth-first order.

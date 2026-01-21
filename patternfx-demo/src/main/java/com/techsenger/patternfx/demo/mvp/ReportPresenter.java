@@ -48,8 +48,8 @@ public class ReportPresenter extends AbstractChildPresenter<ReportView, ChildCom
     }
 
     @Override
-    public Port getPort() {
-        return (Port) super.getPort();
+    public ReportPort getPort() {
+        return (ReportPort) super.getPort();
     }
 
     @Override

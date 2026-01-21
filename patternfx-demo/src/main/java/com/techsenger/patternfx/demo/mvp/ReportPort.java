@@ -17,13 +17,14 @@
 package com.techsenger.patternfx.demo.mvp;
 
 import com.techsenger.patternfx.demo.model.Person;
+import com.techsenger.patternfx.mvp.ChildPort;
 import java.util.List;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface ReportPort {
+public interface ReportPort extends ChildPort {
 
     void refresh(List<Person> persons);
 }

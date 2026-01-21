@@ -16,15 +16,11 @@
 
 package com.techsenger.patternfx.mvp;
 
-import com.techsenger.patternfx.core.ReadOnlyDescriptor;
-
 /**
  *
  * @author Pavel Castornii
  */
-public interface Port {
+public interface ChildPort extends ParentPort {
 
-    ReadOnlyDescriptor getDescriptor();
-
-    void deinitialize();
+    ParentPort getParent();
 }

@@ -44,8 +44,8 @@ public class DialogPresenter<T extends DialogView> extends AbstractParentPresent
     }
 
     @Override
-    public Port getPort() {
-        return (Port) super.getPort();
+    public DialogPort getPort() {
+        return (DialogPort) super.getPort();
     }
 
     @Override

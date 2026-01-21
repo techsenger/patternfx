@@ -28,5 +28,5 @@ public interface ChildComposer extends ParentComposer {
      *
      * @return the Port of the parent component, or {@code null} if this component has no parent
      */
-    Port getParent();
+    ParentPort getParent();
 }

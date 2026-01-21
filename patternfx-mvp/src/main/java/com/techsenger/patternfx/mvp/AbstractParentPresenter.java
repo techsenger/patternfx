@@ -16,6 +16,7 @@
 
 package com.techsenger.patternfx.mvp;
 
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +29,7 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractParentPresenter.class);
 
-    protected class Port implements com.techsenger.patternfx.mvp.Port {
+    protected class Port implements com.techsenger.patternfx.mvp.ParentPort {
 
         private final AbstractParentPresenter<?, ?> presenter = AbstractParentPresenter.this;
 
@@ -40,6 +41,11 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
         @Override
         public void deinitialize() {
             presenter.deinitialize();
+        }
+
+        @Override
+        public List<? extends ChildPort> getChildren() {
+            return getComposer().getChildren();
         }
     }
 
@@ -64,7 +70,7 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
      * Returns the port.
      * @return
      */
-    public Port getPort() {
+    public ParentPort getPort() {
         return this.port;
     }
 

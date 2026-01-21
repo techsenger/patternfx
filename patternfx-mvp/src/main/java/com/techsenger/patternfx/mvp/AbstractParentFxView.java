@@ -59,7 +59,7 @@ public abstract class AbstractParentFxView<P extends AbstractParentPresenter<?, 
     }
 
     @Override
-    public ObservableList<ChildFxView<?>> getChildren() {
+    public ObservableList<? extends ChildFxView<?>> getChildren() {
         return children;
     }
 

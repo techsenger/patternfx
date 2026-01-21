@@ -36,13 +36,13 @@ public class ParentFxComposer<V extends AbstractParentFxView<?, ?>> implements P
     }
 
     @Override
-    public List<Port> getChildren() {
+    public List<ChildPort> getChildren() {
         return view.getChildren().stream().map(v -> v.getPresenter().getPort()).collect(Collectors.toList());
     }
 
     @Override
-    public TreeIterator<Port> depthFirstIterator() {
-        return new AbstractDepthFirstIterator<Port, ParentFxView<?>>(view) {
+    public TreeIterator<ParentPort> depthFirstIterator() {
+        return new AbstractDepthFirstIterator<ParentPort, ParentFxView<?>>(view) {
 
             @Override
             protected List<ParentFxView<?>> getChildren(ParentFxView<?> parent) {
@@ -50,15 +50,15 @@ public class ParentFxComposer<V extends AbstractParentFxView<?, ?>> implements P
             }
 
             @Override
-            protected Port map(ParentFxView<?> value) {
+            protected ParentPort map(ParentFxView<?> value) {
                 return value.getPresenter().getPort();
             }
         };
     }
 
     @Override
-    public TreeIterator<Port> breadthFirstIterator() {
-        return new AbstractBreadthFirstIterator<Port, ParentFxView<?>>(view) {
+    public TreeIterator<ParentPort> breadthFirstIterator() {
+        return new AbstractBreadthFirstIterator<ParentPort, ParentFxView<?>>(view) {
 
             @Override
             protected List<ParentFxView<?>> getChildren(ParentFxView<?> parent) {
@@ -66,7 +66,7 @@ public class ParentFxComposer<V extends AbstractParentFxView<?, ?>> implements P
             }
 
             @Override
-            protected Port map(ParentFxView<?> value) {
+            protected ParentPort map(ParentFxView<?> value) {
                 return value.getPresenter().getPort();
             }
         };
@@ -78,7 +78,7 @@ public class ParentFxComposer<V extends AbstractParentFxView<?, ?>> implements P
     }
 
     @Override
-    public String toTreeString(BiConsumer<Port, StringBuilder> appender) {
+    public String toTreeString(BiConsumer<ParentPort, StringBuilder> appender) {
         return view.toTreeString(depthFirstIterator(), appender);
     }
 
