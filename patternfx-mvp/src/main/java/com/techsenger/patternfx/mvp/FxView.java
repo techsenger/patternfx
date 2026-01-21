@@ -20,7 +20,7 @@ package com.techsenger.patternfx.mvp;
  *
  * @author Pavel Castornii
  */
-public interface JfxView<P extends AbstractPresenter<?>> extends View {
+public interface FxView<P extends AbstractPresenter<?>> extends View {
 
     P getPresenter();
 }

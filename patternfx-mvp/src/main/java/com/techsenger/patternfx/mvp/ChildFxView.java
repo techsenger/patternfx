@@ -22,7 +22,7 @@ import javafx.beans.property.ReadOnlyObjectProperty;
  *
  * @author Pavel Castornii
  */
-public interface ChildJfxView<P extends AbstractChildPresenter<?, ?>> extends ParentFxView<P>, ChildView {
+public interface ChildFxView<P extends AbstractChildPresenter<?, ?>> extends ParentFxView<P>, ChildView {
 
     /**
      * Returns the property representing the parent view of this view. The property holds a reference to the

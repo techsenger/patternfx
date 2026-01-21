@@ -32,9 +32,9 @@ import javafx.collections.ObservableList;
 public abstract class AbstractParentFxView<P extends AbstractParentPresenter<?, C>, C extends ParentComposer>
         extends AbstractView<P> implements ParentFxView<P> {
 
-    private final ObservableList<ChildJfxView<?>> modifiableChildren = FXCollections.observableArrayList();
+    private final ObservableList<ChildFxView<?>> modifiableChildren = FXCollections.observableArrayList();
 
-    private final ObservableList<ChildJfxView<?>> children =
+    private final ObservableList<ChildFxView<?>> children =
             FXCollections.unmodifiableObservableList(modifiableChildren);
 
     private final C composer;
@@ -42,7 +42,7 @@ public abstract class AbstractParentFxView<P extends AbstractParentPresenter<?, 
     public AbstractParentFxView() {
         super();
         this.composer = createComposer();
-        modifiableChildren.addListener((ListChangeListener<ChildJfxView<?>>) (e) -> {
+        modifiableChildren.addListener((ListChangeListener<ChildFxView<?>>) (e) -> {
             while (e.next()) {
                 if (e.wasAdded() || e.wasReplaced()) {
                     for (var c: e.getAddedSubList()) {
@@ -59,7 +59,7 @@ public abstract class AbstractParentFxView<P extends AbstractParentPresenter<?, 
     }
 
     @Override
-    public ObservableList<ChildJfxView<?>> getChildren() {
+    public ObservableList<ChildFxView<?>> getChildren() {
         return children;
     }
 
@@ -114,7 +114,7 @@ public abstract class AbstractParentFxView<P extends AbstractParentPresenter<?, 
         return (C) new ParentFxComposer<>(this);
     }
 
-    protected ObservableList<ChildJfxView<?>> getModifiableChildren() {
+    protected ObservableList<ChildFxView<?>> getModifiableChildren() {
         return modifiableChildren;
     }
 
