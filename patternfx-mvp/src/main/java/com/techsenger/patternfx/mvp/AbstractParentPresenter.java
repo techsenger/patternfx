@@ -83,7 +83,7 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
     public void deinitializeTree() {
         if (logger.isDebugEnabled()) {
             var tree = composer.toTreeString();
-            logger.debug("{} Deinitializing this view tree:\n{}", getDescriptor().getLogPrefix(), tree);
+            logger.debug("{} Deinitializing this component tree:\n{}", getDescriptor().getLogPrefix(), tree);
         }
         var iterator = composer.breadthFirstIterator();
         while (iterator.hasNext()) {

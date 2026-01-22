@@ -58,7 +58,7 @@ public abstract class AbstractPresenter<V extends View> {
     public final void initialize() {
         try {
             if (descriptor.getState() != ComponentState.CREATING) {
-                throw new IllegalStateException("Unexpected state of the view - " + descriptor.getState().name());
+                throw new IllegalStateException("Unexpected state of the component - " + descriptor.getState().name());
             }
             // pre-initialization
             preInitialize();
@@ -69,7 +69,7 @@ public abstract class AbstractPresenter<V extends View> {
                 restoreHistory();
             }
             descriptor.setState(ComponentState.INITIALIZED);
-            logger.debug("{} Initialized view", getDescriptor().getLogPrefix());
+            logger.debug("{} Initialized the component", getDescriptor().getLogPrefix());
             // post-initialization
             postInitialize();
         } catch (Exception ex) {
@@ -84,7 +84,7 @@ public abstract class AbstractPresenter<V extends View> {
         try {
             var descriptor = getDescriptor();
             if (descriptor.getState() != ComponentState.INITIALIZED) {
-                throw new IllegalStateException("Unexpected state of the view - " + descriptor.getState().name());
+                throw new IllegalStateException("Unexpected state of the component - " + descriptor.getState().name());
             }
             // pre-deinitialization
             preDeinitialize();
@@ -95,7 +95,7 @@ public abstract class AbstractPresenter<V extends View> {
             }
             this.view.deinitialize();
             descriptor.setState(ComponentState.DEINITIALIZED);
-            logger.debug("{} Deinitialized view", getDescriptor().getLogPrefix());
+            logger.debug("{} Deinitialized the component", getDescriptor().getLogPrefix());
             // post-deinitialization
             postDeinitialize();
         } catch (Exception ex) {
