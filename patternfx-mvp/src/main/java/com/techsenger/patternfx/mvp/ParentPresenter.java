@@ -20,19 +20,25 @@ package com.techsenger.patternfx.mvp;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractView<T extends Presenter<?>> {
-
-    private T presenter;
+public interface ParentPresenter<V extends ParentView, C extends ParentComposer> extends Presenter<V> {
 
     /**
-     * Returns the presenter.
+     * Returns the composer.
      * @return
      */
-    public T getPresenter() {
-        return presenter;
-    }
+    C getComposer();
 
-    void setPresenter(Presenter<?> presenter) {
-        this.presenter = (T) presenter;
-    }
+    /**
+     * Returns the port.
+     * @return
+     */
+    ParentPort getPort();
+
+    /**
+     * Deinitializes this component and all its descendants as a sub-tree with this component as the root.
+     *
+     * The deinitialization is performed using a breadth-first traversal: the parent component is deinitialized first,
+     * followed by its children level by level.
+     */
+    void deinitializeTree();
 }

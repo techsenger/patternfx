@@ -16,14 +16,14 @@
 
 package com.techsenger.patternfx.demo.mvp;
 
-import com.techsenger.patternfx.mvp.ParentFxComposer;
+import com.techsenger.patternfx.mvp.DefaultParentFxComposer;
 
 /**
  *
  * @author Pavel Castornii
  */
 public class RegistryFxComposer<V extends RegistryFxView<?, ?>>
-        extends ParentFxComposer<V> implements RegistryComposer {
+        extends DefaultParentFxComposer<V> implements RegistryComposer {
 
     public RegistryFxComposer(V view) {
         super(view);

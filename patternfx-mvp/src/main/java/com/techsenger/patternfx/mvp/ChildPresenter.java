@@ -20,19 +20,8 @@ package com.techsenger.patternfx.mvp;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractView<T extends Presenter<?>> {
+public interface ChildPresenter<V extends ChildView, C extends ChildComposer> extends ParentPresenter<V, C> {
 
-    private T presenter;
-
-    /**
-     * Returns the presenter.
-     * @return
-     */
-    public T getPresenter() {
-        return presenter;
-    }
-
-    void setPresenter(Presenter<?> presenter) {
-        this.presenter = (T) presenter;
-    }
+    @Override
+    ChildPort getPort();
 }

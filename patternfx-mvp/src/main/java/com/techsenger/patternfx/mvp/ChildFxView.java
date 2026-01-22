@@ -22,7 +22,7 @@ import javafx.beans.property.ReadOnlyObjectProperty;
  *
  * @author Pavel Castornii
  */
-public interface ChildFxView<P extends AbstractChildPresenter<?, ?>, C extends ChildFxComposer<?>>
+public interface ChildFxView<P extends ChildPresenter<?, ?>, C extends ChildFxComposer<?>>
         extends ParentFxView<P, C>, ChildView {
 
     /**

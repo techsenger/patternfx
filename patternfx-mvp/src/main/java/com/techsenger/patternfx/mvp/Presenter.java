@@ -16,23 +16,49 @@
 
 package com.techsenger.patternfx.mvp;
 
+import com.techsenger.patternfx.core.HistoryPolicy;
+
 /**
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractView<T extends Presenter<?>> {
-
-    private T presenter;
+public interface Presenter<V extends View> {
 
     /**
-     * Returns the presenter.
+     * Initializes both the component.
+     */
+    void initialize();
+
+    /**
+     * Deinitializes both the component.
+     */
+    void deinitialize();
+
+    /**
+     * Returns the descriptor.
+     *
      * @return
      */
-    public T getPresenter() {
-        return presenter;
-    }
+    Descriptor getDescriptor();
 
-    void setPresenter(Presenter<?> presenter) {
-        this.presenter = (T) presenter;
-    }
+    /**
+     * Returns the history policy.
+     *
+     * @return
+     */
+    HistoryPolicy getHistoryPolicy();
+
+    /**
+     * Sets the history policy to the specified value.
+     *
+     * @param policy the history policy to set.
+     */
+    void setHistoryPolicy(HistoryPolicy policy);
+
+    /**
+     * Returns the view.
+     *
+     * @return
+     */
+    V getView();
 }

@@ -17,6 +17,7 @@
 package com.techsenger.patternfx.demo.mvp;
 
 import com.techsenger.patternfx.mvp.AbstractParentFxView;
+import com.techsenger.patternfx.mvp.DefaultParentFxComposer;
 import com.techsenger.patternfx.mvp.ParentFxComposer;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
@@ -123,6 +124,11 @@ public class DialogFxView extends AbstractParentFxView<DialogPresenter<?>, Paren
                 event.consume();
             }
         });
+    }
+
+    @Override
+    protected DefaultParentFxComposer<?> createComposer() {
+        return new DefaultParentFxComposer<>(this);
     }
 
     private void updateValid(TextField textField, boolean valid) {

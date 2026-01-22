@@ -19,6 +19,7 @@ package com.techsenger.patternfx.demo.mvp;
 import com.techsenger.patternfx.demo.Style;
 import com.techsenger.patternfx.mvp.AbstractChildFxView;
 import com.techsenger.patternfx.mvp.ChildFxComposer;
+import com.techsenger.patternfx.mvp.DefaultChildFxComposer;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
@@ -84,5 +85,10 @@ public class ReportFxView extends AbstractChildFxView<ReportPresenter, ChildFxCo
             gridPane.getColumnConstraints().add(cc);
         }
         gridPane.setPadding(new Insets(0, Style.INSET, Style.INSET, Style.INSET));
+    }
+
+    @Override
+    protected ChildFxComposer<?> createComposer() {
+        return new DefaultChildFxComposer<>(this);
     }
 }

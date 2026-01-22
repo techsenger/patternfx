@@ -20,19 +20,6 @@ package com.techsenger.patternfx.mvp;
  *
  * @author Pavel Castornii
  */
-public class ChildFxComposer<V extends AbstractChildFxView<?, ?>>
-        extends ParentFxComposer<V> implements ChildComposer {
+public interface ChildFxComposer<V extends ChildFxView<?, ?>> extends ParentFxComposer<V>, ChildComposer {
 
-    public ChildFxComposer(V view) {
-        super(view);
-    }
-
-    @Override
-    public ParentPort getParent() {
-        var parent = getView().getParent();
-        if (parent == null) {
-            return null;
-        }
-        return parent.getPresenter().getPort();
-    }
 }
