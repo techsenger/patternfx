@@ -38,6 +38,11 @@ public abstract class AbstractFxView<T extends Presenter<?>> extends AbstractVie
         unbuild();
     }
 
+    @Override
+    public Descriptor getDescriptor() {
+        return getPresenter().getDescriptor();
+    }
+
     /**
      * Builds the view.
      */
@@ -80,16 +85,4 @@ public abstract class AbstractFxView<T extends Presenter<?>> extends AbstractVie
      * Unbuilds the view.
      */
     protected void unbuild() { }
-
-    /**
-     * Returns the {@link Descriptor} associated with this view.
-     *
-     * <p>This method is provided as a convenience shortcut that delegates to the underlying view model, allowing
-     * subclasses to access the descriptor without directly referencing the view model.
-     *
-     * @return the view descriptor
-     */
-    protected Descriptor getDescriptor() {
-        return getPresenter().getDescriptor();
-    }
 }
