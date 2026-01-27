@@ -23,28 +23,52 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractChildFxView<P extends ChildPresenter<?, ?>, C extends ChildFxComposer<?>>
-        extends AbstractParentFxView<P, C> implements ChildFxView<P, C> {
+public abstract class AbstractChildFxView<P extends ChildPresenter<?, ?>>
+        extends AbstractParentFxView<P> implements ChildFxView<P> {
 
-    private final ReadOnlyObjectWrapper<ParentFxView<?, ?>> parent = new ReadOnlyObjectWrapper<>();
+    public class Composer extends AbstractParentFxView.Composer implements ChildFxView.Composer {
+
+        private final AbstractChildFxView<?> view = AbstractChildFxView.this;
+
+        @Override
+        public ParentPort getParent() {
+            var parent = view.getParent();
+            if (parent == null) {
+                return null;
+            }
+            return parent.getPresenter().getPort();
+        }
+    }
+
+    private final ReadOnlyObjectWrapper<ParentFxView<?>> parent = new ReadOnlyObjectWrapper<>();
 
     @Override
-    public ReadOnlyObjectProperty<ParentFxView<?, ?>> parentProperty() {
+    public ReadOnlyObjectProperty<ParentFxView<?>> parentProperty() {
         return this.parent.getReadOnlyProperty();
     }
 
     @Override
-    public ParentFxView<?, ?> getParent() {
+    public ParentFxView<?> getParent() {
         return this.parent.get();
     }
 
     @Override
-    public <T extends ParentFxView<?, ?>> T getParent(Class<T> parentClass) {
+    public <T extends ParentFxView<?>> T getParent(Class<T> parentClass) {
         return (T) getParent();
     }
 
     @Override
-    public void setParent(ParentFxView<?, ?> parent) {
+    public void setParent(ParentFxView<?> parent) {
         this.parent.set(parent);
+    }
+
+    @Override
+    public Composer getComposer() {
+        return (Composer) super.getComposer();
+    }
+
+    @Override
+    protected Composer createComposer() {
+        return new AbstractChildFxView.Composer();
     }
 }

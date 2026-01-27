@@ -21,6 +21,7 @@ import com.techsenger.patternfx.core.AbstractDepthFirstIterator;
 import com.techsenger.patternfx.core.TreeIterator;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -29,20 +30,72 @@ import javafx.collections.ObservableList;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>, C extends ParentFxComposer<?>>
-        extends AbstractFxView<P> implements ParentFxView<P, C> {
+public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>>
+        extends AbstractFxView<P> implements ParentFxView<P> {
 
-    private final ObservableList<ChildFxView<?, ?>> modifiableChildren = FXCollections.observableArrayList();
+    public class Composer implements ParentFxView.Composer {
 
-    private final ObservableList<ChildFxView<?, ?>> children =
+        private final AbstractParentFxView<?> view = AbstractParentFxView.this;
+
+        @Override
+        public List<? extends ChildPort> getChildren() {
+            return view.getChildren().stream().map(v -> v.getPresenter().getPort()).collect(Collectors.toList());
+        }
+
+        @Override
+        public TreeIterator<ParentPort> depthFirstIterator() {
+            return new AbstractDepthFirstIterator<ParentPort, ParentFxView<?>>(view) {
+
+                @Override
+                protected List<ParentFxView<?>> getChildren(ParentFxView<?> parent) {
+                    return (List) parent.getChildren();
+                }
+
+                @Override
+                protected ParentPort map(ParentFxView<?> value) {
+                    return value.getPresenter().getPort();
+                }
+            };
+        }
+
+        @Override
+        public TreeIterator<ParentPort> breadthFirstIterator() {
+            return new AbstractBreadthFirstIterator<ParentPort, ParentFxView<?>>(view) {
+
+                @Override
+                protected List<ParentFxView<?>> getChildren(ParentFxView<?> parent) {
+                    return (List) parent.getChildren();
+                }
+
+                @Override
+                protected ParentPort map(ParentFxView<?> value) {
+                    return value.getPresenter().getPort();
+                }
+            };
+        }
+
+        @Override
+        public String toTreeString() {
+            return view.toTreeString();
+        }
+
+        @Override
+        public String toTreeString(BiConsumer<ParentPort, StringBuilder> appender) {
+            return view.toTreeString(depthFirstIterator(), appender);
+        }
+    }
+
+    private final ObservableList<ChildFxView<?>> modifiableChildren = FXCollections.observableArrayList();
+
+    private final ObservableList<ChildFxView<?>> children =
             FXCollections.unmodifiableObservableList(modifiableChildren);
 
-    private final C composer;
+    private final Composer composer;
 
     public AbstractParentFxView() {
         super();
         this.composer = createComposer();
-        modifiableChildren.addListener((ListChangeListener<ChildFxView<?, ?>>) (e) -> {
+        modifiableChildren.addListener((ListChangeListener<ChildFxView<?>>) (e) -> {
             while (e.next()) {
                 if (e.wasAdded() || e.wasReplaced()) {
                     for (var c: e.getAddedSubList()) {
@@ -59,37 +112,37 @@ public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>, C ex
     }
 
     @Override
-    public ObservableList<? extends ChildFxView<?, ?>> getChildren() {
+    public ObservableList<? extends ChildFxView<?>> getChildren() {
         return children;
     }
 
     @Override
-    public TreeIterator<ParentFxView<?, ?>> depthFirstIterator() {
-        return new AbstractDepthFirstIterator<ParentFxView<?, ?>, ParentFxView<?, ?>>(this) {
+    public TreeIterator<ParentFxView<?>> depthFirstIterator() {
+        return new AbstractDepthFirstIterator<ParentFxView<?>, ParentFxView<?>>(this) {
 
             @Override
-            protected List<ParentFxView<?, ?>> getChildren(ParentFxView<?, ?> parent) {
+            protected List<ParentFxView<?>> getChildren(ParentFxView<?> parent) {
                 return (List) parent.getChildren();
             }
 
             @Override
-            protected ParentFxView<?, ?> map(ParentFxView<?, ?> value) {
+            protected ParentFxView<?> map(ParentFxView<?> value) {
                 return value;
             }
         };
     }
 
     @Override
-    public TreeIterator<ParentFxView<?, ?>> breadthFirstIterator() {
-        return new AbstractBreadthFirstIterator<ParentFxView<?, ?>, ParentFxView<?, ?>>(this) {
+    public TreeIterator<ParentFxView<?>> breadthFirstIterator() {
+        return new AbstractBreadthFirstIterator<ParentFxView<?>, ParentFxView<?>>(this) {
 
             @Override
-            protected List<ParentFxView<?, ?>> getChildren(ParentFxView<?, ?> parent) {
+            protected List<ParentFxView<?>> getChildren(ParentFxView<?> parent) {
                 return (List) parent.getChildren();
             }
 
             @Override
-            protected ParentFxView<?, ?> map(ParentFxView<?, ?> value) {
+            protected ParentFxView<?> map(ParentFxView<?> value) {
                 return value;
             }
         };
@@ -102,18 +155,20 @@ public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>, C ex
     }
 
     @Override
-    public String toTreeString(BiConsumer<ParentFxView<?, ?>, StringBuilder> appender) {
+    public String toTreeString(BiConsumer<ParentFxView<?>, StringBuilder> appender) {
         return toTreeString(depthFirstIterator(), appender);
     }
 
     @Override
-    public C getComposer() {
+    public Composer getComposer() {
         return composer;
     }
 
-    protected abstract C createComposer();
+    protected Composer createComposer() {
+        return new AbstractParentFxView.Composer();
+    }
 
-    protected ObservableList<ChildFxView<?, ?>> getModifiableChildren() {
+    protected ObservableList<ChildFxView<?>> getModifiableChildren() {
         return modifiableChildren;
     }
 

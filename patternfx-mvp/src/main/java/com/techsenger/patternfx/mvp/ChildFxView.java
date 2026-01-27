@@ -22,8 +22,11 @@ import javafx.beans.property.ReadOnlyObjectProperty;
  *
  * @author Pavel Castornii
  */
-public interface ChildFxView<P extends ChildPresenter<?, ?>, C extends ChildFxComposer<?>>
-        extends ParentFxView<P, C>, ChildView {
+public interface ChildFxView<P extends ChildPresenter<?, ?>> extends ParentFxView<P>, ChildView {
+
+    interface Composer extends ParentFxView.Composer, ChildComposer {
+
+    }
 
     /**
      * Returns the property representing the parent view of this view. The property holds a reference to the
@@ -31,14 +34,14 @@ public interface ChildFxView<P extends ChildPresenter<?, ?>, C extends ChildFxCo
      *
      * @return the property containing the parent view
      */
-    ReadOnlyObjectProperty<? extends ParentFxView<?, ?>> parentProperty();
+    ReadOnlyObjectProperty<? extends ParentFxView<?>> parentProperty();
 
     /**
      * Returns the value of {@link #parentProperty()}.
      *
      * @return the parent view, or {@code null} if this view has no parent
      */
-     ParentFxView<?, ?> getParent();
+     ParentFxView<?> getParent();
 
     /**
      * Returns the value of {@link #parentProperty()} cast to the specified type.
@@ -48,7 +51,7 @@ public interface ChildFxView<P extends ChildPresenter<?, ?>, C extends ChildFxCo
      * @return the parent view cast to the specified type, or {@code null} if this view has no parent
      * @throws ClassCastException if the parent exists but is not of the specified type
      */
-    <T extends ParentFxView<?, ?>> T getParent(Class<T> parentClass);
+    <T extends ParentFxView<?>> T getParent(Class<T> parentClass);
 
     /**
      * Sets the parent view of this view.
@@ -57,7 +60,7 @@ public interface ChildFxView<P extends ChildPresenter<?, ?>, C extends ChildFxCo
      * implementations while managing the view hierarchy. Direct invocation by user code results in undefined
      * behavior.
      */
-    void setParent(ParentFxView<?, ?> parent);
+    void setParent(ParentFxView<?> parent);
 
     /**
      * Returns the main node of the view. It can be Tab, Node etc.
@@ -65,4 +68,7 @@ public interface ChildFxView<P extends ChildPresenter<?, ?>, C extends ChildFxCo
      * @return
      */
     Object getNode();
+
+    @Override
+    Composer getComposer();
 }

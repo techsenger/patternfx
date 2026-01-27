@@ -38,8 +38,54 @@ import javafx.stage.Stage;
  *
  * @author Pavel Castornii
  */
-public class RegistryFxView<P extends RegistryPresenter<?, C>, C extends RegistryFxComposer<?>>
-        extends AbstractParentFxView<P, C> implements RegistryView {
+public class RegistryFxView<P extends RegistryPresenter<?, ?>> extends AbstractParentFxView<P> implements RegistryView {
+
+    public class Composer extends AbstractParentFxView.Composer implements RegistryComposer {
+
+        private final RegistryFxView<?> view = RegistryFxView.this;
+
+        @Override
+        public DialogPort showDialog() {
+            var v = new DialogFxView(view.getStage());
+            var p = new DialogPresenter<>(v);
+            p.initialize();
+            v.getDialog().showAndWait();
+            return p.getPort();
+        }
+
+        @Override
+        public ReportPort getReport() {
+            if (view.getReport() == null) {
+                return null;
+            }
+            return view.getReport().getPresenter().getPort();
+        }
+
+        @Override
+        public void addReport() {
+            if (view.getReport() != null) {
+                throw new IllegalStateException("Report has been added");
+            }
+            var reportV = new ReportFxView();
+            var reportP = new ReportPresenter(reportV);
+            reportP.initialize();
+            view.root.getChildren().add(reportV.getNode());
+            view.getModifiableChildren().add(reportV);
+            view.report = reportV;
+        }
+
+        @Override
+        public void removeReport() {
+            var report = view.getReport();
+            if (report == null) {
+                throw new IllegalStateException("Report hasn't been added");
+            }
+            view.getModifiableChildren().remove(report);
+            view.root.getChildren().remove(report.getNode());
+            view.report = null;
+            report.getPresenter().deinitialize();
+        }
+    }
 
     private final Button addButton = new Button("Add");
 
@@ -160,14 +206,14 @@ public class RegistryFxView<P extends RegistryPresenter<?, C>, C extends Registr
                 .addListener((ov, oldV, newV) -> getPresenter().handleSelectedChange(newV.intValue()));
     }
 
-    private void setupColumn(TableColumn<?, ?> column) {
-        column.setResizable(false);
-        column.prefWidthProperty().bind(personTable.widthProperty().multiply(0.25).subtract(1));
+    @Override
+    public Composer getComposer() {
+        return (Composer) super.getComposer();
     }
 
     @Override
-    protected C createComposer() {
-        return (C) new RegistryFxComposer<>(this);
+    protected Composer createComposer() {
+        return new RegistryFxView.Composer();
     }
 
     Stage getStage() {
@@ -178,15 +224,8 @@ public class RegistryFxView<P extends RegistryPresenter<?, C>, C extends Registr
         return report;
     }
 
-    void addReport(ReportFxView r) {
-        root.getChildren().add(r.getNode());
-        getModifiableChildren().add(r);
-        report = r;
-    }
-
-    void removeReport() {
-        getModifiableChildren().remove(report);
-        root.getChildren().remove(report.getNode());
-        report = null;
+    private void setupColumn(TableColumn<?, ?> column) {
+        column.setResizable(false);
+        column.prefWidthProperty().bind(personTable.widthProperty().multiply(0.25).subtract(1));
     }
 }

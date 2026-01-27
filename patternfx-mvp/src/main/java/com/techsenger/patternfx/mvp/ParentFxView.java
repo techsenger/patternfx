@@ -24,29 +24,33 @@ import javafx.collections.ObservableList;
  *
  * @author Pavel Castornii
  */
-public interface ParentFxView<P extends ParentPresenter<?, ?>, C extends ParentFxComposer<?>>
+public interface ParentFxView<P extends ParentPresenter<?, ?>>
         extends FxView<P>, ParentView {
+
+    interface Composer extends ParentComposer {
+
+    }
 
     /**
      * Returns an unmodifiable list of child Views.
      *
      * @return an unmodifiable list of child Views (never {@code null})
      */
-    ObservableList<? extends ChildFxView<?, ?>> getChildren();
+    ObservableList<? extends ChildFxView<?>> getChildren();
 
     /**
      * Returns an iterator that traverses the View subtree starting from this View in depth-first order.
      *
      * @return an {@link Iterator} that iterates over this View and all of its descendants
      */
-    TreeIterator<ParentFxView<?, ?>> depthFirstIterator();
+    TreeIterator<ParentFxView<?>> depthFirstIterator();
 
     /**
      * Returns an iterator that traverses the View subtree starting from this View in breadth-first order.
      *
      * @return an {@link Iterator} that iterates over this View and all of its descendants
      */
-    TreeIterator<ParentFxView<?, ?>> breadthFirstIterator();
+    TreeIterator<ParentFxView<?>> breadthFirstIterator();
 
     /**
      * Returns a string representation of this View and all its descendants as a sub-tree with this
@@ -67,7 +71,7 @@ public interface ParentFxView<P extends ParentPresenter<?, ?>, C extends ParentF
      * @param appender a callback used to append the full string representation of each View.
      * @return a tree-formatted string representation of this View
      */
-    String toTreeString(BiConsumer<ParentFxView<?, ?>, StringBuilder> appender);
+    String toTreeString(BiConsumer<ParentFxView<?>, StringBuilder> appender);
 
-    C getComposer();
+    Composer getComposer();
 }

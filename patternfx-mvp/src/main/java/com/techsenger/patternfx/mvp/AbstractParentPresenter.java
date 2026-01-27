@@ -29,7 +29,7 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractParentPresenter.class);
 
-    protected class Port implements com.techsenger.patternfx.mvp.ParentPort {
+    protected class Port implements ParentPort {
 
         private final AbstractParentPresenter<?, ?> presenter = AbstractParentPresenter.this;
 
@@ -88,5 +88,7 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
         this.composer = (C) composer;
     }
 
-    protected abstract Port createPort();
+    protected Port createPort() {
+        return new Port();
+    }
 }
