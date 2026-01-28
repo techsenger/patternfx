@@ -27,6 +27,18 @@ import java.util.function.BiConsumer;
 public interface ParentComposer {
 
     /**
+     * Composes the static structure of this component by creating and adding its default child components. This
+     * method is intended for static composition, where child components are created once during component
+     * initialization and remain present for the entire component lifecycle.
+     *
+     * <p>This method is automatically invoked during the {@code postInitialize} phase of the component lifecycle,
+     * after the main initialization has completed but before the component becomes fully operational. This ensures
+     * that all child components are properly initialized and integrated into the component tree before the parent
+     * component starts its normal operation.
+     */
+    void compose();
+
+    /**
      * Returns an unmodifiable observable list of child components.
      *
      * @return a non-null, unmodifiable observable list of child components

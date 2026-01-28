@@ -84,6 +84,12 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
         }
     }
 
+    @Override
+    protected void postInitialize() {
+        super.postInitialize();
+        this.composer.compose();
+    }
+
     protected void setComposer(ParentComposer composer) {
         this.composer = (C) composer;
     }

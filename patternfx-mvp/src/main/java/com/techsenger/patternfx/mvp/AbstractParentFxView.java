@@ -38,6 +38,11 @@ public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>>
         private final AbstractParentFxView<?> view = AbstractParentFxView.this;
 
         @Override
+        public void compose() {
+            // empty
+        }
+
+        @Override
         public List<? extends ChildPort> getChildren() {
             return view.getChildren().stream().map(v -> v.getPresenter().getPort()).collect(Collectors.toList());
         }
