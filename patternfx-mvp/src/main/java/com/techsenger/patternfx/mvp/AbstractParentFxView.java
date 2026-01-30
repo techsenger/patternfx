@@ -181,7 +181,7 @@ public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>>
     protected void setPresenter(Presenter<?> presenter) {
         super.setPresenter(presenter);
         if (presenter instanceof AbstractParentPresenter<?, ?>) {
-            ((AbstractParentPresenter<?, ?>) presenter).setComposer(createComposer());
+            ((AbstractParentPresenter<?, ?>) presenter).setComposer(composer);
         }
     }
 
