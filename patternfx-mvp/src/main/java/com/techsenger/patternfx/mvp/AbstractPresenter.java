@@ -62,7 +62,9 @@ public abstract class AbstractPresenter<V extends View> implements Presenter<V> 
             preInitialize();
             // initialization
             descriptor.setState(ComponentState.INITIALIZING);
-            this.view.initialize();
+            if (this.view instanceof AbstractView<?>) {
+                ((AbstractView<?>) this.view).initialize();
+            }
             if (this.history != null) {
                 restoreHistory();
             }
@@ -89,7 +91,9 @@ public abstract class AbstractPresenter<V extends View> implements Presenter<V> 
             if (this.history != null) {
                 saveHistory();
             }
-            this.view.deinitialize();
+            if (this.view instanceof AbstractView<?>) {
+                ((AbstractView<?>) this.view).deinitialize();
+            }
             descriptor.setState(ComponentState.DEINITIALIZED);
             logger.debug("{} Deinitialized the component", getDescriptor().getLogPrefix());
             // post-deinitialization

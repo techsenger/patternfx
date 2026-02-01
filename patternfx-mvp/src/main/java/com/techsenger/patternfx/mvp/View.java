@@ -22,13 +22,4 @@ package com.techsenger.patternfx.mvp;
  */
 public interface View {
 
-    /**
-     * Initializes the View.
-     */
-    void initialize();
-
-    /**
-     * Deiinitializes the View.
-     */
-    void deinitialize();
 }

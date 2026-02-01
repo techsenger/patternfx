@@ -32,6 +32,20 @@ public abstract class AbstractView<T extends Presenter<?>> {
         return presenter;
     }
 
+    /**
+     * Initializes the View.
+     */
+    protected void initialize() {
+        // empty
+    }
+
+    /**
+     * Deiinitializes the View.
+     */
+    protected void deinitialize() {
+        // empty
+    }
+
     void setPresenter(Presenter<?> presenter) {
         this.presenter = (T) presenter;
     }
