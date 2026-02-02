@@ -33,5 +33,10 @@ public interface ParentPort {
 
     ReadOnlyDescriptor getDescriptor();
 
+    /**
+     * Initializes the component.
+     */
+    void initialize();
+
     void deinitialize();
 }

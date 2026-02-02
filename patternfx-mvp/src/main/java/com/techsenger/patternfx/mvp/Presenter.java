@@ -25,12 +25,12 @@ import com.techsenger.patternfx.core.HistoryPolicy;
 public interface Presenter<V extends View> {
 
     /**
-     * Initializes both the component.
+     * Initializes the component.
      */
     void initialize();
 
     /**
-     * Deinitializes both the component.
+     * Deinitializes the component.
      */
     void deinitialize();
 

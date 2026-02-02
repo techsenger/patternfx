@@ -43,6 +43,11 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
         }
 
         @Override
+        public void initialize() {
+            presenter.initialize();
+        }
+
+        @Override
         public void deinitialize() {
             presenter.deinitialize();
         }
