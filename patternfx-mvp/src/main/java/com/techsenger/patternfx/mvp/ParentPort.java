@@ -25,6 +25,8 @@ import java.util.List;
  */
 public interface ParentPort {
 
+    void requestFocus();
+
     /**
      * Returns an unmodifiable list of child components.
      * @return

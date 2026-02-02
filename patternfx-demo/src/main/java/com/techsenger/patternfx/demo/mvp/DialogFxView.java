@@ -62,6 +62,11 @@ public class DialogFxView extends AbstractParentFxView<DialogPresenter<?>> imple
     }
 
     @Override
+    public void requestFocus() {
+        firstNameTextField.requestFocus();
+    }
+
+    @Override
     public void setFirstNameValid(boolean value) {
         updateValid(firstNameTextField, value);
     }

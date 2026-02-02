@@ -38,6 +38,11 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
         }
 
         @Override
+        public void requestFocus() {
+            getView().requestFocus();
+        }
+
+        @Override
         public Descriptor getDescriptor() {
             return presenter.getDescriptor();
         }

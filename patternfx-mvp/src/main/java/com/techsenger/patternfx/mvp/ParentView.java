@@ -22,4 +22,8 @@ package com.techsenger.patternfx.mvp;
  */
 public interface ParentView extends View {
 
+    /**
+     * Requests focus. Child view implements this method via selecting FX node that will request focus.
+     */
+    void requestFocus();
 }
