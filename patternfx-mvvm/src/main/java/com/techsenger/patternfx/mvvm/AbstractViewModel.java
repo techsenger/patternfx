@@ -101,8 +101,8 @@ public abstract class AbstractViewModel implements ViewModel {
         var policy = getHistoryPolicy();
         logger.debug("{} History policy during restore: {}", getDescriptor().getLogPrefix(), policy);
         if (policy != NONE) {
-            if (history.isFresh()) {
-                logger.debug("{} History is fresh. Skipping restoration", getDescriptor().getLogPrefix());
+            if (history.isNew()) {
+                logger.debug("{} History is new. Skipping restoration", getDescriptor().getLogPrefix());
             } else {
                 switch (policy) {
                     case DATA:
@@ -175,7 +175,7 @@ public abstract class AbstractViewModel implements ViewModel {
      * @param viewModel
      */
     protected void saveData() {
-        getHistory().setFresh(false);
+        getHistory().setNew(false);
     }
 
     /**
@@ -185,7 +185,7 @@ public abstract class AbstractViewModel implements ViewModel {
      * @param viewModel
      */
     protected void saveAppearance() {
-        getHistory().setFresh(false);
+        getHistory().setNew(false);
     }
 
     protected abstract Descriptor createDescriptor();

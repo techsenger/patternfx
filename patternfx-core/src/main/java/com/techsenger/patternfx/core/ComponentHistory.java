@@ -27,16 +27,16 @@ import java.io.Serializable;
 public interface ComponentHistory extends Serializable {
 
     /**
-     * Returns whether this history instance is fresh, meaning it was newly created and has not yet been used to
-     * save or restore any component state. A fresh history contains no previously stored data and should not be
+     * Returns whether this history instance is new, meaning it was newly created and has not yet been used to
+     * save or restore any component state. A new history contains no previously stored data and should not be
      * passed to a component for restoration.
      *
      * <p>Once the component's state has been saved into this history, the flag becomes {@code false}, indicating that
      * the history now holds valid data that can be used to restore the component's state in future instances.
      *
-     * @return {@code true} if this history is fresh and has not yet been used, {@code false} otherwise
+     * @return {@code true} if this history is new and has not yet been used, {@code false} otherwise
      */
-    boolean isFresh();
+    boolean isNew();
 
     /**
      * Method called before the component is serialized. This can be used to prepare the object's state

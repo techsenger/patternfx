@@ -95,8 +95,8 @@ public abstract class AbstractComponentViewModel<T extends ComponentMediator> im
         var policy = getHistoryPolicy();
         logger.debug("{} History policy during restore: {}", getMediator().getLogPrefix(), policy);
         if (policy != NONE) {
-            if (history.isFresh()) {
-                logger.debug("{} History is fresh. Skipping restoration", getMediator().getLogPrefix());
+            if (history.isNew()) {
+                logger.debug("{} History is new. Skipping restoration", getMediator().getLogPrefix());
             } else {
                 switch (policy) {
                     case DATA:
@@ -169,7 +169,7 @@ public abstract class AbstractComponentViewModel<T extends ComponentMediator> im
      * @param viewModel
      */
     protected void saveData() {
-        getHistory().setFresh(false);
+        getHistory().setNew(false);
     }
 
     /**
@@ -179,7 +179,7 @@ public abstract class AbstractComponentViewModel<T extends ComponentMediator> im
      * @param viewModel
      */
     protected void saveAppearance() {
-        getHistory().setFresh(false);
+        getHistory().setNew(false);
     }
 
     void prepareHistory() {

@@ -24,11 +24,11 @@ import com.techsenger.patternfx.core.ComponentHistory;
  */
 public abstract class AbstractHistory implements ComponentHistory {
 
-    private boolean fresh = true;
+    private boolean isNew = true;
 
     @Override
-    public boolean isFresh() {
-        return fresh;
+    public boolean isNew() {
+        return isNew;
     }
 
     @Override
@@ -41,7 +41,7 @@ public abstract class AbstractHistory implements ComponentHistory {
 
     }
 
-    void setFresh(boolean fresh) {
-        this.fresh = fresh;
+    void setNew(boolean value) {
+        this.isNew = value;
     }
 }
