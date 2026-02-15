@@ -50,6 +50,7 @@ As a real example of using this framework, see [TabShell](https://github.com/tec
         * [MVVMX Component Structure](#templates-mvvmx-structure)
         * [MVVMX Component Lifecycle](#templates-mvvmx-lifecycle)
         * [MVVMX Component Example](#templates-mvvmx-example)
+* [Limitations](#limitations)
 * [Requirements](#requirements)
 * [Dependencies](#dependencies)
 * [Code building](#code-building)
@@ -996,6 +997,12 @@ component.initialize();
 ... // use the component
 component.deinitialize();
 ```
+## Limitations <a name="limitations"></a>
+
+* JavaFX uses strict CSS selectors for `ToolBar` such as `.tool-bar > .container > .button` that only apply styles to
+direct children of the toolbar's internal container. When toolbar items are wrapped in another container (HBox, VBox,
+etc.), default control styles no longer apply. Therefore, when working with `ToolBar`, it is recommended to create a
+single dedicated component without nested components to avoid duplicating styles for toolbar items.
 
 ## Requirements <a name="requirements"></a>
 
