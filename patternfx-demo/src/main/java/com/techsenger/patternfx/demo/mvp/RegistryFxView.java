@@ -197,18 +197,18 @@ public class RegistryFxView<P extends RegistryPresenter<?, ?>> extends AbstractP
     protected void addHandlers() {
         super.addHandlers();
         var presenter = getPresenter();
-        addButton.setOnAction(e -> presenter.handleAddAction());
-        removeButton.setOnAction(e -> presenter.handleRemoveAction());
-        refreshButton.setOnAction(e -> presenter.handleRefreshAction());
-        reportButton.setOnAction(e -> presenter.handleReportAction());
-        stage.setOnCloseRequest(e -> presenter.handleCloseRequest());
+        addButton.setOnAction(e -> presenter.onAdd());
+        removeButton.setOnAction(e -> presenter.onRemove());
+        refreshButton.setOnAction(e -> presenter.onRefresh());
+        reportButton.setOnAction(e -> presenter.onReport());
+        stage.setOnCloseRequest(e -> presenter.onCloseRequest());
     }
 
     @Override
     protected void addListeners() {
         super.addListeners();
         personTable.getSelectionModel().selectedIndexProperty()
-                .addListener((ov, oldV, newV) -> getPresenter().handleSelectedChange(newV.intValue()));
+                .addListener((ov, oldV, newV) -> getPresenter().onSelectedChanged(newV.intValue()));
     }
 
     @Override

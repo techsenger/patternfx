@@ -41,11 +41,11 @@ public class RegistryPresenter<V extends RegistryView, C extends RegistryCompose
         return new Descriptor(DemoNames.PERSON_REGISTRY);
     }
 
-    protected void handleSelectedChange(int value) {
+    protected void onSelectedChanged(int value) {
         getView().setRemoveDisable(value < 0);
     }
 
-    protected void handleAddAction() {
+    protected void onAdd() {
         var dialog = getComposer().showDialog();
         var newPerson = dialog.getResult();
         dialog.deinitialize();
@@ -56,7 +56,7 @@ public class RegistryPresenter<V extends RegistryView, C extends RegistryCompose
         }
     }
 
-    protected void handleRemoveAction() {
+    protected void onRemove() {
         var selectedIndex = getView().getSelectedIndex();
         if (selectedIndex < 0) {
             return;
@@ -67,13 +67,13 @@ public class RegistryPresenter<V extends RegistryView, C extends RegistryCompose
         updateReport();
     }
 
-    protected void handleRefreshAction() {
+    protected void onRefresh() {
         getView().clearPersons();
         getView().addPersons(service.readAll());
         updateReport();
     }
 
-    protected void handleReportAction() {
+    protected void onReport() {
         if (getComposer().getReport() == null) {
             getComposer().addReport();
             getComposer().getReport().refresh(getView().getPersons());
@@ -84,7 +84,7 @@ public class RegistryPresenter<V extends RegistryView, C extends RegistryCompose
         }
     }
 
-    protected void handleCloseRequest() {
+    protected void onCloseRequest() {
         deinitialize();
     }
 
@@ -92,7 +92,7 @@ public class RegistryPresenter<V extends RegistryView, C extends RegistryCompose
     protected void postInitialize() {
         super.postInitialize();
         getView().showStage();
-        handleRefreshAction();
+        onRefresh();
     }
 
     private void updateReport() {

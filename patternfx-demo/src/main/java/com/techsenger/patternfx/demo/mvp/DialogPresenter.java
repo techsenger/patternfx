@@ -53,7 +53,7 @@ public class DialogPresenter<T extends DialogView> extends AbstractParentPresent
         return new Descriptor(DemoNames.PERSON_DIALOG);
     }
 
-    protected boolean handleOkAction() {
+    protected boolean onOk() {
         var v = getView();
         this.result = new Person(v.getFirstName(), v.getLastName(), Integer.valueOf(v.getAge()));
         if (!checkIfValid()) {

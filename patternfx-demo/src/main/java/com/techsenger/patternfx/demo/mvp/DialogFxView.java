@@ -123,7 +123,7 @@ public class DialogFxView extends AbstractParentFxView<DialogPresenter<?>> imple
     protected void addHandlers() {
         super.addHandlers();
         okButton.addEventFilter(ActionEvent.ACTION, event -> {
-            if (!getPresenter().handleOkAction()) {
+            if (!getPresenter().onOk()) {
                 event.consume();
             }
         });
