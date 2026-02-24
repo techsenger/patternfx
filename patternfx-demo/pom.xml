@@ -35,10 +35,6 @@
             <artifactId>patternfx-mvvm</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.techsenger.patternfx</groupId>
-            <artifactId>patternfx-mvvmx</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-base</artifactId>
         </dependency>

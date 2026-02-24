@@ -18,7 +18,6 @@ module com.techsenger.patternfx.demo {
     requires com.techsenger.patternfx.core;
     requires com.techsenger.patternfx.mvp;
     requires com.techsenger.patternfx.mvvm;
-    requires com.techsenger.patternfx.mvvmx;
     requires org.slf4j;
     requires javafx.base;
     requires javafx.graphics;

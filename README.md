@@ -30,12 +30,14 @@ As a real example of using this framework, see [TabShell](https://github.com/tec
     * [MVC vs MVP vs MVVM](#patterns-mvc-mvp-mvvm)
 * [Templates](#templates)
     * [Component](#templates-component)
-        * [Component Types](#templates-component-types)
+        * [Component Descriptor](#templates-component-descriptor)
         * [Component Lifecycle](#templates-component-lifecycle)
+        * [Component Logging](#templates-component-logging)
+        * [Component Types](#templates-component-types)
         * [Component Tree](#templates-component-tree)
+        * [Component Composer](#templates-component-composer)
         * [Imperative Component Management](#templates-component-management)
         * [Component History](#templates-component-history)
-        * [Component Logging](#templates-component-logging)
         * [When to Create a Component?](#templates-component-when-to-create)
         * [When Not to Create a Component?](#templates-component-when-not-to-create)
     * [MVP Template](#templates-mvp)
@@ -46,14 +48,10 @@ As a real example of using this framework, see [TabShell](https://github.com/tec
         * [MVVM Component Structure](#templates-mvvm-structure)
         * [MVVM Component Lifecycle](#templates-mvvm-lifecycle)
         * [MVVM Component Example](#templates-mvvm-example)
-    * [MVVMX Template](#templates-mvvmx)
-        * [MVVMX Component Structure](#templates-mvvmx-structure)
-        * [MVVMX Component Lifecycle](#templates-mvvmx-lifecycle)
-        * [MVVMX Component Example](#templates-mvvmx-example)
 * [Limitations](#limitations)
 * [Requirements](#requirements)
 * [Dependencies](#dependencies)
-* [Code building](#code-building)
+* [Code Building](#code-building)
 * [Running Demo](#demo)
 * [License](#license)
 * [Contributing](#contributing)
@@ -62,7 +60,7 @@ As a real example of using this framework, see [TabShell](https://github.com/tec
 ## Overview <a name="overview"></a>
 
 Today, there are various architectural patterns available for developing JavaFX applications, such as MVC, MVP, and MVVM,
-which can choosen depending on their goals and preferences. However, when building real-world applications, developers
+which can be chosen depending on their goals and preferences. However, when building real-world applications, developers
 often encounter challenges that these patterns do not fully address. These include:
 
 1. Storing metadata for a component.
@@ -113,7 +111,7 @@ to the `View`.
 * In MVP, the presentation logic is split between the `View` and the `Presenter`. The `View` is responsible for
 passive rendering and user event forwarding, while the `Presenter` contains the main coordination logic. The `Presenter`
 interacts with the `View` only through a `View` interface, which decouples it from the concrete UI implementation.
-* In `MVVM`, the presentation logic is located in the `View` itself, expressed declaratively through bindings to the
+* In MVVM, the presentation logic is located in the `View` itself, expressed declaratively through bindings to the
 `ViewModel`’s state. The `ViewModel` contains no UI-specific logic and has no reference to the `View`. UI updates are
 performed automatically via data binding rather than explicit method calls.
 
@@ -209,6 +207,15 @@ handling animations, drag-and-drop operations, or other view-related interaction
 `ViewModel` — manages the state of UI elements without needing to know the implementation details of the user interface.
 `ViewModel` can also serve as a layer between the `View` and `Model`, obtaining data from the `Model` and preparing it for
 display in the `View`. It can transform the data from the model into a format suitable for UI presentation.
+
+It is worth noting that there are two common interpretations of what the `ViewModel` should hold. In the classical
+definition, rooted in the origins of the pattern, the `ViewModel` is a `Presentation Model` — a wrapper around the
+domain model whose primary purpose is to maintain `View` state that does not belong to the domain. In this
+interpretation, the `ViewModel` explicitly holds properties like `buttonEnabled` or `isLoading`, mirroring the state
+of UI elements in an abstract, UI-toolkit-agnostic form. In the alternative interpretation, the `ViewModel` operates
+in business terms — exposing properties like `orderValid` or `documentDirty` — and leaves the mapping to concrete
+UI state as the responsibility of the `View`. Both approaches are valid, but they imply different distributions of
+responsibility between the `View` and the `ViewModel`.
 
 `Model` — represents the application’s data and business logic. As in other patterns, the `Model` is completely
 independent of the UI and does not reference either the `View` or the `Presenter`.
@@ -322,6 +329,44 @@ A natural question might arise: why is there no `Model` in the component? Firstl
 for constructing a user interface, which might not be related to the application's business logic at all. Secondly,
 the `Model` exists independently of the UI and should have no knowledge of the component's existence.
 
+#### Component Descriptor<a name="templates-component-descriptor"></a>
+
+The `Descriptor` represents the internal metadata and platform-level state of a component. It acts as a
+technical identity card, containing all framework-related information while keeping it completely separate
+from business data. In other words, the purpose of this class is to ensure that internal component data does not mix
+with business-related data handled by the `Controller`, `Presenter`, `ViewModel` depending on the template.
+
+#### Component Lifecycle<a name="templates-component-lifecycle"></a>
+
+The component lifecycle defines the process and order of initialization and deinitialization of a component, as well
+as of its child components in the case of a composite component. Violations of the lifecycle may lead to issues such
+as failure to restore or persist state, unreleased resources resulting in memory leaks, and incorrect component behavior
+(for example, required bindings not being established).
+
+Due to the importance of lifecycle management, all templates provided by the framework define the methods `initialize()`
+and `deinitialize()`. These methods serve as the primary mechanisms for controlling the component lifecycle
+and its `State`. The internal implementation of these methods is defined by the selected template.
+
+Each component has five distinct states (see `State`):
+
+| **State**          | **Description** |
+|--------------------|-----------------|
+| **CREATING**       | The component is being constructed; some or all objects exist, but the component has not yet been initialized. |
+| **INITIALIZING**   | The component is undergoing initialization. |
+| **INITIALIZED**    | The component has been fully initialized and is ready for use. |
+| **DEINITIALIZING** | The component is undergoing deinitialization. |
+| **DEINITIALIZED**  | The component has been completely deinitialized; all resources have been released and cleanup has been performed. |
+
+#### Component Logging <a name="templates-component-logging"></a>
+
+PatternFX supports component-scoped logging, allowing log messages to be produced in the context of a specific
+component instance rather than only at the class or subsystem level. This approach is especially useful in complex and
+dynamic applications where multiple instances of the same component type may exist simultaneously (for example, tabs,
+dialogs, editors, or background components). Component-scoped logging makes it possible to precisely identify the
+exact source of a log message and greatly simplifies debugging and diagnostics.
+
+Each component exposes a log prefix that uniquely identifies its instance. This prefix is provided by the `Descriptor`.
+
 #### Component Types<a name="templates-component-types"></a>
 
 Each template in the framework provides base classes and interfaces for creating three types of components, which
@@ -344,27 +389,6 @@ nested UI building blocks (for example, toolbars, forms, or widgets).
 This three-level system allows developers to flexibly choose the appropriate level of component complexity depending
 on its role — from a simple isolated dialog (Base Component) to a complex reusable control embedded into the
 overall application structure (Child Component).
-
-#### Component Lifecycle<a name="templates-component-lifecycle"></a>
-
-The component lifecycle defines the process and order of initialization and deinitialization of a component, as well
-as of its child components in the case of a composite component. Violations of the lifecycle may lead to issues such
-as failure to restore or persist state, unreleased resources resulting in memory leaks, and incorrect component behavior
-(for example, required bindings not being established).
-
-Due to the importance of lifecycle management, all templates provided by the framework define the methods `initialize()`
-and `deinitialize()`. These methods serve as the primary mechanisms for controlling the component lifecycle
-and its `State`. The internal implementation of these methods is defined by the selected template.
-
-Each component has five distinct states (see `State`):
-
-| **State**          | **Description** |
-|--------------------|-----------------|
-| **CREATING**       | The component is being constructed; some or all objects exist, but the component has not yet been initialized. |
-| **INITIALIZING**   | The component is undergoing initialization. |
-| **INITIALIZED**    | The component has been fully initialized and is ready for use. |
-| **DEINITIALIZING** | The component is undergoing deinitialization. |
-| **DEINITIALIZED**  | The component has been completely deinitialized; all resources have been released and cleanup has been performed. |
 
 #### Component Tree <a name="templates-component-tree"></a>
 
@@ -394,6 +418,44 @@ parent–child relationships, and defining ownership boundaries between componen
 Keeping the component layer thin prevents it from becoming a God object and ensures that application logic remains
 properly distributed between the View and the ViewModel. This constraint is essential for preserving architectural
 clarity, testability, and long-term maintainability.
+
+#### Component Composer <a name="templates-component-composer"></a>
+
+The `Composer` serves two primary purposes:
+
+1. To externalize and centralize component composition logic in all supported patterns (MVC, MVP, MVVM).
+2. To enforce strict separation of layers in patterns where presentation logic must not depend on the `View` (MVP, MVVM).
+
+The `Composer` acts as a dedicated composition layer placed above the `View`. Its purpose is to isolate component
+creation and structural composition logic from the primary responsibilities of the architectural pattern in use.
+
+It is important to note that the `Composer` is responsible for adding, managing, and removing two types of components:
+
+1. Child components — those that reside directly inside the current component.
+2. Derived components — those that are created by this component but attached elsewhere, such as dialogs, tabs, popups, etc.
+
+In MVC, the `Controller` may access the `View`, so there is no strict architectural restriction preventing it from
+creating or composing components directly. However, introducing a `Composer` still provides a significant structural
+benefit: it centralizes and isolates component composition logic. This prevents the `View` (and optionally the
+`Controller`) from accumulating orchestration responsibilities that do not belong to their primary roles.
+
+In MVP, the `Presenter` must not depend on the `View`. At the same time, it may need to initiate the creation
+of new components (for example, opening a dialog) and manage their composition. Since component creation ultimately
+involves view-level constructs, doing this directly would violate the separation rules of MVP. The `Composer`
+resolves this by acting as an abstraction layer: the `Presenter` interacts only with the `Composer` interface, while
+the concrete implementation performs the necessary view-related operations.
+
+In MVVM, the `ViewModel` must not depend on the `View`. However, it may still need to create and compose
+components. The `Composer` provides the required abstraction: the `ViewModel` works only with the `Composer`
+interface, while the implementation handles view-specific logic. This preserves the separation between presentation
+logic and UI constructs.
+
+The `Composer` provides the following advantages:
+
+- Structural Clarity. Establishes a consistent and explicit mechanism for managing child and derived components.
+- Separation of Concerns. Keeps `View`, `Controller`, `Presenter`, and `ViewModel` focused on their primary responsibilities.
+- Improved Testability. Allows composition logic to be tested independently.
+- Architectural Consistency. Provides a uniform composition model across all supported templates.
 
 #### Imperative Component Management<a name="templates-component-management"></a>
 
@@ -429,17 +491,6 @@ subclasses without retrieving a history instance, which may be an expensive oper
 the provider is cleared (set to null), and the component uses the history. State restoration occurs in the
 deinitialization phase. The volume and type of state information that is restored and persisted are determined
 by the `HistoryPolicy` enum.
-
-#### Component Logging <a name="templates-component-logging"></a>
-
-PatternFX supports component-scoped logging, allowing log messages to be produced in the context of a specific
-component instance rather than only at the class or subsystem level. This approach is especially useful in complex and
-dynamic applications where multiple instances of the same component type may exist simultaneously (for example, tabs,
-dialogs, editors, or background components). Component-scoped logging makes it possible to precisely identify the
-exact source of a log message and greatly simplifies debugging and diagnostics.
-
-Each component exposes a log prefix that uniquely identifies its instance. The way this prefix is obtained depends
-on the template implementation - see `Descriptor` or `Component`.
 
 #### When to Create a Component? <a name="templates-component-when-to-create"></a>
 * The element has independent testable state or business logic that can exist without a `View`.
@@ -481,32 +532,9 @@ maintain references to parent and child components, and also holds a `Composer` 
 
 #### MVP Component Structure <a name="templates-mvp-structure"></a>
 
-A component  consists of the following classes: a `View`, `JfxView`, `Presenter`. In addition to them, a component
+A component  consists of the following classes: a `View`, `FxView`, `Presenter`. In addition to them, a component
 always has a `Descriptor` (which is provided by the framework and normally does not require custom implementation)
 and may include `Composer`, `Port` and a `History` classes.
-
-The `Descriptor` represents the internal metadata and platform-level state of a component. The descriptor acts as a
-technical identity card, containing all framework-related information while keeping it completely separate
-from business data. In other words, the purpose of this class is to ensure that internal component data does not mix
-with business data within the `Presenter`.
-
-The `Composer` is responsible for:
-1. Creating and managing child components (those that will reside directly inside this component).
-2. Creating and managing derived components (those that will be provided to another component after creation,
-e.g., dialogs, tabs, system notifications, etc.).
-
-The need to create a `Composer` is explained by the fact that, according to MVP, the `Presenter` must not know about
-the `JfxView`. However, the `Presenter` may need to initiate the creation of new components (for example, opening a
-dialog) and their composition — which is impossible without interacting with the `JfxView`.
-
-This contradiction is resolved as follows: the `Presenter` works with the `Composer` interface, which knows nothing
-about the `JfxView`, while the implementation of this interface creates `JfxView`s.
-
-Advantages of this approach:
-
-* Strict Separation. Using a `Composer` enforces a clear separation of layers according to MVP and simplifies testing.
-* Clean Architecture. The `Composer` centralizes all logic related to managing child components, keeping the
-`View` and `Presenter` free from responsibilities that do not belong to them.
 
 `Port` is an interface with its implementation supplied by a nested, non-static class in `Presenter`.
 It represents an explicit communication channel between presenters.
@@ -539,8 +567,8 @@ The third phase consists of invoking the protected methods `postInitialize()` / 
 be overridden.
 
 The second phase is the most important one. During this phase, the `View` is initialized and deinitialized via
-calls to the methods `View#initialize()` and `View#deinitialize()`. During the second phase, the `AbstractJfxView`
-is initialized and deinitialized by invoking four protected methods that perform the core `JfxView` operations. These
+calls to the methods `View#initialize()` and `View#deinitialize()`. During the second phase, the `AbstractFxView`
+is initialized and deinitialized by invoking four protected methods that perform the core `FxView` operations. These
 protected methods may be overridden and are responsible for the following:
 
 - building/unbuilding
@@ -549,10 +577,10 @@ protected methods may be overridden and are responsible for the following:
 - adding/removing handlers
 
 It is important to note that these protected methods should not be considered the only place for performing such tasks
-(e.g., adding or removing handlers) within the `JfxView`; rather, they represent one part of the
+(e.g., adding or removing handlers) within the `FxView`; rather, they represent one part of the
 initialization/deinitialization process. Thus, such tasks may also be performed in other methods.
 
-The `Composer` is created and assigned to the `AbstractParentPresenter` when the `AbstractJfxParentView#setPresenter()`
+The `Composer` is created and assigned to the `AbstractParentPresenter` when the `AbstractParentFxView#setPresenter()`
 method is called.
 
 #### MVP Component Example<a name="templates-mvp-example"></a>
@@ -580,13 +608,13 @@ public interface FooView extends ParentView {
 `Presenter` class:
 
 ```java
-public class FooPresenter<V extends FooView, C extends FooComposer> extends AbstractParentPresenter<V, C>
+public class FooPresenter<V extends FooView, C extends FooComposer> extends AbstractParentPresenter<V, C> {
 
     public FooPresenter(V view) {
         super(view);
     }
 
-    public void handleAction() {
+    public void onAction() {
         getComposer().addBar();
         // use bar
     }
@@ -595,16 +623,16 @@ public class FooPresenter<V extends FooView, C extends FooComposer> extends Abst
 }
 ```
 
-`JfxView` class:
+`FxView` class:
 
 ```java
-public class FooJfxView<P extends FooPresenter<?, ?>> extends AbstractParentJfxView<P> implements FooView {
+public class FooFxView<P extends FooPresenter<?, ?>> extends AbstractParentFxView<P> implements FooView {
 
-    protected class ComposerImpl implements FooComposer {
+    protected class Composer extends AbstractParentFxView<P>.Composer  implements FooComposer {
 
         @Override
         public void addBar() {
-            bar = new BarJfxView();
+            bar = new BarFxView();
             var p = new BarPresenter(bar);
             p.initialize();
             getModifiableChildren().add(bar);
@@ -615,13 +643,15 @@ public class FooJfxView<P extends FooPresenter<?, ?>> extends AbstractParentJfxV
         public BarPort getBar() {
             if (bar != null) {
                 return bar.getPresenter().getPort();
+            } else {
+                return null;
             }
         }
     }
 
-    private BarJfxView bar;
+    private BarFxView bar;
 
-    public FooJfxView() {
+    public FooFxView() {
         ...
     }
 
@@ -633,7 +663,7 @@ public class FooJfxView<P extends FooPresenter<?, ?>> extends AbstractParentJfxV
 
     @Override
     protected Composer createComposer() {
-        return new ComposerImpl();
+        return new Composer();
     }
     ...
 }
@@ -641,8 +671,8 @@ public class FooJfxView<P extends FooPresenter<?, ?>> extends AbstractParentJfxV
 This code demonstrates how to create the foo component instance:
 
 ```java
-var view = new FooJfxView();
-var presenter = new FooPresenter(view);
+var view = new FooFxView<>();
+var presenter = new FooPresenter<>(view);
 presenter.initialize();
 ... // use the component
 presenter.deinitialize();
@@ -674,29 +704,6 @@ in its structure. As for the `ViewModel`, it gains a descriptor and stores refer
 A component  consists of the following classes: a `View` and a `ViewModel`. In addition to them, a component
 always has a `Descriptor` (which is provided by the framework and normally does not require custom implementation)
 and may include a `Composer` and a `History` classes.
-
-The `Descriptor` represents the internal metadata and platform-level state of a component. The descriptor acts as a
-technical identity card, containing all framework-related information while keeping it completely separate
-from business data. In other words, the purpose of this class is to ensure that internal component data does not mix
-with business data within the `ViewModel`.
-
-The `Composer` is responsible for:
-1. Creating and managing child components (those that will reside directly inside this component).
-2. Creating and managing derived components (those that will be provided to another component after creation,
-e.g., dialogs, tabs, system notifications, etc.).
-
-The need to create a `Composer` is explained by the fact that, according to MVVM, the `ViewModel` must not know about
-the `View`. However, the `ViewModel` may need to initiate the creation of new components (for example, opening a
-dialog) and their composition — which is impossible without interacting with the `View`.
-
-This contradiction is resolved as follows: the `ViewModel` works with the `Composer` interface, which knows nothing
-about the `View`, while the implementation of this interface is provided in the nested non-static class `View.Composer`.
-
-Advantages of this approach:
-
-* Strict Separation. Using a `Composer` enforces a clear separation of layers according to MVVM and simplifies testing.
-* Clean Architecture. The `Composer` centralizes all logic related to managing child components, keeping the
-`View` and `ViewModel` free from responsibilities that do not belong to them.
 
 #### MVVM Component Lifecycle <a name="templates-mvvm-lifecycle"></a>
 
@@ -803,208 +810,6 @@ view.initialize();
 view.deinitialize();
 ```
 
-### MVVMX Template <a name="templates-mvvmx"></a>
-
-<img width="1217" height="542" alt="PatternFX MVVMX" src="https://github.com/user-attachments/assets/21a63b51-f939-407c-b3ea-03e4f62815d7" />
-
-In this template, additional elements — `Component` and `Mediator` — are introduced to handle all additional
-responsibilities.
-
-| **Task**                                              | **Responsible**                    |
-|-------------------------------------------------------|------------------------------------|
-| Storing component metadata and state                  | `Component`                        |
-| Managing the component lifecycle                      | `Component`                        |
-| Creating and removing components                      | `Component` / `Component.Mediator` |
-| Composing and decomposing components                  | `Component` / `Component.Mediator` |
-| Maintaining references to parent and child components | `Component` / `Component.Mediator` |
-| Representing the node in the "component" tree         | `Component`                        |
-
-Thus, in this template, the `View` and `ViewModel` are not burdened with logic that does not belong to them, which is an
-advantage. The trade-off lies in the increased complexity of the template structure due to the introduction of the
-`Component` element.
-
-#### MVVMX Component Structure <a name="templates-mvvmx-structure"></a>
-
-A component, as a rule, consists of the following classes: `Component` (with an inner `Mediator` implementation),
-`ComponentView`, `ComponentViewModel`, and `ComponentMediator`.
-
-The `ComponentView` and `ComponentViewModel` classes correspond to the `View` and `ViewModel` in the MVVM pattern and
-are relatively straightforward. The `Component` and `ComponentMediator` classes, on the other hand, address the
-aspects that MVVM does not cover and are therefore more complex, which is why they are explained in detail below.
-
-The `Component` forms a very thin, structural layer of a higher order than the `View`, which allows it to add child
-components to its `View`. A `Component` always operates strictly at the component level and deliberately does not take
-initiative. Its sole responsibility is to perform operations requested by its clients—either directly or via the
-`Mediator`. For example, it can create a child component and place it in its `View`, but only when the `ViewModel`
-commands it to do so through the `Mediator`. Since the `Component` has the greatest capabilities, it is important to
-remember that its responsibilities are very limited, to prevent the `Component` from turning into a God object and
-violating MVVM responsibility principles.
-
-The `Component` is responsible for:
-
-1. Initializing and deinitializing the component.
-2. Providing component data and related objects that directly belong to the component:
-   - Structural data (parent/children references);
-   - Lifecycle data (component state);
-   - Metadata (component ID, type, version, etc.).
-3. Creating, initializing, adding to the component tree, removing from the component tree, and deinitializing
-   child components (those that reside directly inside this component). It can also add or remove child components in
-   its `View`.
-4. Creating, initializing, and passing derived components to other components for further management
-   (e.g., dialogs, tabs, system notifications).
-
-The `ComponentMediator` is the interface that the `ViewModel` uses to interact with the `Component`. This interface
-is needed for two reasons: first, it allows the `ViewModel` to be tested independently; second, it allows the
-`ViewModel` to use the `Component` without knowing the View, since the Component has knowledge of the View.
-
-The `ComponentMediator` is implemented as a non-static inner class within the `Component`, which allows it to work with
-both the `View` and the `ViewModel` without violating MVVM principles.
-
-Advantages of this approach:
-
-* Strict Separation. Using a `Component` together with a `Mediator` enforces a clear separation of layers according to
-MVVM and simplifies testing. The `Mediator` interface defines how a `ViewModel` can initiate the addition or removal of
-a component without violating MVVM principles. It provides a controlled, testable channel for UI composition that
-respects the pattern's constraints.
-* Clean Architecture. The `Component` centralizes all logic related to managing child components, keeping the
-`View` and `ViewModel` free from responsibilities that do not belong to them. This prevents `View` and `ViewModel` from
-becoming bloated with lifecycle management or compositional logic. In addition, the `Component` serves as a single
-source of truth for child component references. This eliminates duplication where `View` would store child `View`
-references and `ViewModel` would store child `ViewModel` references. Instead, the `Component` manages the complete
-child graph while exposing only appropriate references to each layer.
-* Explicit Component-Level Operations. When `View` or `ViewModel` needs to interact at the component level,
-it does so explicitly through `getComponent()` or `getMediator()` calls. This creates clear architectural boundaries
-and makes it immediately visible when code crosses from view/view-model concerns into component management concerns.
-
-**Important:** `Component` and `ComponentMediator` are an extension of the MVVM pattern. The MVVM pattern remains the core
-of the framework and defines all key rules of operation. Whenever a developer needs functionality beyond standard MVVM,
-they access the `getComponent()` and `getMediator()` methods — this immediately signals that the extension is being
-used. Following this principle ensures that MVVM principles are never violated and that the framework is used correctly.
-
-#### MVVMX Component Lifecycle <a name="templates-mvvmx-lifecycle"></a>
-
-Each component features `Component#initialize()` and `Component#deinitialize()` methods,
-which initialize and deinitialize all the parts of the component, respectively, updating its state.
-
-In the default implementation during initialization, the component first enters the pre-initialization phase, where
-the `ComponentMediator` is created, attached to the `ViewModel`, and the component’s history is restored. After that,
-the main initialization phase begins, during which the `ViewModel` and `View` perform their own internal initialization.
-Once both parts are initialized, the component completes the process with a post-initialization phase that can be used
-for any additional logic specific to the component.
-
-Deinitialization follows the same structure in reverse. It begins with a pre-deinitialization phase, then proceeds to
-the main deinitialization of the `View` and `ViewModel` (reverse order), and finishes with a post-deinitialization
-phase. By default, the component saves its history at this final stage.
-
-Both AbstractComponentView and AbstractComponentViewModel provide protected initialize() and deinitialize() methods
-that are automatically invoked during the lifecycle, allowing each part to perform its own work without breaking
-the architectural boundaries. The optional pre and post hooks in `AbstractComponent` give developers additional
-flexibility to extend the lifecycle while preserving its structure. This design keeps the component's behavior
-predictable, transparent, and easy to customize.
-
-The default implementation of the `AbstractComponentView#initialize()` and `AbstractComponentView#deinitialize()`
-methods is split into four protected methods that perform the core `View` operations. These protected methods may be
-overridden and are responsible for the following:
-
-- building/unbuilding
-- binding/unbinding
-- adding/removing listeners
-- adding/removing handlers
-
-It is important to note that these protected methods should not be considered the only place for performing such tasks
-(e.g., adding or removing handlers) within the `View`; rather, they represent one part of the
-initialization/deinitialization process. Thus, such tasks may also be performed in other methods.
-
-#### MVVMX Component Example<a name="templates-mvvmx-example"></a>
-
-This example demonstrates the creation of a Foo component that dynamically adds a child Bar component.
-
-`ComponentMediator` interface:
-
-```java
-public interface FooMediator extends ChildMediator {
-
-    void addBar(BarViewModel bar);
-}
-```
-
-`ComponentViewModel` class:
-
-```java
-public class FooViewModel extends AbstractChildViewModel<FooMediator> {
-
-    public FooViewModel() {
-        ...
-    }
-
-    public void doSomething() {
-        var bar = new BarViewModel();
-        ... // set up the bar
-        getMediator().addBar(bar);
-    }
-
-    ...
-}
-```
-
-`ComponentView` class:
-
-```java
-public class FooView extends AbstractChildView<FooViewModel, FooComponent> {
-
-    public FooView(FooViewModel viewModel) {
-        ...
-    }
-
-    @Override
-    protected void initialize() {
-        super.initialize();
-        logger.debug("{} View is initializing", getComponent().getLogPrefix());
-    }
-    ...
-}
-```
-
-`Component` class:
-
-```java
-public class FooComponent extends AbstractChildComponent<FooView> {
-
-    protected class Mediator extends AbstractChildComponent.Mediator implements FooMediator {
-
-        @Override
-        public void addBar(BarViewModel vm) {
-            var v = new BarView(vm);
-            var c = new BarComponent(v);
-            c.initialize();
-            getModifiableChildren().add(c);
-            getView.addSomewhere(v); // adding bar view into foo view
-        }
-    }
-
-    public FooComponent(FooView view) {
-        ...
-    }
-
-    ...
-
-    @Override
-    protected FooMediator createMediator() {
-        return new FooComponent.Mediator(); // the mediator is created at the beginning of initialization
-    }
-}
-```
-
-This code demonstrates how to create the foo component instance:
-
-```java
-var viewModel = new FooViewModel();
-var view = new FooView(viewModel);
-var component = new FooComponent(view);
-component.initialize();
-... // use the component
-component.deinitialize();
-```
 ## Limitations <a name="limitations"></a>
 
 * JavaFX uses strict CSS selectors for `ToolBar` such as `.tool-bar > .container > .button` that only apply styles to
@@ -1020,26 +825,34 @@ Java 11+ and JavaFX 19.
 
 This project will be available on Maven Central in a few weeks.
 
+For MVP template:
+
+```
+<dependency>
+    <groupId>com.techsenger.patternfx</groupId>
+    <artifactId>patternfx-core</artifactId>
+    <version>${patternfx.version}</version>
+</dependency>
+<dependency>
+    <groupId>com.techsenger.patternfx</groupId>
+    <artifactId>patternfx-mvp</artifactId>
+    <version>${patternfx.version}</version>
+</dependency>
+```
+
 For MVVM template:
 
 ```
 <dependency>
     <groupId>com.techsenger.patternfx</groupId>
+    <artifactId>patternfx-core</artifactId>
+    <version>${patternfx.version}</version>
+</dependency>
+<dependency>
+    <groupId>com.techsenger.patternfx</groupId>
     <artifactId>patternfx-mvvm</artifactId>
     <version>${patternfx.version}</version>
 </dependency>
-
-```
-
-For MVVMX template:
-
-```
-<dependency>
-    <groupId>com.techsenger.patternfx</groupId>
-    <artifactId>patternfx-mvvmx</artifactId>
-    <version>${patternfx.version}</version>
-</dependency>
-
 ```
 
 ## Code Building <a name="code-building"></a>

@@ -34,7 +34,7 @@ import javafx.stage.Stage;
 public class Demo extends Application {
 
     private enum Pattern {
-        MVP(new MvpRunner()), MVVM(new MvvmRunner()), MVVMX(new MvvmxRunner());
+        MVP(new MvpRunner()), MVVM(new MvvmRunner());
 
         private final Runnable runner;
 
