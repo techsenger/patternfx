@@ -38,7 +38,7 @@ public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>>
         private final AbstractParentFxView<?> view = AbstractParentFxView.this;
 
         @Override
-        public void compose() {
+        public void compose(ComposeParameters params) {
             // empty
         }
 

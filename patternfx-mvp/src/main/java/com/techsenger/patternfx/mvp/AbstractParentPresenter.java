@@ -67,9 +67,12 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
 
     private C composer;
 
+    private ComposeParameters parameters;
+
     public AbstractParentPresenter(V view) {
         super(view);
         this.port = createPort();
+        this.parameters = createParameters();
     }
 
     @Override
@@ -97,7 +100,8 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
     @Override
     protected void postInitialize() {
         super.postInitialize();
-        this.composer.compose();
+        this.composer.compose(parameters);
+        this.parameters = null;
     }
 
     protected void setComposer(ParentComposer composer) {
@@ -106,5 +110,19 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
 
     protected Port createPort() {
         return new Port();
+    }
+
+    /**
+    * Creates the parameters to be passed to {@link ParentComposer#compose(ComposerParameters)} during the static
+    * composition phase. After composition completes, the instance is set to {@code null} and is no longer accessible.
+    *
+    * @return the parameters for composition, or {@code null} if no parameters are required
+    */
+    protected ComposeParameters createParameters() {
+        return null;
+    }
+
+    protected ComposeParameters getParameters() {
+        return parameters;
     }
 }

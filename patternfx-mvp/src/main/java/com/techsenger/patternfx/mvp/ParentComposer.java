@@ -35,8 +35,10 @@ public interface ParentComposer {
      * after the main initialization has completed but before the component becomes fully operational. This ensures
      * that all child components are properly initialized and integrated into the component tree before the parent
      * component starts its normal operation.
+     *
+     * @param params the parameters to be used during composition, or {@code null} if no parameters are required
      */
-    void compose();
+    void compose(ComposeParameters params);
 
     /**
      * Returns an unmodifiable observable list of child components.
