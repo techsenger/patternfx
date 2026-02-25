@@ -81,7 +81,7 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
     }
 
     @Override
-    public ParentPort getPort() {
+    public Port getPort() {
         return this.port;
     }
 

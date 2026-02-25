@@ -40,8 +40,8 @@ public abstract class AbstractChildPresenter<V extends ChildView, C extends Chil
     }
 
     @Override
-    public ChildPort getPort() {
-        return (ChildPort) super.getPort();
+    public Port getPort() {
+        return (Port) super.getPort();
     }
 
     @Override
