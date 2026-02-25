@@ -42,7 +42,7 @@ public class RegistryFxView<P extends RegistryPresenter<?, ?>> extends AbstractP
 
     public class Composer extends AbstractParentFxView<P>.Composer implements RegistryComposer {
 
-        private final RegistryFxView<?> view = RegistryFxView.this;
+        private final RegistryFxView<P> view = RegistryFxView.this;
 
         @Override
         public DialogPort showDialog() {

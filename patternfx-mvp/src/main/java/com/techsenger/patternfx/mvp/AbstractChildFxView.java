@@ -28,7 +28,7 @@ public abstract class AbstractChildFxView<P extends ChildPresenter<?, ?>>
 
     public class Composer extends AbstractParentFxView<P>.Composer implements ChildFxView.Composer {
 
-        private final AbstractChildFxView<?> view = AbstractChildFxView.this;
+        private final AbstractChildFxView<P> view = AbstractChildFxView.this;
 
         @Override
         public ParentPort getParent() {
