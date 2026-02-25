@@ -57,8 +57,8 @@ public abstract class AbstractDescriptor implements ReadOnlyDescriptor {
     protected AbstractDescriptor(ComponentName name, UUID uuid) {
         this.name = name;
         this.uuid = uuid;
-        long least32bits = uuid.getLeastSignificantBits() & 0xFFFFFFFFL;
-        String shortUuid = String.format("%08X", least32bits);
+        long most32bits = uuid.getMostSignificantBits() >>> 32;
+        String shortUuid = String.format("%08X", most32bits);
         this.fullName = name.getText() + "@" + shortUuid;
         this.logPrefix = logPrefixResolver.apply(this);
     }
