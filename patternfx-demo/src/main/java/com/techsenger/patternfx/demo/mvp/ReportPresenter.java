@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class ReportPresenter extends AbstractChildPresenter<ReportView, ChildComposer> {
 
-    private final class Port extends AbstractChildPresenter.Port implements ReportPort {
+    private final class Port extends AbstractChildPresenter<ReportView, ChildComposer>.Port implements ReportPort {
 
         @Override
         public void refresh(List<Person> persons) {

@@ -29,7 +29,7 @@ import com.techsenger.patternfx.mvp.ParentComposer;
  */
 public class DialogPresenter<T extends DialogView> extends AbstractParentPresenter<T, ParentComposer> {
 
-    protected class Port extends AbstractParentPresenter.Port implements DialogPort {
+    protected class Port extends AbstractParentPresenter<T, ParentComposer>.Port implements DialogPort {
 
         @Override
         public Person getResult() {

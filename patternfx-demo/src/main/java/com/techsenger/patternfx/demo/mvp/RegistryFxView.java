@@ -40,7 +40,7 @@ import javafx.stage.Stage;
  */
 public class RegistryFxView<P extends RegistryPresenter<?, ?>> extends AbstractParentFxView<P> implements RegistryView {
 
-    public class Composer extends AbstractParentFxView.Composer implements RegistryComposer {
+    public class Composer extends AbstractParentFxView<P>.Composer implements RegistryComposer {
 
         private final RegistryFxView<?> view = RegistryFxView.this;
 
