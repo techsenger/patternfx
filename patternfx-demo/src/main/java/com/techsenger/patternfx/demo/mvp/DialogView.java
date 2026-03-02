@@ -24,12 +24,6 @@ import com.techsenger.patternfx.mvp.ParentView;
  */
 public interface DialogView extends ParentView {
 
-    String getFirstName();
-
-    String getLastName();
-
-    String getAge();
-
     void setFirstNameValid(boolean value);
 
     void setLastNameValid(boolean value);

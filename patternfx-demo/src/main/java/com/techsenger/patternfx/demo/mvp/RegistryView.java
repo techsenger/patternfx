@@ -26,19 +26,15 @@ import java.util.List;
  */
 public interface RegistryView extends ParentView {
 
-    void setRemoveDisable(boolean value);
+    void setRemoveDisabled(boolean value);
 
-    void setReportVisible(boolean shown);
+    void setReportShown(boolean value);
 
     void showStage();
 
     void addPersons(List<Person> persons);
 
     void removePerson(int index);
-
-    List<Person> getPersons();
-
-    int getSelectedIndex();
 
     void clearPersons();
 }

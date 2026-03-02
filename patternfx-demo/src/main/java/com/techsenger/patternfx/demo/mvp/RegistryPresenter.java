@@ -17,9 +17,11 @@
 package com.techsenger.patternfx.demo.mvp;
 
 import com.techsenger.patternfx.demo.DemoNames;
+import com.techsenger.patternfx.demo.model.Person;
 import com.techsenger.patternfx.demo.model.PersonService;
 import com.techsenger.patternfx.mvp.AbstractParentPresenter;
 import com.techsenger.patternfx.mvp.Descriptor;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,7 +31,11 @@ import java.util.List;
 public class RegistryPresenter<V extends RegistryView, C extends RegistryComposer>
         extends AbstractParentPresenter<V, C> {
 
+    private final List<Person> persons = new ArrayList<>();
+
     private final PersonService service;
+
+    private int selectedIndex;
 
     public RegistryPresenter(V view, PersonService service) {
         super(view);
@@ -42,7 +48,7 @@ public class RegistryPresenter<V extends RegistryView, C extends RegistryCompose
     }
 
     protected void onSelectedChanged(int value) {
-        getView().setRemoveDisable(value < 0);
+        getView().setRemoveDisabled(value < 0);
     }
 
     protected void onAdd() {
@@ -51,36 +57,39 @@ public class RegistryPresenter<V extends RegistryView, C extends RegistryCompose
         dialog.deinitialize();
         if (newPerson != null) {
             service.save(newPerson);
+            persons.add(newPerson);
             getView().addPersons(List.of(newPerson));
             updateReport();
         }
     }
 
     protected void onRemove() {
-        var selectedIndex = getView().getSelectedIndex();
         if (selectedIndex < 0) {
             return;
         }
-        var person = getView().getPersons().get(selectedIndex);
+        var person = persons.get(selectedIndex);
         service.delete(person.getId());
+        persons.remove(selectedIndex);
         getView().removePerson(selectedIndex);
         updateReport();
     }
 
     protected void onRefresh() {
+        this.persons.clear();
         getView().clearPersons();
-        getView().addPersons(service.readAll());
+        this.persons.addAll(service.readAll());
+        getView().addPersons(this.persons);
         updateReport();
     }
 
     protected void onReport() {
         if (getComposer().getReport() == null) {
             getComposer().addReport();
-            getComposer().getReport().refresh(getView().getPersons());
-            getView().setReportVisible(true);
+            updateReport();
+            getView().setReportShown(true);
         } else {
             getComposer().removeReport();
-            getView().setReportVisible(false);
+            getView().setReportShown(false);
         }
     }
 
@@ -98,7 +107,7 @@ public class RegistryPresenter<V extends RegistryView, C extends RegistryCompose
     private void updateReport() {
         var report = getComposer().getReport();
         if (report != null) {
-            report.refresh(getView().getPersons());
+            report.refresh(persons);
         }
     }
 

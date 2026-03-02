@@ -114,13 +114,13 @@ public class RegistryFxView<P extends RegistryPresenter<?, ?>> extends AbstractP
     }
 
     @Override
-    public void setRemoveDisable(boolean v) {
+    public void setRemoveDisabled(boolean v) {
         this.removeButton.setDisable(v);
     }
 
     @Override
-    public void setReportVisible(boolean visible) {
-        if (visible) {
+    public void setReportShown(boolean value) {
+        if (value) {
             reportButton.setText("Hide Report");
         } else {
             reportButton.setText("Show Report");
@@ -143,18 +143,8 @@ public class RegistryFxView<P extends RegistryPresenter<?, ?>> extends AbstractP
     }
 
     @Override
-    public List<Person> getPersons() {
-        return this.personTable.getItems();
-    }
-
-    @Override
     public void removePerson(int index) {
         this.personTable.getItems().remove(index);
-    }
-
-    @Override
-    public int getSelectedIndex() {
-        return this.personTable.getSelectionModel().getSelectedIndex();
     }
 
     @Override
@@ -186,8 +176,8 @@ public class RegistryFxView<P extends RegistryPresenter<?, ?>> extends AbstractP
 
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        setReportVisible(false);
-        setRemoveDisable(true);
+        setReportShown(false);
+        setRemoveDisabled(true);
 
         stage.setTitle("PatternFX - MVP");
         stage.setScene(new Scene(root, 800, 500));

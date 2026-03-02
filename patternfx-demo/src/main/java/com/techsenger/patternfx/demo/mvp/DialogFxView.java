@@ -81,21 +81,6 @@ public class DialogFxView extends AbstractParentFxView<DialogPresenter<?>> imple
         updateValid(ageTextField, value);
     }
 
-    @Override
-    public String getFirstName() {
-        return this.firstNameTextField.getText();
-    }
-
-    @Override
-    public String getLastName() {
-        return this.lastNameTextField.getText();
-    }
-
-    @Override
-    public String getAge() {
-        return this.ageTextField.getText();
-    }
-
     protected Dialog<ButtonType> getDialog() {
         return this.dialog;
     }
@@ -117,6 +102,15 @@ public class DialogFxView extends AbstractParentFxView<DialogPresenter<?>> imple
         dialog.getDialogPane().setContent(hBox);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
         this.okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+    }
+
+    @Override
+    protected void addListeners() {
+        super.addListeners();
+        var p = getPresenter();
+        this.firstNameTextField.textProperty().addListener((ov, oldV, newV) -> p.onFirstNameChanged(newV));
+        this.lastNameTextField.textProperty().addListener((ov, oldV, newV) -> p.onLastNameChanged(newV));
+        this.ageTextField.textProperty().addListener((ov, oldV, newV) -> p.onAgeChanged(newV));
     }
 
     @Override

@@ -37,6 +37,12 @@ public class DialogPresenter<T extends DialogView> extends AbstractParentPresent
         }
     }
 
+    private String firstName;
+
+    private String lastName;
+
+    private Integer age;
+
     private Person result;
 
     public DialogPresenter(T view) {
@@ -53,9 +59,21 @@ public class DialogPresenter<T extends DialogView> extends AbstractParentPresent
         return new Descriptor(DemoNames.PERSON_DIALOG);
     }
 
+    protected void onFirstNameChanged(String value) {
+        this.firstName = value;
+    }
+
+    protected void onLastNameChanged(String value) {
+        this.lastName = value;
+    }
+
+    protected void onAgeChanged(String value) {
+        this.age = Integer.valueOf(value);
+    }
+
     protected boolean onOk() {
         var v = getView();
-        this.result = new Person(v.getFirstName(), v.getLastName(), Integer.valueOf(v.getAge()));
+        this.result = new Person(firstName, lastName, age);
         if (!checkIfValid()) {
             this.result = null;
             return false;
