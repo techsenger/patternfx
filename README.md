@@ -251,29 +251,20 @@ properties or special methods for performing actions, or when using controls fro
 
 ### MVC vs MVP vs MVVM <a name="patterns-mvc-mvp-mvvm"></a>
 
-It is clear that each of the discussed patterns has its own strengths and weaknesses, and the choice of architecture
-should be driven by the project’s requirements and the developer’s preferences.
+Each of the discussed patterns has its own strengths and weaknesses, and the choice of architecture should be
+driven by the project’s requirements and the developer’s preferences.
 
-MVC provides maximum control and is very simple to implement, but it has a serious drawback — it completely merges the
-logic that interacts with the model and the presentation logic. This not only complicates the code but also makes it
-impossible to test interaction logic without the `View`. For this reason, the following analysis will focus only on
-MVP and MVVM.
+MVC provides maximum control and is very simple to implement, but it has a serious drawback — MVC tends to mix
+presentation and interaction logic inside the Controller, which often leads to tightly coupled and harder-to-test code.
+For this reason, the following analysis will focus only on MVP and MVVM.
 
-Both MVP and MVVM provide a crucial advantage — the ability to test the logic that interacts with the `Model`
-independently of the `View`, but this is achieved in different ways.
+MVP and MVVM are similar in that both patterns introduce an explicit representation of UI state outside of the `View`,
+unlike MVC. In MVP, the state is stored in the `Presenter`, while in MVVM, the state is stored in the `ViewModel`.
+It is worth noting that this characteristic makes both patterns significantly more complex compared to MVC.
 
-In MVVM, this separation is accomplished by moving UI state into the `ViewModel`, which requires creating and
-maintaining a dedicated representation of the UI state. In JavaFX, this often leads to a significant amount of
-additional code and increased architectural complexity, especially in cases where the state of the `View` is
-difficult to express exclusively through bindings.
-
-In contrast, MVP does not require duplicating the `View` state. The `Presenter` can directly invoke methods on the
-`View` through an interface, which makes the pattern more flexible and allows it to naturally handle situations
-where updating the UI through state or bindings proves to be awkward or insufficient.
-
-The second important difference is testability. MVVM excels at testing data-driven, state-oriented logic, which
-makes it particularly well suited for CRUD-style screens where the UI is a deterministic projection of state.
-However, this advantage is limited to scenarios where the UI behavior is state-driven.
+MVVM naturally aligns with declarative UI frameworks and state-based rendering models, which makes it particularly well
+suited for CRUD-style screens where the UI is a deterministic projection of state. However, this advantage is
+limited to scenarios where the UI behavior is state-driven.
 
 When the interaction model becomes algorithm-driven — for example:
 - searching and navigating through a document,
@@ -285,10 +276,15 @@ the logic no longer maps naturally to state. Attempting to express such behavior
 often results in complex derived properties, numerous listeners, and implicit control flow that is difficult to
 reason about and debug.
 
-MVP, on the other hand, allows interaction-heavy and algorithmic logic to be tested directly by verifying the
-`Presenter`’s interactions with a mocked `View`. While testing data and state transitions in MVP is typically more
-verbose and requires more setup, it remains effective in scenarios where UI behavior cannot be naturally modeled
-as state.
+MVP, on the other hand, allows interaction-heavy and algorithmic logic. So, it remains effective in scenarios where
+UI behavior cannot be naturally modeled as state.
+
+From a testability perspective, MVVM has an advantage over MVP because the `ViewModel` is an ideal unit for testing.
+In contrast, in MVP you need to mock the `View` in every `Presenter` test, which introduces boilerplate.
+
+Conceptually, MVVM is centered around modeling UI as a projection of state, while MVP models UI behavior as an explicit
+sequence of interactions. The more deterministic and state-driven the UI is, the more natural MVVM becomes. The
+more procedural and interaction-driven it is, the more natural MVP becomes.
 
 Thus, when choosing between MVP and MVVM, it is also important to consider the nature of the application: MVVM may
 be more suitable for primarily data-driven interfaces (e.g., forms and dashboards), while MVP often fits better
