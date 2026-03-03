@@ -23,27 +23,12 @@ package com.techsenger.patternfx.mvp;
 public abstract class AbstractChildPresenter<V extends ChildView, C extends ChildComposer>
         extends AbstractParentPresenter<V, C> implements ChildPresenter<V, C> {
 
-    protected class Port extends AbstractParentPresenter<V, C>.Port implements ChildPort {
-
-        public Port() {
-            // empty
-        }
-
-        @Override
-        public ParentPort getParent() {
-            return getComposer().getParent();
-        }
-    }
-
     public AbstractChildPresenter(V view) {
         super(view);
     }
 
     @Override
-    public Port getPort() {
-        return (Port) super.getPort();
+    public ParentPort getParent() {
+        return getComposer().getParent();
     }
-
-    @Override
-    protected abstract Port createPort();
 }

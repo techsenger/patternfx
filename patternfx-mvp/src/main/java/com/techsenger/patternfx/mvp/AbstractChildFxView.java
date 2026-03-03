@@ -36,7 +36,7 @@ public abstract class AbstractChildFxView<P extends ChildPresenter<?, ?>>
             if (parent == null) {
                 return null;
             }
-            return parent.getPresenter().getPort();
+            return parent.getPresenter();
         }
     }
 

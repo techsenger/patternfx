@@ -20,8 +20,6 @@ package com.techsenger.patternfx.mvp;
  *
  * @author Pavel Castornii
  */
-public interface ChildPresenter<V extends ChildView, C extends ChildComposer> extends ParentPresenter<V, C> {
+public interface ChildPresenter<V extends ChildView, C extends ChildComposer> extends ParentPresenter<V, C>, ChildPort {
 
-    @Override
-    ChildPort getPort();
 }

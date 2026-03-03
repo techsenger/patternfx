@@ -50,7 +50,7 @@ public class RegistryFxView<P extends RegistryPresenter<?, ?>> extends AbstractP
             var p = new DialogPresenter<>(v);
             p.initialize();
             v.getDialog().showAndWait();
-            return p.getPort();
+            return p;
         }
 
         @Override
@@ -58,7 +58,7 @@ public class RegistryFxView<P extends RegistryPresenter<?, ?>> extends AbstractP
             if (view.getReport() == null) {
                 return null;
             }
-            return view.getReport().getPresenter().getPort();
+            return view.getReport().getPresenter();
         }
 
         @Override

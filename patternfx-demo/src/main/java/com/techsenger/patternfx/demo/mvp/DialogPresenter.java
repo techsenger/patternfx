@@ -27,15 +27,8 @@ import com.techsenger.patternfx.mvp.ParentComposer;
  *
  * @author Pavel Castornii
  */
-public class DialogPresenter<T extends DialogView> extends AbstractParentPresenter<T, ParentComposer> {
-
-    protected class Port extends AbstractParentPresenter<T, ParentComposer>.Port implements DialogPort {
-
-        @Override
-        public Person getResult() {
-            return DialogPresenter.this.result;
-        }
-    }
+public class DialogPresenter<T extends DialogView> extends AbstractParentPresenter<T, ParentComposer>
+        implements DialogPort {
 
     private String firstName;
 
@@ -50,8 +43,8 @@ public class DialogPresenter<T extends DialogView> extends AbstractParentPresent
     }
 
     @Override
-    public Port getPort() {
-        return (Port) super.getPort();
+    public Person getResult() {
+        return DialogPresenter.this.result;
     }
 
     @Override
@@ -79,15 +72,6 @@ public class DialogPresenter<T extends DialogView> extends AbstractParentPresent
             return false;
         }
         return true;
-    }
-
-    protected Person getResult() {
-        return result;
-    }
-
-    @Override
-    protected Port createPort() {
-        return new DialogPresenter.Port();
     }
 
     private boolean checkIfValid() {

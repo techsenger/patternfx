@@ -34,11 +34,4 @@ public interface ParentPort {
     List<? extends ChildPort> getChildren();
 
     ReadOnlyDescriptor getDescriptor();
-
-    /**
-     * Initializes the component.
-     */
-    void initialize();
-
-    void deinitialize();
 }

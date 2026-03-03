@@ -44,7 +44,7 @@ public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>>
 
         @Override
         public List<? extends ChildPort> getChildren() {
-            return view.getChildren().stream().map(v -> v.getPresenter().getPort()).collect(Collectors.toList());
+            return view.getChildren().stream().map(v -> v.getPresenter()).collect(Collectors.toList());
         }
 
         @Override
@@ -58,7 +58,7 @@ public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>>
 
                 @Override
                 protected ParentPort map(ParentFxView<?> value) {
-                    return value.getPresenter().getPort();
+                    return value.getPresenter();
                 }
             };
         }
@@ -74,7 +74,7 @@ public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>>
 
                 @Override
                 protected ParentPort map(ParentFxView<?> value) {
-                    return value.getPresenter().getPort();
+                    return value.getPresenter();
                 }
             };
         }

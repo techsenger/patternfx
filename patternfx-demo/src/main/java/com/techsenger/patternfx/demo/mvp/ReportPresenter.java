@@ -27,39 +27,21 @@ import java.util.List;
  *
  * @author Pavel Castornii
  */
-public class ReportPresenter extends AbstractChildPresenter<ReportView, ChildComposer> {
-
-    private final class Port extends AbstractChildPresenter<ReportView, ChildComposer>.Port implements ReportPort {
-
-        @Override
-        public void refresh(List<Person> persons) {
-            ReportPresenter.this.refresh(persons);
-        }
-
-    }
+public class ReportPresenter extends AbstractChildPresenter<ReportView, ChildComposer> implements ReportPort {
 
     public ReportPresenter(ReportView view) {
         super(view);
     }
 
     @Override
-    protected Descriptor createDescriptor() {
-        return new Descriptor(DemoNames.PERSON_REPORT);
-    }
-
-    @Override
-    public Port getPort() {
-        return (Port) super.getPort();
-    }
-
-    @Override
-    protected Port createPort() {
-        return new ReportPresenter.Port();
-    }
-
-    private void refresh(List<Person> persons) {
+    public void refresh(List<Person> persons) {
         double average = persons.stream().mapToDouble(Person::getAge).average().orElse(0.0);
         getView().setAverageAge(String.valueOf(average));
         getView().setTotalPeople(String.valueOf(persons.size()));
+    }
+
+    @Override
+    protected Descriptor createDescriptor() {
+        return new Descriptor(DemoNames.PERSON_REPORT);
     }
 }

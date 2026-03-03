@@ -29,60 +29,18 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractParentPresenter.class);
 
-    protected class Port implements ParentPort {
-
-        private final AbstractParentPresenter<?, ?> presenter = AbstractParentPresenter.this;
-
-        public Port() {
-            // empty
-        }
-
-        @Override
-        public void requestFocus() {
-            getView().requestFocus();
-        }
-
-        @Override
-        public Descriptor getDescriptor() {
-            return presenter.getDescriptor();
-        }
-
-        @Override
-        public void initialize() {
-            presenter.initialize();
-        }
-
-        @Override
-        public void deinitialize() {
-            presenter.deinitialize();
-        }
-
-        @Override
-        public List<? extends ChildPort> getChildren() {
-            return getComposer().getChildren();
-        }
-    }
-
-    private final Port port;
-
     private C composer;
 
     private ComposeParameters parameters;
 
     public AbstractParentPresenter(V view) {
         super(view);
-        this.port = createPort();
         this.parameters = createParameters();
     }
 
     @Override
     public C getComposer() {
         return this.composer;
-    }
-
-    @Override
-    public Port getPort() {
-        return this.port;
     }
 
     @Override
@@ -93,8 +51,20 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
         }
         var iterator = composer.breadthFirstIterator();
         while (iterator.hasNext()) {
-            iterator.next().deinitialize();
+            var port = iterator.next();
+            var presenter = (ParentPresenter<?, ?>) port;
+            presenter.deinitialize();
         }
+    }
+
+    @Override
+    public List<? extends ChildPort> getChildren() {
+        return getComposer().getChildren();
+    }
+
+    @Override
+    public void requestFocus() {
+        getView().requestFocus();
     }
 
     @Override
@@ -106,10 +76,6 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
 
     protected void setComposer(ParentComposer composer) {
         this.composer = (C) composer;
-    }
-
-    protected Port createPort() {
-        return new Port();
     }
 
     /**

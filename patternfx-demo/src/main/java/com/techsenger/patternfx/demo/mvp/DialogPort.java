@@ -26,4 +26,6 @@ import com.techsenger.patternfx.mvp.ParentPort;
 public interface DialogPort extends ParentPort {
 
     Person getResult();
+
+    void deinitialize();
 }

@@ -110,9 +110,4 @@ public class RegistryPresenter<V extends RegistryView, C extends RegistryCompose
             report.refresh(persons);
         }
     }
-
-    @Override
-    protected Port createPort() {
-        return new AbstractParentPresenter.Port();
-    }
 }
