@@ -255,7 +255,7 @@ Each of the discussed patterns has its own strengths and weaknesses, and the cho
 driven by the project’s requirements and the developer’s preferences.
 
 MVC provides maximum control and is very simple to implement, but it has a serious drawback — MVC tends to mix
-presentation and interaction logic inside the Controller, which often leads to tightly coupled and harder-to-test code.
+presentation and interaction logic inside the `Controller`, which often leads to tightly coupled and harder-to-test code.
 For this reason, the following analysis will focus only on MVP and MVVM.
 
 MVP and MVVM are similar in that both patterns introduce an explicit representation of UI state outside of the `View`,
