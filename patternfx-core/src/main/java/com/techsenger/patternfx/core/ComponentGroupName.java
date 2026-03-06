@@ -20,7 +20,7 @@ package com.techsenger.patternfx.core;
  *
  * @author Pavel Castornii
  */
-public class ComponentGroupName extends ComponentName {
+public class ComponentGroupName extends AbstractName {
 
     public ComponentGroupName(String text) {
         super(text);

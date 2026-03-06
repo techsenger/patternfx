@@ -28,9 +28,6 @@ package com.techsenger.patternfx.core;
  *
  * @author Pavel Castornii
  */
-public class ComponentName extends Name {
+public interface ComponentName extends Name {
 
-    public ComponentName(String text) {
-        super(text);
-    }
 }

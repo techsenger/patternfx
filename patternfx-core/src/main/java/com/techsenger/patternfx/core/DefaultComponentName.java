@@ -20,12 +20,9 @@ package com.techsenger.patternfx.core;
  *
  * @author Pavel Castornii
  */
-public interface Name {
+public class DefaultComponentName extends AbstractName implements ComponentName {
 
-   /**
-     * Returns the human-readable name.
-     *
-     * @return the component name text
-     */
-    String getText();
+    public DefaultComponentName(String text) {
+        super(text);
+    }
 }
