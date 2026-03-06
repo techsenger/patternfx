@@ -17,8 +17,6 @@
 package com.techsenger.patternfx.mvp;
 
 /**
- * Marker interface for parameters passed to {@link ParentComposer#compose(Parameters)}.
- * Implementations carry initialization data required by child components during static composition.
  *
  * @author Pavel Castornii
  */

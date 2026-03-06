@@ -31,11 +31,8 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
 
     private C composer;
 
-    private ComposeParameters parameters;
-
     public AbstractParentPresenter(V view) {
         super(view);
-        this.parameters = createParameters();
     }
 
     @Override
@@ -70,25 +67,10 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
     @Override
     protected void postInitialize() {
         super.postInitialize();
-        this.composer.compose(parameters);
-        this.parameters = null;
+        this.composer.compose();
     }
 
     protected void setComposer(ParentComposer composer) {
         this.composer = (C) composer;
-    }
-
-    /**
-    * Creates the parameters to be passed to {@link ParentComposer#compose(ComposerParameters)} during the static
-    * composition phase. After composition completes, the instance is set to {@code null} and is no longer accessible.
-    *
-    * @return the parameters for composition, or {@code null} if no parameters are required
-    */
-    protected ComposeParameters createParameters() {
-        return null;
-    }
-
-    protected ComposeParameters getParameters() {
-        return parameters;
     }
 }

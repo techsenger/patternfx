@@ -27,6 +27,13 @@ import java.util.function.BiConsumer;
 public interface ParentComposer {
 
     /**
+     * Returns the parameters of the composer.
+     *
+     * @return the parameters or null.
+     */
+    ComposeParameters getParameters();
+
+    /**
      * Composes the static structure of this component by creating and adding its default child components. This
      * method is intended for static composition, where child components are created once during component
      * initialization and remain present for the entire component lifecycle.
@@ -36,9 +43,8 @@ public interface ParentComposer {
      * that all child components are properly initialized and integrated into the component tree before the parent
      * component starts its normal operation.
      *
-     * @param params the parameters to be used during composition, or {@code null} if no parameters are required
      */
-    void compose(ComposeParameters params);
+    void compose();
 
     /**
      * Returns an unmodifiable observable list of child components.

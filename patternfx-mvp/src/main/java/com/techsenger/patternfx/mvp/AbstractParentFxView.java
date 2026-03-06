@@ -35,10 +35,12 @@ public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>>
 
     public class Composer implements ParentFxView.Composer {
 
+        private ComposeParameters parameters = createParameters();
+
         private final AbstractParentFxView<?> view = AbstractParentFxView.this;
 
         @Override
-        public void compose(ComposeParameters params) {
+        public void compose() {
             // empty
         }
 
@@ -87,6 +89,15 @@ public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>>
         @Override
         public String toTreeString(BiConsumer<ParentPort, StringBuilder> appender) {
             return view.toTreeString(depthFirstIterator(), appender);
+        }
+
+        @Override
+        public ComposeParameters getParameters() {
+            return this.parameters;
+        }
+
+        protected ComposeParameters createParameters() {
+            return null;
         }
     }
 
