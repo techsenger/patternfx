@@ -42,8 +42,15 @@ public interface ReadOnlyDescriptor {
     UUID getUuid();
 
     /**
+     * Returns the first 32 bits of the UUID.
+     *
+     * @return
+     */
+    String getShortUuid();
+
+    /**
      * Returns a human-readable identifier for this component instance. The identifier combines the component
-     * name with the last 32 bits of its UUID, represented as 8 hexadecimal characters.
+     * name with the first 32 bits of its UUID, represented as 8 hexadecimal characters.
      *
      * <p>Example: {@code TextEditorTab#A0A0A0A0}</p>
      *

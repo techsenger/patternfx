@@ -46,6 +46,8 @@ public abstract class AbstractDescriptor implements ReadOnlyDescriptor {
 
     private final String logPrefix;
 
+    private final String shortUuid;
+
     private final ReadOnlyObjectWrapper<ComponentState> state = new ReadOnlyObjectWrapper<>(ComponentState.CREATING);
 
     private final  ReadOnlyObjectWrapper<ComponentGroup> group = new ReadOnlyObjectWrapper<>();
@@ -57,8 +59,7 @@ public abstract class AbstractDescriptor implements ReadOnlyDescriptor {
     protected AbstractDescriptor(ComponentName name, UUID uuid) {
         this.name = name;
         this.uuid = uuid;
-        long most32bits = uuid.getMostSignificantBits() >>> 32;
-        String shortUuid = String.format("%08X", most32bits);
+        this.shortUuid = uuid.toString().substring(0, 8);
         this.fullName = name.getText() + "@" + shortUuid;
         this.logPrefix = logPrefixResolver.apply(this);
     }
@@ -71,6 +72,11 @@ public abstract class AbstractDescriptor implements ReadOnlyDescriptor {
     @Override
     public UUID getUuid() {
         return uuid;
+    }
+
+    @Override
+    public String getShortUuid() {
+        return this.shortUuid;
     }
 
     @Override
