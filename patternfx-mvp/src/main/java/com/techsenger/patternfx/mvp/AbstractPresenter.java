@@ -165,18 +165,13 @@ public abstract class AbstractPresenter<V extends View> implements Presenter<V> 
                 logger.debug("{} History is new. Skipping restoration", getDescriptor().getLogPrefix());
             } else {
                 switch (policy) {
-                    case DATA:
-                        restoreData();
-                        break;
-                    case APPEARANCE:
-                        restoreAppearance();
-                        break;
-                    case ALL:
+                    case DATA -> restoreData();
+                    case APPEARANCE -> restoreAppearance();
+                    case ALL -> {
                         restoreData();
                         restoreAppearance();
-                    break;
-                    default:
-                        throw new AssertionError();
+                    }
+                    default -> throw new AssertionError();
                 }
             }
         }
@@ -200,20 +195,14 @@ public abstract class AbstractPresenter<V extends View> implements Presenter<V> 
         var policy = getHistoryPolicy();
         logger.debug("{} History policy during save: {}", getDescriptor().getLogPrefix(), policy);
         switch (policy) {
-            case DATA:
-                saveData();
-                break;
-            case APPEARANCE:
-                saveAppearance();
-                break;
-            case ALL:
+            case DATA -> saveData();
+            case APPEARANCE -> saveAppearance();
+            case ALL -> {
                 saveData();
                 saveAppearance();
-                break;
-            case NONE:
-                break;
-            default:
-                throw new AssertionError();
+            }
+            case NONE -> { }
+            default -> throw new AssertionError();
         }
     }
 

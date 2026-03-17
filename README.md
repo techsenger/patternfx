@@ -818,7 +818,7 @@ single dedicated component without nested components to avoid duplicating styles
 
 ## Requirements <a name="requirements"></a>
 
-Java 11+ and JavaFX 19.
+Java 25+ and JavaFX 25+.
 
 ## Dependencies <a name="dependencies"></a>
 

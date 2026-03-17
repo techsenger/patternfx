@@ -43,8 +43,8 @@
 
     <properties>
         <publishing.plugin.exclusions>patternfx-demo</publishing.plugin.exclusions>
-        <!-- JavaFX 19 has a bug: it shows a system notification on Ubuntu when a dialog is closed -->
-        <javafx.version>18</javafx.version>
+        <maven.compiler.release>25</maven.compiler.release>
+        <javafx.version>25</javafx.version>
         <osp.bom.version>1.8.0-SNAPSHOT</osp.bom.version>
     </properties>
 

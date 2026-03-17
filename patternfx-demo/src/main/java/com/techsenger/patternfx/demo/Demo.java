@@ -62,14 +62,9 @@ public class Demo extends Application {
                     // the unit will be deinitialized automatically when the stage
                     // is closed, via the handler registered with stage#setOnCloseRequest
                     switch (pattern) {
-                        case MVP:
-                            new MvpRunner().run();
-                            break;
-                        case MVVM:
-                            new MvvmRunner().run();
-                            break;
-                        default:
-                            throw new AssertionError();
+                        case MVP -> new MvpRunner().run();
+                        case MVVM -> new MvvmRunner().run();
+                        default -> throw new AssertionError();
                     }
                 }
             });
