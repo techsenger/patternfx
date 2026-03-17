@@ -16,6 +16,8 @@
 
 package com.techsenger.patternfx.mvvm;
 
+import com.techsenger.annotations.Nullable;
+import com.techsenger.annotations.Unmodifiable;
 import com.techsenger.patternfx.core.TreeIterator;
 import java.util.Iterator;
 import java.util.function.BiConsumer;
@@ -27,14 +29,14 @@ import javafx.collections.ObservableList;
  */
 public interface ParentViewModel<C extends Composer> extends ViewModel {
 
-    C getComposer();
+    @Nullable C getComposer();
 
     /**
      * Returns an unmodifiable observable list of child ViewModels.
      *
      * @return a non-null, unmodifiable observable list of child ViewModels
      */
-    ObservableList<ChildViewModel<?>> getChildren();
+    @Unmodifiable ObservableList<ChildViewModel<?>> getChildren();
 
     /**
      * Returns an iterator that traverses the ViewModel subtree starting from this ViewModel in depth-first order.

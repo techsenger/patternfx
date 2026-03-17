@@ -18,7 +18,8 @@ package com.techsenger.patternfx.demo.mvvm;
 
 import com.techsenger.patternfx.demo.DemoNames;
 import com.techsenger.patternfx.demo.model.Person;
-import com.techsenger.patternfx.mvvm.AbstractLeafViewModel;
+import com.techsenger.patternfx.mvvm.AbstractChildViewModel;
+import com.techsenger.patternfx.mvvm.Composer;
 import com.techsenger.patternfx.mvvm.Descriptor;
 import java.util.List;
 import javafx.beans.property.ReadOnlyDoubleProperty;
@@ -30,7 +31,7 @@ import javafx.beans.property.ReadOnlyIntegerWrapper;
  *
  * @author Pavel Castornii
  */
-public class ReportViewModel extends AbstractLeafViewModel {
+public class ReportViewModel extends AbstractChildViewModel<Composer> {
 
     private final ReadOnlyIntegerWrapper totalPeople = new ReadOnlyIntegerWrapper();
 

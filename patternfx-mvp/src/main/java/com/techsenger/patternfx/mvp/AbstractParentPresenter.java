@@ -16,6 +16,7 @@
 
 package com.techsenger.patternfx.mvp;
 
+import com.google.errorprone.annotations.concurrent.LazyInit;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,7 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractParentPresenter.class);
 
+    @LazyInit
     private C composer;
 
     public AbstractParentPresenter(V view) {
@@ -70,6 +72,7 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
         this.composer.compose();
     }
 
+    @SuppressWarnings("unchecked")
     protected void setComposer(ParentComposer composer) {
         this.composer = (C) composer;
     }

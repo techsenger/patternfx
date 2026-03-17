@@ -16,6 +16,7 @@
 
 package com.techsenger.patternfx.demo.mvp;
 
+import com.techsenger.annotations.Nullable;
 import com.techsenger.patternfx.demo.Style;
 import com.techsenger.patternfx.demo.model.Person;
 import com.techsenger.patternfx.mvp.AbstractParentFxView;
@@ -54,7 +55,7 @@ public class RegistryFxView<P extends RegistryPresenter<?, ?>> extends AbstractP
         }
 
         @Override
-        public ReportPort getReport() {
+        public @Nullable ReportPort getReport() {
             if (view.getReport() == null) {
                 return null;
             }
@@ -107,7 +108,7 @@ public class RegistryFxView<P extends RegistryPresenter<?, ?>> extends AbstractP
 
     private final Stage stage = new Stage();
 
-    private ReportFxView report;
+    private @Nullable ReportFxView report;
 
     public RegistryFxView() {
         super();
@@ -169,7 +170,8 @@ public class RegistryFxView<P extends RegistryPresenter<?, ?>> extends AbstractP
         var ageColumn = new TableColumn<Person, Integer>("Age");
         ageColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAge()));
         setupColumn(ageColumn);
-        personTable.getColumns().addAll(idColumn, firstNameColumn, lastNameColumn, ageColumn);
+        var columns = List.of(idColumn, firstNameColumn, lastNameColumn, ageColumn);
+        personTable.getColumns().addAll(columns);
 
         VBox.setVgrow(content, Priority.ALWAYS);
         content.setPadding(new Insets(Style.INSET));
@@ -208,14 +210,14 @@ public class RegistryFxView<P extends RegistryPresenter<?, ?>> extends AbstractP
 
     @Override
     protected Composer createComposer() {
-        return new RegistryFxView.Composer();
+        return new RegistryFxView<P>.Composer();
     }
 
     Stage getStage() {
         return stage;
     }
 
-    ReportFxView getReport() {
+    @Nullable ReportFxView getReport() {
         return report;
     }
 

@@ -16,6 +16,8 @@
 
 package com.techsenger.patternfx.mvvm;
 
+import com.techsenger.annotations.Nullable;
+import com.techsenger.annotations.Unmodifiable;
 import com.techsenger.patternfx.core.AbstractBreadthFirstIterator;
 import com.techsenger.patternfx.core.AbstractDepthFirstIterator;
 import com.techsenger.patternfx.core.TreeIterator;
@@ -36,8 +38,6 @@ public abstract class AbstractParentView<VM extends AbstractParentViewModel<?>>
         extends AbstractView<VM> implements ParentView<VM> {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractParentView.class);
-
-    private final ListBinder childrenBinder;
 
     private final ObservableList<ChildView<?>> modifiableChildren = FXCollections.observableArrayList();
 
@@ -60,13 +60,13 @@ public abstract class AbstractParentView<VM extends AbstractParentViewModel<?>>
                 }
             }
         });
-        childrenBinder = ListBinder.bindContent(getViewModel().getModifiableChildren(), modifiableChildren,
+        ListBinder.bindContent(getViewModel().getModifiableChildren(), modifiableChildren,
                     (v) -> v.getViewModel());
         getViewModel().setComposer(createComposer());
     }
 
     @Override
-    public ObservableList<ChildView<?>> getChildren() {
+    public @Unmodifiable ObservableList<ChildView<?>> getChildren() {
         return children;
     }
 
@@ -75,8 +75,9 @@ public abstract class AbstractParentView<VM extends AbstractParentViewModel<?>>
         return new AbstractDepthFirstIterator<ParentView<?>, ParentView<?>>(this) {
 
             @Override
+            @SuppressWarnings("unchecked")
             protected List<ParentView<?>> getChildren(ParentView<?> parent) {
-                return (List) parent.getChildren();
+                return (List<ParentView<?>>) (List<?>) parent.getChildren();
             }
 
             @Override
@@ -91,8 +92,9 @@ public abstract class AbstractParentView<VM extends AbstractParentViewModel<?>>
         return new AbstractBreadthFirstIterator<ParentView<?>, ParentView<?>>(this) {
 
             @Override
+            @SuppressWarnings("unchecked")
             protected List<ParentView<?>> getChildren(ParentView<?> parent) {
-                return (List) parent.getChildren();
+                return (List<ParentView<?>>) (List<?>) parent.getChildren();
             }
 
             @Override
@@ -125,7 +127,7 @@ public abstract class AbstractParentView<VM extends AbstractParentViewModel<?>>
         }
     }
 
-    protected abstract Composer createComposer();
+    protected abstract @Nullable Composer createComposer();
 
     @Override
     protected void addListeners() {

@@ -28,7 +28,6 @@ public interface ObservableReadOnlyDescriptor extends ReadOnlyDescriptor {
     /**
      * Returns the state property of the component.
      *
-     * @return
      */
     ReadOnlyObjectProperty<ComponentState> stateProperty();
 

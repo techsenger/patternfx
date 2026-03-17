@@ -16,6 +16,7 @@
 
 package com.techsenger.patternfx.demo.mvp;
 
+import com.techsenger.annotations.Nullable;
 import com.techsenger.patternfx.mvp.ParentComposer;
 
 /**
@@ -26,7 +27,7 @@ public interface RegistryComposer extends ParentComposer {
 
     DialogPort showDialog();
 
-    ReportPort getReport();
+    @Nullable ReportPort getReport();
 
     void addReport();
 

@@ -16,6 +16,7 @@
 
 package com.techsenger.patternfx.demo.mvp;
 
+import com.techsenger.annotations.Nullable;
 import com.techsenger.patternfx.demo.DemoNames;
 import com.techsenger.patternfx.demo.model.Person;
 import com.techsenger.patternfx.demo.model.PersonValidator;
@@ -30,21 +31,21 @@ import com.techsenger.patternfx.mvp.ParentComposer;
 public class DialogPresenter<T extends DialogView> extends AbstractParentPresenter<T, ParentComposer>
         implements DialogPort {
 
-    private String firstName;
+    private @Nullable String firstName;
 
-    private String lastName;
+    private @Nullable String lastName;
 
-    private Integer age;
+    private @Nullable Integer age;
 
-    private Person result;
+    private @Nullable Person result;
 
     public DialogPresenter(T view) {
         super(view);
     }
 
     @Override
-    public Person getResult() {
-        return DialogPresenter.this.result;
+    public @Nullable Person getResult() {
+        return this.result;
     }
 
     @Override
@@ -65,22 +66,23 @@ public class DialogPresenter<T extends DialogView> extends AbstractParentPresent
     }
 
     protected boolean onOk() {
-        var v = getView();
-        this.result = new Person(firstName, lastName, age);
-        if (!checkIfValid()) {
-            this.result = null;
+        var person = new Person(firstName, lastName, age);
+        if (checkIfValid(person)) {
+            this.result = person;
+            return true;
+        } else {
             return false;
         }
-        return true;
     }
 
-    private boolean checkIfValid() {
+    private boolean checkIfValid(Person person) {
         var v = getView();
-        var firstNameValid = PersonValidator.isFirstNameValid(this.result.getFirstName());
+
+        var firstNameValid = PersonValidator.isFirstNameValid(person.getFirstName());
         v.setFirstNameValid(firstNameValid);
-        var lastNameValid = PersonValidator.isLastNameValid(this.result.getLastName());
+        var lastNameValid = PersonValidator.isLastNameValid(person.getLastName());
         v.setLastNameValid(lastNameValid);
-        var ageValid = PersonValidator.isAgeValid(this.result.getAge());
+        var ageValid = PersonValidator.isAgeValid(person.getAge());
         v.setAgeValid(ageValid);
         return firstNameValid && lastNameValid && ageValid;
     }

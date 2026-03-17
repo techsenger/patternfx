@@ -16,6 +16,7 @@
 
 package com.techsenger.patternfx.core;
 
+import com.techsenger.annotations.Nullable;
 import java.util.UUID;
 
 /**
@@ -43,8 +44,6 @@ public interface ReadOnlyDescriptor {
 
     /**
      * Returns the first 32 bits of the UUID.
-     *
-     * @return
      */
     String getShortUuid();
 
@@ -68,7 +67,6 @@ public interface ReadOnlyDescriptor {
 
     /**
      * Returns the state of the component.
-     * @return
      */
     ComponentState getState();
 
@@ -77,5 +75,5 @@ public interface ReadOnlyDescriptor {
      *
      * @return the current component group
      */
-    ComponentGroup getGroup();
+    @Nullable ComponentGroup getGroup();
 }

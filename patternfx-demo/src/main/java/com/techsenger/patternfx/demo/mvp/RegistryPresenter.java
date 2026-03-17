@@ -23,6 +23,7 @@ import com.techsenger.patternfx.mvp.AbstractParentPresenter;
 import com.techsenger.patternfx.mvp.Descriptor;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -68,6 +69,7 @@ public class RegistryPresenter<V extends RegistryView, C extends RegistryCompose
             return;
         }
         var person = persons.get(selectedIndex);
+        Objects.requireNonNull(person.getId());
         service.delete(person.getId());
         persons.remove(selectedIndex);
         getView().removePerson(selectedIndex);

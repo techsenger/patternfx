@@ -14,23 +14,8 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.mvp;
+@NullMarked
+package com.techsenger.patternfx.demo.model;
 
-import com.techsenger.annotations.Nullable;
+import com.techsenger.annotations.NullMarked;
 
-/**
- *
- * @author Pavel Castornii
- */
-public abstract class AbstractChildPresenter<V extends ChildView, C extends ChildComposer>
-        extends AbstractParentPresenter<V, C> implements ChildPresenter<V, C> {
-
-    public AbstractChildPresenter(V view) {
-        super(view);
-    }
-
-    @Override
-    public @Nullable ParentPort getParent() {
-        return getComposer().getParent();
-    }
-}

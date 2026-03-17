@@ -34,17 +34,7 @@ import javafx.stage.Stage;
 public class Demo extends Application {
 
     private enum Pattern {
-        MVP(new MvpRunner()), MVVM(new MvvmRunner());
-
-        private final Runnable runner;
-
-        Pattern(Runnable runner) {
-            this.runner = runner;
-        }
-
-        public Runnable getRunner() {
-            return runner;
-        }
+        MVP, MVVM
     }
 
     private final Label label = new Label("Select Pattern:");
@@ -71,7 +61,16 @@ public class Demo extends Application {
                     Pattern pattern = cell.getItem();
                     // the unit will be deinitialized automatically when the stage
                     // is closed, via the handler registered with stage#setOnCloseRequest
-                    pattern.getRunner().run();
+                    switch (pattern) {
+                        case MVP:
+                            new MvpRunner().run();
+                            break;
+                        case MVVM:
+                            new MvvmRunner().run();
+                            break;
+                        default:
+                            throw new AssertionError();
+                    }
                 }
             });
             return cell;

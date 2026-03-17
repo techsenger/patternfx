@@ -14,12 +14,8 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.mvvm;
+@NullMarked
+package com.techsenger.patternfx.demo.mvvm;
 
-/**
- *
- * @author Pavel Castornii
- */
-public abstract class AbstractLeafViewModel extends AbstractChildViewModel<Composer> {
+import com.techsenger.annotations.NullMarked;
 
-}

@@ -24,15 +24,14 @@ public interface ParentPresenter<V extends ParentView, C extends ParentComposer>
 
     /**
      * Returns the composer.
-     * @return
      */
     C getComposer();
 
     /**
      * Deinitializes this component and all its descendants as a sub-tree with this component as the root.
      *
-     * The deinitialization is performed using a breadth-first traversal: the parent component is deinitialized first,
-     * followed by its children level by level.
+     * <p>The deinitialization is performed using a breadth-first traversal: the parent component is deinitialized
+     * first, followed by its children level by level.
      */
     void deinitializeTree();
 }

@@ -16,6 +16,8 @@
 
 package com.techsenger.patternfx.core;
 
+import java.util.Objects;
+
 /**
  *
  * @author Pavel Castornii
@@ -33,6 +35,6 @@ public class ComponentGroupName extends AbstractName {
      */
     @Override
     public String getText() {
-        return super.getText();
+        return Objects.requireNonNull(super.getText());
     }
 }

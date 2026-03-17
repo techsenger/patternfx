@@ -16,6 +16,8 @@
 
 package com.techsenger.patternfx.mvp;
 
+import com.techsenger.annotations.Nullable;
+import com.techsenger.annotations.Unmodifiable;
 import com.techsenger.patternfx.core.AbstractBreadthFirstIterator;
 import com.techsenger.patternfx.core.AbstractDepthFirstIterator;
 import com.techsenger.patternfx.core.TreeIterator;
@@ -35,7 +37,7 @@ public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>>
 
     public class Composer implements ParentFxView.Composer {
 
-        private ComposeParameters parameters = createParameters();
+        private @Nullable ComposeParameters parameters = createParameters();
 
         private final AbstractParentFxView<?> view = AbstractParentFxView.this;
 
@@ -54,8 +56,9 @@ public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>>
             return new AbstractDepthFirstIterator<ParentPort, ParentFxView<?>>(view) {
 
                 @Override
+                @SuppressWarnings("unchecked")
                 protected List<ParentFxView<?>> getChildren(ParentFxView<?> parent) {
-                    return (List) parent.getChildren();
+                    return (List<ParentFxView<?>>) (List<?>) parent.getChildren();
                 }
 
                 @Override
@@ -70,8 +73,9 @@ public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>>
             return new AbstractBreadthFirstIterator<ParentPort, ParentFxView<?>>(view) {
 
                 @Override
+                @SuppressWarnings("unchecked")
                 protected List<ParentFxView<?>> getChildren(ParentFxView<?> parent) {
-                    return (List) parent.getChildren();
+                    return (List<ParentFxView<?>>) (List<?>) parent.getChildren();
                 }
 
                 @Override
@@ -92,11 +96,11 @@ public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>>
         }
 
         @Override
-        public ComposeParameters getParameters() {
+        public @Nullable ComposeParameters getParameters() {
             return this.parameters;
         }
 
-        protected ComposeParameters createParameters() {
+        protected @Nullable ComposeParameters createParameters() {
             return null;
         }
     }
@@ -128,7 +132,7 @@ public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>>
     }
 
     @Override
-    public ObservableList<? extends ChildFxView<?>> getChildren() {
+    public @Unmodifiable ObservableList<? extends ChildFxView<?>> getChildren() {
         return children;
     }
 
@@ -137,8 +141,9 @@ public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>>
         return new AbstractDepthFirstIterator<ParentFxView<?>, ParentFxView<?>>(this) {
 
             @Override
+            @SuppressWarnings("unchecked")
             protected List<ParentFxView<?>> getChildren(ParentFxView<?> parent) {
-                return (List) parent.getChildren();
+                return (List<ParentFxView<?>>) (List<?>) parent.getChildren();
             }
 
             @Override
@@ -153,8 +158,9 @@ public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>>
         return new AbstractBreadthFirstIterator<ParentFxView<?>, ParentFxView<?>>(this) {
 
             @Override
+            @SuppressWarnings("unchecked")
             protected List<ParentFxView<?>> getChildren(ParentFxView<?> parent) {
-                return (List) parent.getChildren();
+                return (List<ParentFxView<?>>) (List<?>) parent.getChildren();
             }
 
             @Override
@@ -181,7 +187,7 @@ public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>>
     }
 
     protected Composer createComposer() {
-        return new AbstractParentFxView.Composer();
+        return new AbstractParentFxView<P>.Composer();
     }
 
     protected ObservableList<ChildFxView<?>> getModifiableChildren() {

@@ -16,59 +16,61 @@
 
 package com.techsenger.patternfx.demo.model;
 
+import com.techsenger.annotations.Nullable;
+
 /**
  *
  * @author Pavel Castornii
  */
 public class Person {
 
-    private Integer id;
+    private @Nullable Integer id;
 
-    private String firstName;
+    private @Nullable String firstName;
 
-    private String lastName;
+    private @Nullable String lastName;
 
-    private Integer age;
+    private @Nullable Integer age;
 
     public Person() {
 
     }
 
-    public Person(String firstName, String lastName, Integer age) {
+    public Person(@Nullable String firstName, @Nullable String lastName, @Nullable Integer age) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
     }
 
-    public Integer getId() {
+    public @Nullable Integer getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(@Nullable Integer id) {
         this.id = id;
     }
 
-    public String getFirstName() {
+    public @Nullable String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
+    public void setFirstName(@Nullable String firstName) {
         this.firstName = firstName;
     }
 
-    public String getLastName() {
+    public @Nullable String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
+    public void setLastName(@Nullable String lastName) {
         this.lastName = lastName;
     }
 
-    public Integer getAge() {
+    public @Nullable Integer getAge() {
         return age;
     }
 
-    public void setAge(Integer age) {
+    public void setAge(@Nullable Integer age) {
         this.age = age;
     }
 }

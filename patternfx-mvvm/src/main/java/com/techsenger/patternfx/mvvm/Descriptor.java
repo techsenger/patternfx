@@ -16,12 +16,13 @@
 
 package com.techsenger.patternfx.mvvm;
 
+import com.techsenger.annotations.Nullable;
 import com.techsenger.patternfx.core.AbstractObservableDescriptor;
+import com.techsenger.patternfx.core.ComponentGroup;
 import com.techsenger.patternfx.core.ComponentName;
 import com.techsenger.patternfx.core.ComponentState;
 import java.util.UUID;
 import javafx.beans.property.ObjectProperty;
-import com.techsenger.patternfx.core.ComponentGroup;
 
 /**
  *
@@ -43,7 +44,7 @@ public final class Descriptor extends AbstractObservableDescriptor {
     }
 
     @Override
-    public void setGroup(ComponentGroup group) {
+    public void setGroup(@Nullable ComponentGroup group) {
         super.setGroup(group);
     }
 

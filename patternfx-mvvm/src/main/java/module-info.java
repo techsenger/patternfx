@@ -16,6 +16,7 @@
 
 module com.techsenger.patternfx.mvvm {
     requires org.slf4j;
+    requires com.techsenger.annotations;
     requires com.techsenger.patternfx.core;
     requires com.techsenger.toolkit.fx;
     requires javafx.base;

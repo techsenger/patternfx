@@ -16,6 +16,8 @@
 
 package com.techsenger.patternfx.mvp;
 
+import com.techsenger.annotations.Nullable;
+import com.techsenger.annotations.Unmodifiable;
 import com.techsenger.patternfx.core.TreeIterator;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -31,7 +33,7 @@ public interface ParentComposer {
      *
      * @return the parameters or null.
      */
-    ComposeParameters getParameters();
+    @Nullable ComposeParameters getParameters();
 
     /**
      * Composes the static structure of this component by creating and adding its default child components. This
@@ -51,7 +53,7 @@ public interface ParentComposer {
      *
      * @return a non-null, unmodifiable observable list of child components
      */
-    List<? extends ChildPort> getChildren();
+    @Unmodifiable List<? extends ChildPort> getChildren();
 
     /**
      * Returns an iterator that traverses the component subtree starting from this component in depth-first order.

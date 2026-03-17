@@ -16,6 +16,7 @@
 
 package com.techsenger.patternfx.demo.mvvm;
 
+import com.techsenger.annotations.Nullable;
 import com.techsenger.patternfx.core.ComponentState;
 import com.techsenger.patternfx.demo.DemoNames;
 import com.techsenger.patternfx.demo.model.Person;
@@ -23,6 +24,7 @@ import com.techsenger.patternfx.demo.model.PersonService;
 import com.techsenger.patternfx.mvvm.AbstractParentViewModel;
 import com.techsenger.patternfx.mvvm.Descriptor;
 import java.util.Iterator;
+import java.util.Objects;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -71,7 +73,7 @@ public class RegistryViewModel extends AbstractParentViewModel<RegistryComposer>
         });
         getDescriptor().stateProperty().addListener((ov, oldV, newV) -> {
             if (newV == ComponentState.INITIALIZED) {
-                refresh();
+                onRefresh();
             }
         });
         persons.addListener((ListChangeListener<Person>) e -> {
@@ -112,7 +114,7 @@ public class RegistryViewModel extends AbstractParentViewModel<RegistryComposer>
         return reportButtonText.get();
     }
 
-    ReportViewModel getReport() {
+    @Nullable ReportViewModel getReport() {
         return report.get();
     }
 
@@ -120,32 +122,37 @@ public class RegistryViewModel extends AbstractParentViewModel<RegistryComposer>
         return report;
     }
 
-    void refresh() {
+    void onRefresh() {
         persons.clear();
         persons.addAll(service.readAll());
     }
 
-    void add() {
+    void onAdd() {
         var dialogVM = new DialogViewModel((p) -> add(p));
+        Objects.requireNonNull(getComposer());
         getComposer().openDialog(dialogVM);
     }
 
-    void remove() {
+    void onRemove() {
         var id = selectedPerson.get().getId();
+        Objects.requireNonNull(id);
         service.delete(id);
         for (Iterator<Person> it = persons.iterator(); it.hasNext();) {
             Person p = it.next();
-            if (p.getId() == id) {
+            if (Objects.equals(p.getId(), id)) {
                 it.remove();
                 break;
             }
         }
     }
 
-    void toggleReport() {
+    void onToggleReport() {
+        Objects.requireNonNull(getComposer());
         if (getReport() == null) {
             getComposer().addReport(new ReportViewModel());
-            getReport().refresh(persons);
+            var report = getReport();
+            Objects.requireNonNull(report);
+            report.refresh(persons);
             updateReportButtonText(true);
         } else {
             getComposer().removeReport();
@@ -153,7 +160,7 @@ public class RegistryViewModel extends AbstractParentViewModel<RegistryComposer>
         }
     }
 
-    void close() {
+    void onClose() {
         var iterator = breadthFirstIterator();
         while (iterator.hasNext()) {
             iterator.next().requestDeinitialize();

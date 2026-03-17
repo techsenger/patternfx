@@ -16,6 +16,7 @@
 
 package com.techsenger.patternfx.mvp;
 
+import com.techsenger.annotations.Unmodifiable;
 import com.techsenger.patternfx.core.ReadOnlyDescriptor;
 import java.util.List;
 
@@ -29,9 +30,8 @@ public interface ParentPort {
 
     /**
      * Returns an unmodifiable list of child components.
-     * @return
      */
-    List<? extends ChildPort> getChildren();
+    @Unmodifiable List<? extends ChildPort> getChildren();
 
     ReadOnlyDescriptor getDescriptor();
 }

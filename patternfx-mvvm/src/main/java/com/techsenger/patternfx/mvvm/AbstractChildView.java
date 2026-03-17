@@ -16,6 +16,7 @@
 
 package com.techsenger.patternfx.mvvm;
 
+import com.techsenger.annotations.Nullable;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 
@@ -45,17 +46,22 @@ public abstract class AbstractChildView<VM extends AbstractChildViewModel<?>>
     }
 
     @Override
-    public ParentView<?> getParent() {
+    public @Nullable ParentView<?> getParent() {
         return this.parent.get();
     }
 
     @Override
-    public <T extends ParentView<?>> T getParent(Class<T> parentClass) {
-        return (T) getParent();
+    public <T extends ParentView<?>> @Nullable T getParent(Class<T> parentClass) {
+        var parent = getParent();
+        if (parent != null) {
+            return parentClass.cast(parent);
+        } else {
+            return null;
+        }
     }
 
     @Override
-    public void setParent(ParentView<?> parent) {
+    public void setParent(@Nullable ParentView<?> parent) {
         this.parent.set(parent);
     }
 }

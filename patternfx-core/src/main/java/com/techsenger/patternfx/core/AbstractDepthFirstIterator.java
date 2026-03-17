@@ -16,9 +16,10 @@
 
 package com.techsenger.patternfx.core;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Stack;
 import javafx.util.Pair;
 
 /**
@@ -27,12 +28,12 @@ import javafx.util.Pair;
  */
 public abstract class AbstractDepthFirstIterator<T, S> implements TreeIterator<T> {
 
-    private final Stack<Pair<S, Integer>> stack = new Stack<>();
+    private final Deque<Pair<S, Integer>> stack = new ArrayDeque<>(32);
 
     private int currentDepth = -1;
 
     protected AbstractDepthFirstIterator(S root) {
-        stack.push(new Pair<>(root, 0));
+        stack.addFirst(new Pair<>(root, 0));
     }
 
     @Override
@@ -45,7 +46,7 @@ public abstract class AbstractDepthFirstIterator<T, S> implements TreeIterator<T
 
     @Override
     public boolean hasNext() {
-         return !stack.isEmpty();
+        return !stack.isEmpty();
     }
 
     @Override
@@ -53,13 +54,13 @@ public abstract class AbstractDepthFirstIterator<T, S> implements TreeIterator<T
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        var pair = stack.pop();
+        var pair = stack.removeFirst();
         S node = pair.getKey();
         this.currentDepth = pair.getValue();
         var children = getChildren(node);
         for (int i = children.size() - 1; i >= 0; i--) {
-            S child =  children.get(i);
-            stack.push(new Pair<>(child, currentDepth + 1));
+            S child = children.get(i);
+            stack.addFirst(new Pair<>(child, currentDepth + 1));
         }
         return map(node);
     }

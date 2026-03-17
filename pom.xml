@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.techsenger.maven.root</groupId>
         <artifactId>maven-root</artifactId>
-        <version>1.6.0</version>
+        <version>1.7.0-SNAPSHOT</version>
     </parent>
 
     <groupId>com.techsenger.patternfx</groupId>
@@ -45,6 +45,7 @@
         <publishing.plugin.exclusions>patternfx-demo</publishing.plugin.exclusions>
         <!-- JavaFX 19 has a bug: it shows a system notification on Ubuntu when a dialog is closed -->
         <javafx.version>18</javafx.version>
+        <osp.bom.version>1.8.0-SNAPSHOT</osp.bom.version>
     </properties>
 
     <repositories>
@@ -65,7 +66,7 @@
             <dependency>
                 <groupId>com.techsenger.osp.bom</groupId>
                 <artifactId>osp-bom</artifactId>
-                <version>1.8.0-SNAPSHOT</version>
+                <version>${osp.bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -110,6 +111,82 @@
         <module>patternfx-demo</module>
         <module>patternfx-mvp</module>
     </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.techsenger.maven.plugins</groupId>
+                <artifactId>bom-properties-maven-plugin</artifactId>
+                <version>${bom.properties.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>copy-bom-properties</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>copy-properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <boms>
+                        <bom>
+                            <groupId>com.techsenger.osp.bom</groupId>
+                            <artifactId>osp-bom</artifactId>
+                            <version>${osp.bom.version}</version>
+                            <prefix>bom</prefix>
+                            <includes>
+                                <include>errorprone.version</include>
+                                <include>nullaway.version</include>
+                            </includes>
+                        </bom>
+                    </boms>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${compiler.plugin.version}</version>
+                <configuration>
+                    <release>${maven.compiler.release}</release>
+                    <parameters>true</parameters>
+                    <encoding>UTF-8</encoding>
+                    <fork>true</fork>
+                    <showWarnings>true</showWarnings>
+                    <compilerArgs>
+                        <arg>-Xlint:rawtypes</arg>
+                        <arg>-Xlint:unchecked</arg>
+                        <arg>-XDcompilePolicy=simple</arg>
+                        <arg>--should-stop=ifError=FLOW</arg>
+                        <arg>-Werror</arg>
+
+                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
+                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
+                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
+                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
+                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
+                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
+                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
+
+                        <arg>-Xplugin:ErrorProne -XepAllErrorsAsWarnings -Xep:MissingSummary:OFF -Xep:NullAway:ERROR -XepOpt:NullAway:OnlyNullMarked</arg>
+                    </compilerArgs>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>com.google.errorprone</groupId>
+                            <artifactId>error_prone_core</artifactId>
+                            <version>${bom.errorprone.version}</version>
+                        </path>
+                        <path>
+                            <groupId>com.uber.nullaway</groupId>
+                            <artifactId>nullaway</artifactId>
+                            <version>${bom.nullaway.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
 
 

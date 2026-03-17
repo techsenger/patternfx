@@ -16,6 +16,7 @@
 
 package com.techsenger.patternfx.mvvm;
 
+import com.techsenger.annotations.Unmodifiable;
 import com.techsenger.patternfx.core.TreeIterator;
 import java.util.Iterator;
 import java.util.function.BiConsumer;
@@ -32,7 +33,7 @@ public interface ParentView<VM extends ParentViewModel<?>> extends View<VM> {
      *
      * @return an unmodifiable list of child Views (never {@code null})
      */
-    ObservableList<ChildView<?>> getChildren();
+    @Unmodifiable ObservableList<ChildView<?>> getChildren();
 
     /**
      * Returns an iterator that traverses the View subtree starting from this View in depth-first order.

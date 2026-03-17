@@ -16,6 +16,8 @@
 
 package com.techsenger.patternfx.mvvm;
 
+import com.techsenger.annotations.Nullable;
+import com.techsenger.annotations.Unmodifiable;
 import com.techsenger.patternfx.core.AbstractBreadthFirstIterator;
 import com.techsenger.patternfx.core.AbstractDepthFirstIterator;
 import com.techsenger.patternfx.core.TreeIterator;
@@ -33,7 +35,7 @@ import javafx.collections.ObservableList;
 public abstract class AbstractParentViewModel<C extends Composer> extends AbstractViewModel
         implements ParentViewModel<C> {
 
-    private C composer;
+    private @Nullable C composer;
 
     private final ObservableList<ChildViewModel<?>> modifiableChildren = FXCollections.observableArrayList();
 
@@ -47,12 +49,12 @@ public abstract class AbstractParentViewModel<C extends Composer> extends Abstra
     }
 
     @Override
-    public C getComposer() {
+    public @Nullable C getComposer() {
         return this.composer;
     }
 
     @Override
-    public ObservableList<ChildViewModel<?>> getChildren() {
+    public @Unmodifiable ObservableList<ChildViewModel<?>> getChildren() {
         return children;
     }
 
@@ -61,8 +63,9 @@ public abstract class AbstractParentViewModel<C extends Composer> extends Abstra
         return new AbstractDepthFirstIterator<ParentViewModel<?>, ParentViewModel<?>>(this) {
 
             @Override
+            @SuppressWarnings("unchecked")
             protected List<ParentViewModel<?>> getChildren(ParentViewModel<?> parent) {
-                return (List) parent.getChildren();
+                return (List<ParentViewModel<?>>) (List<?>) parent.getChildren();
             }
 
             @Override
@@ -77,8 +80,9 @@ public abstract class AbstractParentViewModel<C extends Composer> extends Abstra
         return new AbstractBreadthFirstIterator<ParentViewModel<?>, ParentViewModel<?>>(this) {
 
             @Override
+            @SuppressWarnings("unchecked")
             protected List<ParentViewModel<?>> getChildren(ParentViewModel<?> parent) {
-                return (List) parent.getChildren();
+                return (List<ParentViewModel<?>>) (List<?>) parent.getChildren();
             }
 
             @Override
@@ -103,7 +107,8 @@ public abstract class AbstractParentViewModel<C extends Composer> extends Abstra
         requestDeinitializeTree.next(null);
     }
 
-    protected void setComposer(Composer composer) {
+    @SuppressWarnings("unchecked")
+    protected void setComposer(@Nullable Composer composer) {
         this.composer = (C) composer;
     }
 

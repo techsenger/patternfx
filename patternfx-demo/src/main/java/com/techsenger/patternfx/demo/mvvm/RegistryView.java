@@ -21,6 +21,7 @@ import com.techsenger.patternfx.demo.model.Person;
 import com.techsenger.patternfx.mvvm.AbstractParentView;
 import com.techsenger.patternfx.mvvm.BindingUtils;
 import com.techsenger.patternfx.mvvm.Composer;
+import java.util.List;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -114,7 +115,8 @@ public class RegistryView extends AbstractParentView<RegistryViewModel> {
         var ageColumn = new TableColumn<Person, Integer>("Age");
         ageColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAge()));
         setupColumn(ageColumn);
-        personTable.getColumns().addAll(idColumn, firstNameColumn, lastNameColumn, ageColumn);
+        var columns = List.of(idColumn, firstNameColumn, lastNameColumn, ageColumn);
+        personTable.getColumns().addAll(columns);
 
         VBox.setVgrow(content, Priority.ALWAYS);
         content.setPadding(new Insets(Style.INSET));
@@ -139,11 +141,11 @@ public class RegistryView extends AbstractParentView<RegistryViewModel> {
     protected void addHandlers() {
         super.addHandlers();
         var viewModel = getViewModel();
-        addButton.setOnAction(e -> viewModel.add());
-        removeButton.setOnAction(e -> viewModel.remove());
-        refreshButton.setOnAction(e -> viewModel.refresh());
-        reportButton.setOnAction(e -> viewModel.toggleReport());
-        stage.setOnCloseRequest(e -> viewModel.close());
+        addButton.setOnAction(e -> viewModel.onAdd());
+        removeButton.setOnAction(e -> viewModel.onRemove());
+        refreshButton.setOnAction(e -> viewModel.onRefresh());
+        reportButton.setOnAction(e -> viewModel.onToggleReport());
+        stage.setOnCloseRequest(e -> viewModel.onClose());
     }
 
     @Override

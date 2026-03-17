@@ -16,6 +16,8 @@
 
 package com.techsenger.patternfx.demo.model;
 
+import com.techsenger.annotations.Nullable;
+
 /**
  *
  * @author Pavel Castornii
@@ -28,15 +30,15 @@ public final class PersonValidator {
             && isAgeValid(person.getAge());
     }
 
-    public static boolean isFirstNameValid(String name) {
+    public static boolean isFirstNameValid(@Nullable String name) {
         return name != null && !name.isBlank();
     }
 
-    public static boolean isLastNameValid(String name) {
+    public static boolean isLastNameValid(@Nullable String name) {
         return name != null && !name.isBlank();
     }
 
-    public static boolean isAgeValid(Integer age) {
+    public static boolean isAgeValid(@Nullable Integer age) {
         return age != null && age >= 0 && age <= 125;
     }
 

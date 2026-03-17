@@ -27,22 +27,16 @@ public interface ViewModel {
 
     /**
      * Returns the descriptor of the View.
-     *
-     * @return
      */
     Descriptor getDescriptor();
 
     /**
      * Returns the property for the history policy.
-     *
-     * @return
      */
     ObjectProperty<HistoryPolicy> historyPolicyProperty();
 
     /**
      * Returns the history policy.
-     *
-     * @return
      */
     HistoryPolicy getHistoryPolicy();
 

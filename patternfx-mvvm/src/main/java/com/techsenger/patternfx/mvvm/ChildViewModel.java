@@ -16,6 +16,7 @@
 
 package com.techsenger.patternfx.mvvm;
 
+import com.techsenger.annotations.Nullable;
 import javafx.beans.property.ReadOnlyObjectProperty;
 
 /**
@@ -37,5 +38,5 @@ public interface ChildViewModel<T extends Composer> extends ParentViewModel<T> {
      *
      * @return the ViewModel of the parent View, or {@code null} if this View has no parent
      */
-    ParentViewModel<?> getParent();
+    @Nullable ParentViewModel<?> getParent();
 }

@@ -24,8 +24,6 @@ public interface View<VM extends ViewModel> {
 
     /**
      * Returns the view model.
-     *
-     * @return
      */
     VM getViewModel();
 

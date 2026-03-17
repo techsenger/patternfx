@@ -16,6 +16,7 @@
 
 package com.techsenger.patternfx.demo.mvvm;
 
+import com.techsenger.annotations.Nullable;
 import com.techsenger.patternfx.demo.DemoNames;
 import com.techsenger.patternfx.demo.model.Person;
 import com.techsenger.patternfx.demo.model.PersonValidator;
@@ -41,7 +42,7 @@ public class DialogViewModel extends AbstractViewModel {
 
     private final StringProperty lastName = new SimpleStringProperty();
 
-    private final ObjectProperty<Integer> age = new SimpleObjectProperty();
+    private final ObjectProperty<Integer> age = new SimpleObjectProperty<>();
 
     private final BooleanProperty firstNameValid = new SimpleBooleanProperty(true);
 
@@ -55,11 +56,11 @@ public class DialogViewModel extends AbstractViewModel {
         this.resultCallback = resultCallback;
     }
 
-    public String getFirstName() {
+    public @Nullable String getFirstName() {
         return firstName.get();
     }
 
-    public void setFirstName(String firstName) {
+    public void setFirstName(@Nullable String firstName) {
         this.firstName.set(firstName);
     }
 
@@ -67,11 +68,11 @@ public class DialogViewModel extends AbstractViewModel {
         return firstName;
     }
 
-    public String getLastName() {
+    public @Nullable String getLastName() {
         return lastName.get();
     }
 
-    public void setLastName(String lastName) {
+    public void setLastName(@Nullable String lastName) {
         this.lastName.set(lastName);
     }
 
@@ -79,11 +80,11 @@ public class DialogViewModel extends AbstractViewModel {
         return lastName;
     }
 
-    public Integer getAge() {
+    public @Nullable Integer getAge() {
         return age.get();
     }
 
-    public void setAge(Integer age) {
+    public void setAge(@Nullable Integer age) {
         this.age.set(age);
     }
 

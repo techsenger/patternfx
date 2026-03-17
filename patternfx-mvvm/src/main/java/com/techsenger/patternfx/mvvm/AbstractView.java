@@ -136,29 +136,21 @@ public abstract class AbstractView<T extends AbstractViewModel> implements View<
 
     /**
      * Removes handlers.
-     *
-     * @param viewModel
      */
     protected void removeHandlers() { }
 
     /**
      * Removes listeners.
-     *
-     * @param viewModel
      */
     protected void removeListeners() { }
 
     /**
      * Unbinds view from viewModel etc.
-     *
-     * @param viewModel
      */
     protected void unbind() { }
 
     /**
      * Unbuilds view.
-     *
-     * @param viewModel
      */
     protected void unbuild() { }
 

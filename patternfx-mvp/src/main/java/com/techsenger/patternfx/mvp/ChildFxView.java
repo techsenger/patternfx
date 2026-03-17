@@ -16,6 +16,7 @@
 
 package com.techsenger.patternfx.mvp;
 
+import com.techsenger.annotations.Nullable;
 import javafx.beans.property.ReadOnlyObjectProperty;
 
 /**
@@ -41,7 +42,7 @@ public interface ChildFxView<P extends ChildPresenter<?, ?>> extends ParentFxVie
      *
      * @return the parent view, or {@code null} if this view has no parent
      */
-     ParentFxView<?> getParent();
+     @Nullable ParentFxView<?> getParent();
 
     /**
      * Returns the value of {@link #parentProperty()} cast to the specified type.
@@ -51,7 +52,7 @@ public interface ChildFxView<P extends ChildPresenter<?, ?>> extends ParentFxVie
      * @return the parent view cast to the specified type, or {@code null} if this view has no parent
      * @throws ClassCastException if the parent exists but is not of the specified type
      */
-    <T extends ParentFxView<?>> T getParent(Class<T> parentClass);
+    <T extends ParentFxView<?>> @Nullable T getParent(Class<T> parentClass);
 
     /**
      * Sets the parent view of this view.
@@ -60,12 +61,10 @@ public interface ChildFxView<P extends ChildPresenter<?, ?>> extends ParentFxVie
      * implementations while managing the view hierarchy. Direct invocation by user code results in undefined
      * behavior.
      */
-    void setParent(ParentFxView<?> parent);
+    void setParent(@Nullable ParentFxView<?> parent);
 
     /**
      * Returns the main node of the view. It can be Tab, Node etc.
-     *
-     * @return
      */
     Object getNode();
 

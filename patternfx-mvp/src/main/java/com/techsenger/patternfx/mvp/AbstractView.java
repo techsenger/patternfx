@@ -16,17 +16,19 @@
 
 package com.techsenger.patternfx.mvp;
 
+import com.google.errorprone.annotations.concurrent.LazyInit;
+
 /**
  *
  * @author Pavel Castornii
  */
 public abstract class AbstractView<T extends Presenter<?>> {
 
+    @LazyInit
     private T presenter;
 
     /**
      * Returns the presenter.
-     * @return
      */
     public T getPresenter() {
         return presenter;
@@ -46,6 +48,7 @@ public abstract class AbstractView<T extends Presenter<?>> {
         // empty
     }
 
+    @SuppressWarnings("unchecked")
     void setPresenter(Presenter<?> presenter) {
         this.presenter = (T) presenter;
     }

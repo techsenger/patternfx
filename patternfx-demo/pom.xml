@@ -23,6 +23,14 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.techsenger.annotations</groupId>
+            <artifactId>annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.errorprone</groupId>
+            <artifactId>error_prone_annotations</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.techsenger.patternfx</groupId>
             <artifactId>patternfx-core</artifactId>
         </dependency>

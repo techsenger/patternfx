@@ -16,15 +16,17 @@
 
 package com.techsenger.patternfx.core;
 
+import com.techsenger.annotations.Nullable;
+
 /**
  *
  * @author Pavel Castornii
  */
 public abstract class AbstractName implements Name {
 
-    private final String text;
+    private final @Nullable String text;
 
-    public AbstractName(String text) {
+    public AbstractName(@Nullable String text) {
         this.text = text;
     }
 
@@ -33,12 +35,13 @@ public abstract class AbstractName implements Name {
      *
      * @return the component name text
      */
-    public String getText() {
+    @Override
+    public @Nullable String getText() {
         return text;
     }
 
     @Override
     public String toString() {
-        return this.text;
+        return getClass().getSimpleName() + "[text=" + String.valueOf(text) + "]";
     }
 }

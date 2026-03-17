@@ -16,6 +16,7 @@
 
 package com.techsenger.patternfx.core;
 
+import com.techsenger.annotations.Nullable;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
@@ -50,7 +51,7 @@ public abstract class AbstractDescriptor implements ReadOnlyDescriptor {
 
     private final ReadOnlyObjectWrapper<ComponentState> state = new ReadOnlyObjectWrapper<>(ComponentState.CREATING);
 
-    private final  ReadOnlyObjectWrapper<ComponentGroup> group = new ReadOnlyObjectWrapper<>();
+    private final ReadOnlyObjectWrapper<ComponentGroup> group = new ReadOnlyObjectWrapper<>();
 
     protected AbstractDescriptor(ComponentName name) {
         this(name, UUID.randomUUID());
@@ -95,7 +96,7 @@ public abstract class AbstractDescriptor implements ReadOnlyDescriptor {
     }
 
     @Override
-    public ComponentGroup getGroup() {
+    public @Nullable ComponentGroup getGroup() {
        return group.get();
     }
 
@@ -103,11 +104,11 @@ public abstract class AbstractDescriptor implements ReadOnlyDescriptor {
         this.state.set(state);
     }
 
-    protected void setGroup(ComponentGroup group) {
+    protected void setGroup(@Nullable ComponentGroup group) {
         this.group.set(group);
     }
 
-    protected  ReadOnlyObjectWrapper<ComponentState> getStateWrapper() {
+    protected ReadOnlyObjectWrapper<ComponentState> getStateWrapper() {
         return state;
     }
 

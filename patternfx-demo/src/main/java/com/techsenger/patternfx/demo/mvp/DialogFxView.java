@@ -16,6 +16,7 @@
 
 package com.techsenger.patternfx.demo.mvp;
 
+import com.google.errorprone.annotations.concurrent.LazyInit;
 import com.techsenger.patternfx.mvp.AbstractParentFxView;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
@@ -55,6 +56,7 @@ public class DialogFxView extends AbstractParentFxView<DialogPresenter<?>> imple
 
     private final Dialog<ButtonType> dialog = new Dialog<>();
 
+    @LazyInit
     private Button okButton;
 
     public DialogFxView(Stage stage) {

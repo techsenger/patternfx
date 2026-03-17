@@ -16,8 +16,10 @@
 
 package com.techsenger.patternfx.demo.mvvm;
 
+import com.techsenger.annotations.Nullable;
 import com.techsenger.patternfx.demo.Style;
-import com.techsenger.patternfx.mvvm.AbstractLeafView;
+import com.techsenger.patternfx.mvvm.AbstractChildView;
+import com.techsenger.patternfx.mvvm.Composer;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
@@ -28,7 +30,7 @@ import javafx.scene.layout.Priority;
  *
  * @author Pavel Castornii
  */
-public class ReportView extends AbstractLeafView<ReportViewModel> {
+public class ReportView extends AbstractChildView<ReportViewModel> {
 
     private final Label totalPeopleLabel = new Label("Total People:");
 
@@ -81,5 +83,10 @@ public class ReportView extends AbstractLeafView<ReportViewModel> {
         var vm = getViewModel();
         totalPeopleValueLabel.textProperty().bind(vm.totalPeopleProperty().asString());
         averageAgeValueLabel.textProperty().bind(vm.averageAgeProperty().asString());
+    }
+
+    @Override
+    protected @Nullable Composer createComposer() {
+        return null;
     }
 }

@@ -16,6 +16,8 @@
 
 package com.techsenger.patternfx.core;
 
+import com.techsenger.annotations.Nullable;
+
 /**
  *
  * @author Pavel Castornii
@@ -27,5 +29,5 @@ public interface Name {
      *
      * @return the component name text
      */
-    String getText();
+    @Nullable String getText();
 }

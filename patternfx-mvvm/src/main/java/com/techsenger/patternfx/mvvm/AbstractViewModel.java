@@ -16,6 +16,7 @@
 
 package com.techsenger.patternfx.mvvm;
 
+import com.techsenger.annotations.Nullable;
 import com.techsenger.patternfx.core.HistoryPolicy;
 import static com.techsenger.patternfx.core.HistoryPolicy.ALL;
 import static com.techsenger.patternfx.core.HistoryPolicy.APPEARANCE;
@@ -43,9 +44,9 @@ public abstract class AbstractViewModel implements ViewModel {
 
     private final ObjectProperty<HistoryPolicy> historyPolicy = new SimpleObjectProperty<>(HistoryPolicy.NONE);
 
-    private HistoryProvider<? extends AbstractHistory> historyProvider;
+    private @Nullable HistoryProvider<? extends AbstractHistory> historyProvider;
 
-    private AbstractHistory history;
+    private @Nullable AbstractHistory history;
 
     public AbstractViewModel() {
         this.descriptor = createDescriptor();
@@ -76,15 +77,14 @@ public abstract class AbstractViewModel implements ViewModel {
         requestDeinitialize.next(null);
     }
 
-    protected void setHistoryProvider(HistoryProvider<? extends AbstractHistory> historyProvider) {
+    protected void setHistoryProvider(@Nullable HistoryProvider<? extends AbstractHistory> historyProvider) {
         this.historyProvider = historyProvider;
     }
 
     /**
      * Returns the history of the view.
-     * @return
      */
-    protected AbstractHistory getHistory() {
+    protected @Nullable AbstractHistory getHistory() {
         return history;
     }
 
@@ -100,7 +100,7 @@ public abstract class AbstractViewModel implements ViewModel {
     protected final void restoreHistory() {
         var policy = getHistoryPolicy();
         logger.debug("{} History policy during restore: {}", getDescriptor().getLogPrefix(), policy);
-        if (policy != NONE) {
+        if (policy != NONE && history != null) {
             if (history.isNew()) {
                 logger.debug("{} History is new. Skipping restoration", getDescriptor().getLogPrefix());
             } else {
@@ -125,16 +125,12 @@ public abstract class AbstractViewModel implements ViewModel {
     /**
      * Method copies all data from history to view model. This method is called at the beginning of initialization
      * when the policy is {@link HistoryPolicy#ALL} or {@link HistoryPolicy#DATA}.
-     *
-     * @param viewModel
      */
     protected void restoreData() { }
 
     /**
      * Method copies all appearance information from history to view model. This method is called at the beginning
      * of initialization when the policy is {@link HistoryPolicy#ALL} or {@link HistoryPolicy#APPEARANCE}.
-     *
-     * @param viewModel
      */
     protected void restoreAppearance() { }
 
@@ -171,21 +167,21 @@ public abstract class AbstractViewModel implements ViewModel {
     /**
      * Method copies all data from view model to history. This method is called at the beginning of deinitialization
      * when the policy is {@link HistoryPolicy#ALL} or {@link HistoryPolicy#DATA}.
-     *
-     * @param viewModel
      */
     protected void saveData() {
-        getHistory().setNew(false);
+        if (this.history != null) {
+            this.history.setNew(false);
+        }
     }
 
     /**
      * Method copies all data from view model to history. This method is called at the beginning of deinitialization
      * when the policy is {@link HistoryPolicy#ALL} or {@link HistoryPolicy#APPEARANCE}.
-     *
-     * @param viewModel
      */
     protected void saveAppearance() {
-        getHistory().setNew(false);
+        if (this.history != null) {
+            this.history.setNew(false);
+        }
     }
 
     protected abstract Descriptor createDescriptor();

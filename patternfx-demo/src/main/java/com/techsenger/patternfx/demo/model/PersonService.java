@@ -19,6 +19,7 @@ package com.techsenger.patternfx.demo.model;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -48,7 +49,7 @@ public class PersonService {
     public void delete(int id) {
        for (Iterator<Person> it = persons.iterator(); it.hasNext();) {
             Person p = it.next();
-            if (p.getId() == id) {
+            if (Objects.equals(p.getId(), id)) {
                 it.remove();
                 break;
             }

@@ -16,7 +16,7 @@
 
 package com.techsenger.patternfx.core;
 
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Queue;
@@ -28,7 +28,7 @@ import javafx.util.Pair;
  */
 public abstract class AbstractBreadthFirstIterator<T, S> implements TreeIterator<T> {
 
-    private final Queue<Pair<S, Integer>> queue = new LinkedList<>();
+    private final Queue<Pair<S, Integer>> queue = new ArrayDeque<>(32);
 
     private int currentDepth = -1;
 

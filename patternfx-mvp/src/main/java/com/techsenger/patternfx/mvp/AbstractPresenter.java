@@ -16,6 +16,7 @@
 
 package com.techsenger.patternfx.mvp;
 
+import com.techsenger.annotations.Nullable;
 import com.techsenger.patternfx.core.ComponentState;
 import com.techsenger.patternfx.core.HistoryPolicy;
 import static com.techsenger.patternfx.core.HistoryPolicy.ALL;
@@ -40,9 +41,9 @@ public abstract class AbstractPresenter<V extends View> implements Presenter<V> 
 
     private HistoryPolicy historyPolicy = HistoryPolicy.NONE;
 
-    private HistoryProvider<? extends AbstractHistory> historyProvider;
+    private @Nullable HistoryProvider<? extends AbstractHistory> historyProvider;
 
-    private AbstractHistory history;
+    private @Nullable AbstractHistory history;
 
     public AbstractPresenter(V view) {
         this.descriptor = createDescriptor();
@@ -145,22 +146,21 @@ public abstract class AbstractPresenter<V extends View> implements Presenter<V> 
      */
     protected void postDeinitialize() { }
 
-    protected void setHistoryProvider(HistoryProvider<? extends AbstractHistory> historyProvider) {
+    protected void setHistoryProvider(@Nullable HistoryProvider<? extends AbstractHistory> historyProvider) {
         this.historyProvider = historyProvider;
     }
 
     /**
      * Returns the history of the View.
-     * @return
      */
-    protected AbstractHistory getHistory() {
+    protected @Nullable AbstractHistory getHistory() {
         return history;
     }
 
     protected final void restoreHistory() {
         var policy = getHistoryPolicy();
         logger.debug("{} History policy during restore: {}", getDescriptor().getLogPrefix(), policy);
-        if (policy != NONE) {
+        if (policy != NONE && history != null) {
             if (history.isNew()) {
                 logger.debug("{} History is new. Skipping restoration", getDescriptor().getLogPrefix());
             } else {
@@ -223,7 +223,9 @@ public abstract class AbstractPresenter<V extends View> implements Presenter<V> 
      *
      */
     protected void saveData() {
-        getHistory().setNew(false);
+        if (this.history != null) {
+            this.history.setNew(false);
+        }
     }
 
     /**
@@ -232,7 +234,9 @@ public abstract class AbstractPresenter<V extends View> implements Presenter<V> 
      *
      */
     protected void saveAppearance() {
-        getHistory().setNew(false);
+        if (this.history != null) {
+            this.history.setNew(false);
+        }
     }
 
     protected abstract Descriptor createDescriptor();

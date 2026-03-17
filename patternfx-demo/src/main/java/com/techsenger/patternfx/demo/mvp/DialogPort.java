@@ -16,6 +16,7 @@
 
 package com.techsenger.patternfx.demo.mvp;
 
+import com.techsenger.annotations.Nullable;
 import com.techsenger.patternfx.demo.model.Person;
 import com.techsenger.patternfx.mvp.ParentPort;
 
@@ -25,7 +26,7 @@ import com.techsenger.patternfx.mvp.ParentPort;
  */
 public interface DialogPort extends ParentPort {
 
-    Person getResult();
+    @Nullable Person getResult();
 
     void deinitialize();
 }

@@ -16,6 +16,7 @@
 
 package com.techsenger.patternfx.demo.mvvm;
 
+import com.google.errorprone.annotations.concurrent.LazyInit;
 import com.techsenger.patternfx.mvvm.AbstractView;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -58,6 +59,7 @@ public class DialogView extends AbstractView<DialogViewModel> {
 
     private final Dialog<ButtonType> dialog = new Dialog<>();
 
+    @LazyInit
     private Button okButton;
 
     public DialogView(DialogViewModel viewModel, Stage stage) {

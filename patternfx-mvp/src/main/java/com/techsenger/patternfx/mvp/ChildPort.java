@@ -16,11 +16,13 @@
 
 package com.techsenger.patternfx.mvp;
 
+import com.techsenger.annotations.Nullable;
+
 /**
  *
  * @author Pavel Castornii
  */
 public interface ChildPort extends ParentPort {
 
-    ParentPort getParent();
+    @Nullable ParentPort getParent();
 }

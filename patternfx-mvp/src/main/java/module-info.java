@@ -16,7 +16,9 @@
 
 module com.techsenger.patternfx.mvp {
     requires org.slf4j;
+    requires com.techsenger.annotations;
     requires com.techsenger.patternfx.core;
+    requires com.google.errorprone.annotations;
     requires javafx.base;
     requires javafx.graphics;
 

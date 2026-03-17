@@ -16,6 +16,7 @@
 
 package com.techsenger.patternfx.mvp;
 
+import com.techsenger.annotations.Nullable;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 
@@ -31,7 +32,7 @@ public abstract class AbstractChildFxView<P extends ChildPresenter<?, ?>>
         private final AbstractChildFxView<P> view = AbstractChildFxView.this;
 
         @Override
-        public ParentPort getParent() {
+        public @Nullable ParentPort getParent() {
             var parent = view.getParent();
             if (parent == null) {
                 return null;
@@ -48,17 +49,22 @@ public abstract class AbstractChildFxView<P extends ChildPresenter<?, ?>>
     }
 
     @Override
-    public ParentFxView<?> getParent() {
+    public @Nullable ParentFxView<?> getParent() {
         return this.parent.get();
     }
 
     @Override
-    public <T extends ParentFxView<?>> T getParent(Class<T> parentClass) {
-        return (T) getParent();
+    public @Nullable <T extends ParentFxView<?>> T getParent(Class<T> parentClass) {
+        var parent = getParent();
+        if (parent != null) {
+            return parentClass.cast(parent);
+        } else {
+            return null;
+        }
     }
 
     @Override
-    public void setParent(ParentFxView<?> parent) {
+    public void setParent(@Nullable ParentFxView<?> parent) {
         this.parent.set(parent);
     }
 
@@ -69,6 +75,6 @@ public abstract class AbstractChildFxView<P extends ChildPresenter<?, ?>>
 
     @Override
     protected Composer createComposer() {
-        return new AbstractChildFxView.Composer();
+        return new AbstractChildFxView<P>.Composer();
     }
 }
