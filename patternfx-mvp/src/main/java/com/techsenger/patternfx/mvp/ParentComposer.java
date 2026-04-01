@@ -53,7 +53,7 @@ public interface ParentComposer {
      *
      * @return a non-null, unmodifiable observable list of child components
      */
-    @Unmodifiable List<? extends ChildPort> getChildren();
+    @Unmodifiable List<? extends ChildPort> getChildPorts();
 
     /**
      * Returns an iterator that traverses the component subtree starting from this component in depth-first order.

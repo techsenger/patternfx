@@ -58,7 +58,7 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
 
     @Override
     public List<? extends ChildPort> getChildren() {
-        return getComposer().getChildren();
+        return getComposer().getChildPorts();
     }
 
     @Override
