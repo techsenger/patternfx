@@ -31,6 +31,6 @@ public abstract class AbstractChildPresenter<V extends ChildView, C extends Chil
 
     @Override
     public @Nullable ParentPort getParent() {
-        return getComposer().getParent();
+        return getComposer().getParentPort();
     }
 }

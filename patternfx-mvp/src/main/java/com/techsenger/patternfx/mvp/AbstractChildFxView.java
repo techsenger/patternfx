@@ -32,7 +32,7 @@ public abstract class AbstractChildFxView<P extends ChildPresenter<?, ?>>
         private final AbstractChildFxView<P> view = AbstractChildFxView.this;
 
         @Override
-        public @Nullable ParentPort getParent() {
+        public @Nullable ParentPort getParentPort() {
             var parent = view.getParent();
             if (parent == null) {
                 return null;
