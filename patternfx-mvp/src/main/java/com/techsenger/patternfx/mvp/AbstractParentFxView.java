@@ -16,7 +16,6 @@
 
 package com.techsenger.patternfx.mvp;
 
-import com.techsenger.annotations.Nullable;
 import com.techsenger.annotations.Unmodifiable;
 import com.techsenger.patternfx.core.AbstractBreadthFirstIterator;
 import com.techsenger.patternfx.core.AbstractDepthFirstIterator;
@@ -36,8 +35,6 @@ public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>>
         extends AbstractFxView<P> implements ParentFxView<P> {
 
     public class Composer implements ParentFxView.Composer {
-
-        private @Nullable ComposerParameters parameters = createParameters();
 
         private final AbstractParentFxView<?> view = AbstractParentFxView.this;
 
@@ -93,15 +90,6 @@ public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>>
         @Override
         public String toTreeString(BiConsumer<ParentPort, StringBuilder> appender) {
             return view.toTreeString(depthFirstIterator(), appender);
-        }
-
-        @Override
-        public @Nullable ComposerParameters getParameters() {
-            return this.parameters;
-        }
-
-        protected @Nullable ComposerParameters createParameters() {
-            return null;
         }
     }
 
