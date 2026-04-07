@@ -37,7 +37,7 @@ public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>>
 
     public class Composer implements ParentFxView.Composer {
 
-        private @Nullable ComposeParameters parameters = createParameters();
+        private @Nullable ComposerParameters parameters = createParameters();
 
         private final AbstractParentFxView<?> view = AbstractParentFxView.this;
 
@@ -96,11 +96,11 @@ public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>>
         }
 
         @Override
-        public @Nullable ComposeParameters getParameters() {
+        public @Nullable ComposerParameters getParameters() {
             return this.parameters;
         }
 
-        protected @Nullable ComposeParameters createParameters() {
+        protected @Nullable ComposerParameters createParameters() {
             return null;
         }
     }

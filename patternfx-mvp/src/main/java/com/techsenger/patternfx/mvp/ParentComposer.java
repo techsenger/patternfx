@@ -33,7 +33,7 @@ public interface ParentComposer {
      *
      * @return the parameters or null.
      */
-    @Nullable ComposeParameters getParameters();
+    @Nullable ComposerParameters getParameters();
 
     /**
      * Composes the static structure of this component by creating and adding its default child components. This

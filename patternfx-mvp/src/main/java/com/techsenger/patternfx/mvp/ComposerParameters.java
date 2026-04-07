@@ -20,6 +20,6 @@ package com.techsenger.patternfx.mvp;
  *
  * @author Pavel Castornii
  */
-public interface ComposeParameters {
+public interface ComposerParameters {
 
 }
