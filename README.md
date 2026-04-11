@@ -535,22 +535,17 @@ A component  consists of the following classes: a `View`, `FxView`, `Presenter`.
 always has a `Descriptor` (which is provided by the framework and normally does not require custom implementation)
 and may include `Composer`, `Port` and a `History` classes.
 
-`Port` is an interface with its implementation supplied by a nested, non-static class in `Presenter`.
-It represents an explicit communication channel between presenters.
+`Port` is an interface implemented by a `Presenter` to enable explicit communication between presenters. A single
+`Presenter` may implement multiple distinct `Port`s.
 
 This interface is introduced to achieve the following objectives:
 
 * To maintain component encapsulation by avoiding direct presenter-to-presenter references.
 * To establish a well-defined and strictly controlled interaction boundary between a presenter and its external
-environment.
+  environment.
 
 It is important to note that `Presenter` instances should never be shared directly between components. A `Port` is the
 only intended mechanism for inter-presenter communication.
-
-A `Presenter` exposes one primary `Port` via `presenter.getPort()`. This `Port` extends the primary `Port`s of all child
-`Presenters`, providing a unified access point to the entire component subtree. Additionally, a `Presenter` may define
-any number of secondary `Port`s, which can be used, for example, to establish bidirectional communication channels
-between components.
 
 #### MVP Component Lifecycle <a name="templates-mvp-lifecycle"></a>
 
