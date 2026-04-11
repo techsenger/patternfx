@@ -16,9 +16,7 @@
 
 package com.techsenger.patternfx.mvp;
 
-import com.techsenger.annotations.Unmodifiable;
-import com.techsenger.patternfx.core.ReadOnlyDescriptor;
-import java.util.List;
+import com.techsenger.patternfx.core.DescriptorBase;
 
 /**
  *
@@ -26,12 +24,13 @@ import java.util.List;
  */
 public interface ParentPort {
 
-    void requestFocus();
+    /**
+     * Returns the composer with minimal functionality.
+     */
+    ComposerBase getComposer();
 
     /**
-     * Returns an unmodifiable list of child components.
+     * Returns the descriptor with minimal functionality.
      */
-    @Unmodifiable List<? extends ChildPort> getChildren();
-
-    ReadOnlyDescriptor getDescriptor();
+    DescriptorBase getDescriptor();
 }

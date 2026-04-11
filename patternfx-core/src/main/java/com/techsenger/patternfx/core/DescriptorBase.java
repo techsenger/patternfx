@@ -26,7 +26,7 @@ import java.util.UUID;
  *
  * @author Pavel Castornii
  */
-public interface ReadOnlyDescriptor {
+public interface DescriptorBase {
 
     /**
      * Returns the logical name of the component. Multiple component instances can share the same {@link ComponentName}.

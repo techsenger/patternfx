@@ -26,15 +26,15 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractDescriptor implements ReadOnlyDescriptor {
+public abstract class AbstractDescriptor implements DescriptorBase {
 
-    private static Function<ReadOnlyDescriptor, String> logPrefixResolver = (d) -> "[" + d.getFullName() + "]";
+    private static Function<DescriptorBase, String> logPrefixResolver = (d) -> "[" + d.getFullName() + "]";
 
-    public static Function<ReadOnlyDescriptor, String> getLogPrefixResolver() {
+    public static Function<DescriptorBase, String> getLogPrefixResolver() {
         return logPrefixResolver;
     }
 
-    public static void setLogPrefixResolver(Function<ReadOnlyDescriptor, String> logPrefixResolver) {
+    public static void setLogPrefixResolver(Function<DescriptorBase, String> logPrefixResolver) {
         Objects.requireNonNull(logPrefixResolver, "logPrefixResolver can't be null");
         AbstractDescriptor.logPrefixResolver = logPrefixResolver;
     }

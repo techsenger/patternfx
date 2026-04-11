@@ -25,6 +25,7 @@ public interface ParentPresenter<V extends ParentView, C extends ParentComposer>
     /**
      * Returns the composer.
      */
+    @Override
     C getComposer();
 
     /**

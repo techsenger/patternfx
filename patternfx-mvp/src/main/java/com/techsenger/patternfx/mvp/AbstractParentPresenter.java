@@ -17,7 +17,6 @@
 package com.techsenger.patternfx.mvp;
 
 import com.google.errorprone.annotations.concurrent.LazyInit;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,16 +53,6 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
             var presenter = (ParentPresenter<?, ?>) port;
             presenter.deinitialize();
         }
-    }
-
-    @Override
-    public List<? extends ChildPort> getChildren() {
-        return getComposer().getChildPorts();
-    }
-
-    @Override
-    public void requestFocus() {
-        getView().requestFocus();
     }
 
     @Override

@@ -24,7 +24,7 @@ import javafx.beans.property.ReadOnlyObjectProperty;
  * @author Pavel Castornii
  */
 public abstract class AbstractObservableDescriptor extends AbstractDescriptor
-        implements ObservableReadOnlyDescriptor {
+        implements ObservableDescriptor {
 
     protected AbstractObservableDescriptor(ComponentName name) {
         super(name);

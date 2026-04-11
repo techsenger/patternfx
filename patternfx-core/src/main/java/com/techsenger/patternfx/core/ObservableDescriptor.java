@@ -23,7 +23,7 @@ import javafx.beans.property.ReadOnlyObjectProperty;
  *
  * @author Pavel Castornii
  */
-public interface ObservableReadOnlyDescriptor extends ReadOnlyDescriptor {
+public interface ObservableDescriptor extends DescriptorBase {
 
     /**
      * Returns the state property of the component.
