@@ -22,7 +22,7 @@ import com.google.errorprone.annotations.concurrent.LazyInit;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractView<T extends Presenter<?>> {
+public abstract class AbstractView<T extends Presenter<?>> implements View {
 
     @LazyInit
     private T presenter;
@@ -32,20 +32,6 @@ public abstract class AbstractView<T extends Presenter<?>> {
      */
     public T getPresenter() {
         return presenter;
-    }
-
-    /**
-     * Initializes the View.
-     */
-    protected void initialize() {
-        // empty
-    }
-
-    /**
-     * Deiinitializes the View.
-     */
-    protected void deinitialize() {
-        // empty
     }
 
     @SuppressWarnings("unchecked")

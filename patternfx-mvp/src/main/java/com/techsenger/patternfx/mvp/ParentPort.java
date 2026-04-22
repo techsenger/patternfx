@@ -22,7 +22,7 @@ import com.techsenger.patternfx.core.DescriptorBase;
  *
  * @author Pavel Castornii
  */
-public interface ParentPort {
+public interface ParentPort extends ComponentPort {
 
     /**
      * Returns the composer with minimal functionality.

@@ -31,8 +31,8 @@ import javafx.collections.ObservableList;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>>
-        extends AbstractFxView<P> implements ParentFxView<P> {
+public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>> extends AbstractComponentFxView<P>
+        implements ParentFxView<P> {
 
     public class Composer implements ParentFxView.Composer {
 

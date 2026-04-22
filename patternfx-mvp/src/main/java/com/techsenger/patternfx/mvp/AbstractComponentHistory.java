@@ -16,24 +16,32 @@
 
 package com.techsenger.patternfx.mvp;
 
+import com.techsenger.patternfx.core.ComponentHistory;
+
 /**
  *
  * @author Pavel Castornii
  */
-public interface ParentPresenter<V extends ParentView, C extends ParentComposer>
-        extends ComponentPresenter<V>, ParentPort {
+public abstract class AbstractComponentHistory implements ComponentHistory {
 
-    /**
-     * Returns the composer.
-     */
+    private boolean isNew = true;
+
     @Override
-    C getComposer();
+    public boolean isNew() {
+        return isNew;
+    }
 
-    /**
-     * Deinitializes this component and all its descendants as a sub-tree with this component as the root.
-     *
-     * <p>The deinitialization is performed using a breadth-first traversal: the parent component is deinitialized
-     * first, followed by its children level by level.
-     */
-    void deinitializeTree();
+    @Override
+    public void postDeserialize() {
+
+    }
+
+    @Override
+    public void preSerialize() {
+
+    }
+
+    void setNew(boolean value) {
+        this.isNew = value;
+    }
 }

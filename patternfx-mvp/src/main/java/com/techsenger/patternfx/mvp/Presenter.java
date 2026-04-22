@@ -16,40 +16,11 @@
 
 package com.techsenger.patternfx.mvp;
 
-import com.techsenger.patternfx.core.HistoryPolicy;
-
 /**
  *
  * @author Pavel Castornii
  */
 public interface Presenter<V extends View> {
-
-    /**
-     * Initializes the component.
-     */
-    void initialize();
-
-    /**
-     * Deinitializes the component.
-     */
-    void deinitialize();
-
-    /**
-     * Returns the descriptor.
-     */
-    Descriptor getDescriptor();
-
-    /**
-     * Returns the history policy.
-     */
-    HistoryPolicy getHistoryPolicy();
-
-    /**
-     * Sets the history policy to the specified value.
-     *
-     * @param policy the history policy to set.
-     */
-    void setHistoryPolicy(HistoryPolicy policy);
 
     /**
      * Returns the view.

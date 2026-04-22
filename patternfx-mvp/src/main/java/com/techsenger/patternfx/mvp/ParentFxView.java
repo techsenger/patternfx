@@ -26,7 +26,7 @@ import javafx.collections.ObservableList;
  * @author Pavel Castornii
  */
 public interface ParentFxView<P extends ParentPresenter<?, ?>>
-        extends FxView<P>, ParentView {
+        extends ComponentFxView<P>, ParentView {
 
     interface Composer extends ParentComposer {
 

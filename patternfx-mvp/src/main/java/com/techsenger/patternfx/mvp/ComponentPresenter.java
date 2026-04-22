@@ -16,24 +16,38 @@
 
 package com.techsenger.patternfx.mvp;
 
+import com.techsenger.patternfx.core.HistoryPolicy;
+
 /**
  *
  * @author Pavel Castornii
  */
-public interface ParentPresenter<V extends ParentView, C extends ParentComposer>
-        extends ComponentPresenter<V>, ParentPort {
+public interface ComponentPresenter<V extends View> extends Presenter<V>, ComponentPort {
 
     /**
-     * Returns the composer.
+     * Initializes the component.
      */
-    @Override
-    C getComposer();
+    void initialize();
 
     /**
-     * Deinitializes this component and all its descendants as a sub-tree with this component as the root.
+     * Deinitializes the component.
+     */
+    void deinitialize();
+
+    /**
+     * Returns the descriptor.
+     */
+    Descriptor getDescriptor();
+
+    /**
+     * Returns the history policy.
+     */
+    HistoryPolicy getHistoryPolicy();
+
+    /**
+     * Sets the history policy to the specified value.
      *
-     * <p>The deinitialization is performed using a breadth-first traversal: the parent component is deinitialized
-     * first, followed by its children level by level.
+     * @param policy the history policy to set.
      */
-    void deinitializeTree();
+    void setHistoryPolicy(HistoryPolicy policy);
 }

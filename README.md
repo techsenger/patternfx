@@ -371,7 +371,7 @@ Each component exposes a log prefix that uniquely identifies its instance. This 
 Each template in the framework provides base classes and interfaces for creating three types of components, which
 form a hierarchy of inheritance and composition:
 
-* **Base Component** — the fundamental implementation of the selected architectural pattern. This is the simplest and
+* **Component** — the fundamental implementation of the selected architectural pattern. This is the simplest and
 “purest” component type, providing only minimal functionality: lifecycle management and interaction between the core
 elements of the pattern. Base components do not support parent–child relationships and therefore cannot participate
 in a tree-like composition. They are intended for isolated, self-contained windows or dialogs.
