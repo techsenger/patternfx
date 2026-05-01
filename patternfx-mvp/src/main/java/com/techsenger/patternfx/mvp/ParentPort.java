@@ -25,11 +25,6 @@ import com.techsenger.patternfx.core.DescriptorBase;
 public interface ParentPort extends ComponentPort {
 
     /**
-     * Returns the composer with minimal functionality.
-     */
-    ComposerBase getComposer();
-
-    /**
      * Returns the descriptor with minimal functionality.
      */
     DescriptorBase getDescriptor();
