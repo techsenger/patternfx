@@ -16,7 +16,6 @@
 
 package com.techsenger.patternfx.mvp;
 
-import com.google.errorprone.annotations.concurrent.LazyInit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,25 +23,18 @@ import org.slf4j.LoggerFactory;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractParentPresenter<V extends ParentView, C extends ParentComposer>
-        extends AbstractComponentPresenter<V> implements ParentPresenter<V, C> {
+public abstract class AbstractParentPresenter<V extends ParentView> extends AbstractComponentPresenter<V>
+        implements ParentPresenter<V> {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractParentPresenter.class);
-
-    @LazyInit
-    private C composer;
 
     public AbstractParentPresenter(V view) {
         super(view);
     }
 
     @Override
-    public C getComposer() {
-        return this.composer;
-    }
-
-    @Override
     public void deinitializeTree() {
+        var composer = getView().getComposer();
         if (logger.isDebugEnabled()) {
             var tree = composer.toTreeString();
             logger.debug("{} Deinitializing this component tree:\n{}", getDescriptor().getLogPrefix(), tree);
@@ -50,7 +42,7 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
         var iterator = composer.breadthFirstIterator();
         while (iterator.hasNext()) {
             var port = iterator.next();
-            var presenter = (ParentPresenter<?, ?>) port;
+            var presenter = (ParentPresenter<?>) port;
             presenter.deinitialize();
         }
     }
@@ -58,11 +50,6 @@ public abstract class AbstractParentPresenter<V extends ParentView, C extends Pa
     @Override
     protected void postInitialize() {
         super.postInitialize();
-        this.composer.compose();
-    }
-
-    @SuppressWarnings("unchecked")
-    protected void setComposer(ParentComposer composer) {
-        this.composer = (C) composer;
+        this.getView().getComposer().compose();
     }
 }

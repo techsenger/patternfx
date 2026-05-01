@@ -16,6 +16,7 @@
 
 package com.techsenger.patternfx.demo.mvp;
 
+import com.techsenger.annotations.Nullable;
 import com.techsenger.patternfx.demo.model.Person;
 import com.techsenger.patternfx.mvp.ParentView;
 import java.util.List;
@@ -25,6 +26,20 @@ import java.util.List;
  * @author Pavel Castornii
  */
 public interface RegistryView extends ParentView {
+
+    interface Composer extends ParentView.Composer {
+
+        DialogPort showDialog();
+
+        @Nullable ReportPort getReport();
+
+        void addReport();
+
+        void removeReport();
+    }
+
+    @Override
+    Composer getComposer();
 
     void setRemoveDisabled(boolean value);
 

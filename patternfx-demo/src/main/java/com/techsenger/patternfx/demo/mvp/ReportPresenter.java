@@ -19,7 +19,6 @@ package com.techsenger.patternfx.demo.mvp;
 import com.techsenger.patternfx.demo.DemoNames;
 import com.techsenger.patternfx.demo.model.Person;
 import com.techsenger.patternfx.mvp.AbstractChildPresenter;
-import com.techsenger.patternfx.mvp.ChildComposer;
 import com.techsenger.patternfx.mvp.Descriptor;
 import java.util.List;
 
@@ -27,7 +26,7 @@ import java.util.List;
  *
  * @author Pavel Castornii
  */
-public class ReportPresenter extends AbstractChildPresenter<ReportView, ChildComposer> implements ReportPort {
+public class ReportPresenter extends AbstractChildPresenter<ReportView> implements ReportPort {
 
     public ReportPresenter(ReportView view) {
         super(view);

@@ -20,13 +20,7 @@ package com.techsenger.patternfx.mvp;
  *
  * @author Pavel Castornii
  */
-public interface ParentPresenter<V extends ParentView, C extends ParentComposer>
-        extends ComponentPresenter<V>, ParentPort {
-
-    /**
-     * Returns the composer.
-     */
-    C getComposer();
+public interface ParentPresenter<V extends ParentView> extends ComponentPresenter<V>, ParentPort {
 
     /**
      * Deinitializes this component and all its descendants as a sub-tree with this component as the root.

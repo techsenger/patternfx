@@ -16,10 +16,25 @@
 
 package com.techsenger.patternfx.mvp;
 
+import com.techsenger.annotations.Nullable;
+
 /**
  *
  * @author Pavel Castornii
  */
 public interface ChildView extends ParentView {
 
+    interface Composer extends ParentView.Composer {
+
+        /**
+        * Returns the parent if the component is currently added as a child to another component, or {@code null}
+        * if it has no parent.
+        *
+        * @return the Port of the parent component, or {@code null} if this component has no parent
+        */
+       @Nullable ParentPort getParentPort();
+    }
+
+    @Override
+    Composer getComposer();
 }

@@ -39,9 +39,9 @@ import javafx.stage.Stage;
  *
  * @author Pavel Castornii
  */
-public class RegistryFxView<P extends RegistryPresenter<?, ?>> extends AbstractParentFxView<P> implements RegistryView {
+public class RegistryFxView<P extends RegistryPresenter<?>> extends AbstractParentFxView<P> implements RegistryView {
 
-    public class Composer extends AbstractParentFxView<P>.Composer implements RegistryComposer {
+    public class Composer extends AbstractParentFxView<P>.Composer implements RegistryView.Composer {
 
         private final RegistryFxView<P> view = RegistryFxView.this;
 
@@ -154,6 +154,11 @@ public class RegistryFxView<P extends RegistryPresenter<?, ?>> extends AbstractP
     }
 
     @Override
+    public Composer getComposer() {
+        return (Composer) super.getComposer();
+    }
+
+    @Override
     protected void build() {
         super.build();
         VBox.setVgrow(personTable, Priority.ALWAYS);
@@ -201,11 +206,6 @@ public class RegistryFxView<P extends RegistryPresenter<?, ?>> extends AbstractP
         super.addListeners();
         personTable.getSelectionModel().selectedIndexProperty()
                 .addListener((ov, oldV, newV) -> getPresenter().onSelectedChanged(newV.intValue()));
-    }
-
-    @Override
-    public Composer getComposer() {
-        return (Composer) super.getComposer();
     }
 
     @Override

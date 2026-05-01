@@ -552,8 +552,8 @@ only intended mechanism for inter-presenter communication.
 Each `Presenter` provides the `Presenter#initialize()` and `Presenter#deinitialize()` methods, which initialize and
 deinitialize all parts of the component respectively, updating its state.
 
-The default implementation of these methods in `AbstractPresenter` is based on the Template Method pattern. Initialization
-and deinitialization are divided into three phases.
+The default implementation of these methods in `AbstractPresenter` is based on the Template Method pattern.
+Initialization and deinitialization are divided into three phases.
 
 The first phase consists of invoking the protected methods `preInitialize()` / `preDeinitialize()`, which may be
 overridden. The second phase is strictly fixed and performs the core initialization and deinitialization logic.
@@ -579,37 +579,36 @@ method is called.
 
 #### MVP Component Example<a name="templates-mvp-example"></a>
 
-`Composer` interface:
-
-```java
-public interface FooComposer extends ParentComposer {
-
-    void addBar();
-
-    BarPort getBar();
-    ...
-}
-```
-
 `View` interface:
 
 ```java
 public interface FooView extends ParentView {
-   ...
+
+    interface Composer extends ParentView.Composer {
+
+        void addBar();
+
+        BarPort getBar();
+    }
+
+    @Override
+    Composer getComposer();
+
+    ...
 }
 ```
 
 `Presenter` class:
 
 ```java
-public class FooPresenter<V extends FooView, C extends FooComposer> extends AbstractParentPresenter<V, C> {
+public class FooPresenter<V extends FooView> extends AbstractParentPresenter<V> {
 
     public FooPresenter(V view) {
         super(view);
     }
 
     public void onAction() {
-        getComposer().addBar();
+        getView().getComposer().addBar();
         // use bar
     }
 
@@ -620,9 +619,9 @@ public class FooPresenter<V extends FooView, C extends FooComposer> extends Abst
 `FxView` class:
 
 ```java
-public class FooFxView<P extends FooPresenter<?, ?>> extends AbstractParentFxView<P> implements FooView {
+public class FooFxView<P extends FooPresenter<?>> extends AbstractParentFxView<P> implements FooView {
 
-    protected class Composer extends AbstractParentFxView<P>.Composer  implements FooComposer {
+    public class Composer extends AbstractParentFxView<P>.Composer implements FooView.Composer {
 
         @Override
         public void addBar() {
@@ -653,6 +652,11 @@ public class FooFxView<P extends FooPresenter<?, ?>> extends AbstractParentFxVie
     public void initialize() {
         super.initialize();
         logger.debug("{} View is initializing", getDescriptor().getLogPrefix());
+    }
+
+    @Override
+    public Composer getComposer() {
+        return (Composer) super.getComposer();
     }
 
     @Override

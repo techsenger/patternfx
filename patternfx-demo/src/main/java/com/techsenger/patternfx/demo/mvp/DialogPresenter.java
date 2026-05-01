@@ -22,14 +22,12 @@ import com.techsenger.patternfx.demo.model.Person;
 import com.techsenger.patternfx.demo.model.PersonValidator;
 import com.techsenger.patternfx.mvp.AbstractParentPresenter;
 import com.techsenger.patternfx.mvp.Descriptor;
-import com.techsenger.patternfx.mvp.ParentComposer;
 
 /**
  *
  * @author Pavel Castornii
  */
-public class DialogPresenter<T extends DialogView> extends AbstractParentPresenter<T, ParentComposer>
-        implements DialogPort {
+public class DialogPresenter<V extends DialogView> extends AbstractParentPresenter<V> implements DialogPort {
 
     private @Nullable String firstName;
 
@@ -39,7 +37,7 @@ public class DialogPresenter<T extends DialogView> extends AbstractParentPresent
 
     private @Nullable Person result;
 
-    public DialogPresenter(T view) {
+    public DialogPresenter(V view) {
         super(view);
     }
 

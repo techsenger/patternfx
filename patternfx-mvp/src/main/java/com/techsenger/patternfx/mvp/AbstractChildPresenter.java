@@ -22,8 +22,8 @@ import com.techsenger.annotations.Nullable;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractChildPresenter<V extends ChildView, C extends ChildComposer>
-        extends AbstractParentPresenter<V, C> implements ChildPresenter<V, C> {
+public abstract class AbstractChildPresenter<V extends ChildView> extends AbstractParentPresenter<V>
+        implements ChildPresenter<V> {
 
     public AbstractChildPresenter(V view) {
         super(view);
@@ -31,6 +31,6 @@ public abstract class AbstractChildPresenter<V extends ChildView, C extends Chil
 
     @Override
     public @Nullable ParentPort getParent() {
-        return getComposer().getParentPort();
+        return getView().getComposer().getParentPort();
     }
 }

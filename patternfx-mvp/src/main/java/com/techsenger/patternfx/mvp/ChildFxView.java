@@ -23,9 +23,9 @@ import javafx.beans.property.ReadOnlyObjectProperty;
  *
  * @author Pavel Castornii
  */
-public interface ChildFxView<P extends ChildPresenter<?, ?>> extends ParentFxView<P>, ChildView {
+public interface ChildFxView<P extends ChildPresenter<?>> extends ParentFxView<P>, ChildView {
 
-    interface Composer extends ParentFxView.Composer, ChildComposer {
+    interface Composer extends ParentFxView.Composer, ChildView.Composer {
 
     }
 

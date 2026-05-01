@@ -31,7 +31,7 @@ import javafx.collections.ObservableList;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>> extends AbstractComponentFxView<P>
+public abstract class AbstractParentFxView<P extends ParentPresenter<?>> extends AbstractComponentFxView<P>
         implements ParentFxView<P> {
 
     public class Composer implements ParentFxView.Composer {
@@ -180,14 +180,6 @@ public abstract class AbstractParentFxView<P extends ParentPresenter<?, ?>> exte
 
     protected ObservableList<ChildFxView<?>> getModifiableChildren() {
         return modifiableChildren;
-    }
-
-    @Override
-    protected void setPresenter(Presenter<?> presenter) {
-        super.setPresenter(presenter);
-        if (presenter instanceof AbstractParentPresenter<?, ?>) {
-            ((AbstractParentPresenter<?, ?>) presenter).setComposer(composer);
-        }
     }
 
     <T> String toTreeString(TreeIterator<T> iterator, BiConsumer<T, StringBuilder> appender) {

@@ -25,10 +25,9 @@ import javafx.collections.ObservableList;
  *
  * @author Pavel Castornii
  */
-public interface ParentFxView<P extends ParentPresenter<?, ?>>
-        extends ComponentFxView<P>, ParentView {
+public interface ParentFxView<P extends ParentPresenter<?>> extends ComponentFxView<P>, ParentView {
 
-    interface Composer extends ParentComposer {
+    interface Composer extends ParentView.Composer {
 
     }
 
@@ -74,5 +73,6 @@ public interface ParentFxView<P extends ParentPresenter<?, ?>>
      */
     String toTreeString(BiConsumer<ParentFxView<?>, StringBuilder> appender);
 
+    @Override
     Composer getComposer();
 }

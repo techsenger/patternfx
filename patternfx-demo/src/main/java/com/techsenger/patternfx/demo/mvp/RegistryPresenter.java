@@ -29,8 +29,7 @@ import java.util.Objects;
  *
  * @author Pavel Castornii
  */
-public class RegistryPresenter<V extends RegistryView, C extends RegistryComposer>
-        extends AbstractParentPresenter<V, C> {
+public class RegistryPresenter<V extends RegistryView> extends AbstractParentPresenter<V> {
 
     private final List<Person> persons = new ArrayList<>();
 
@@ -53,7 +52,7 @@ public class RegistryPresenter<V extends RegistryView, C extends RegistryCompose
     }
 
     protected void onAdd() {
-        var dialog = getComposer().showDialog();
+        var dialog = getView().getComposer().showDialog();
         var newPerson = dialog.getResult();
         dialog.deinitialize();
         if (newPerson != null) {
@@ -85,12 +84,13 @@ public class RegistryPresenter<V extends RegistryView, C extends RegistryCompose
     }
 
     protected void onReport() {
-        if (getComposer().getReport() == null) {
-            getComposer().addReport();
+        var composer = getView().getComposer();
+        if (composer.getReport() == null) {
+            composer.addReport();
             updateReport();
             getView().setReportShown(true);
         } else {
-            getComposer().removeReport();
+            composer.removeReport();
             getView().setReportShown(false);
         }
     }
@@ -107,7 +107,7 @@ public class RegistryPresenter<V extends RegistryView, C extends RegistryCompose
     }
 
     private void updateReport() {
-        var report = getComposer().getReport();
+        var report = getView().getComposer().getReport();
         if (report != null) {
             report.refresh(persons);
         }
