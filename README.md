@@ -510,7 +510,7 @@ than improving clarity.
 
 ### MVP Template <a name="templates-mvp"></a>
 
-<img width="1209" height="533" alt="PatternFX MVP" src="https://github.com/user-attachments/assets/663115e8-5702-4195-bc88-77e3ea3f4b9f" />
+<img width="1197" height="522" alt="PatternFX MVP" src="https://github.com/user-attachments/assets/c9c675f5-76ba-434c-9ccc-08272ad32a44" />
 
 In this template, additional responsibilities are distributed between the `View` and `Presenter`. For responsibilities
 that cannot be performed without creating an additional element, a `Composer` is introduced:
@@ -678,7 +678,7 @@ presenter.deinitialize();
 
 ### MVVM Template <a name="templates-mvvm"></a>
 
-<img width="1211" height="537" alt="PatternFX MVVM" src="https://github.com/user-attachments/assets/72e4465b-dac7-4320-92ed-247f7a062068" />
+<img width="1197" height="522" alt="PatternFX MVVM" src="https://github.com/user-attachments/assets/a86802d0-b907-41ec-9cce-3ad10c7bacc3" />
 
 In this template, additional responsibilities are distributed between the `View` and `ViewModel`. For responsibilities
 that cannot be performed without creating an additional element, a `Composer` is introduced:
