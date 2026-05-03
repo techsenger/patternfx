@@ -18,6 +18,8 @@ package com.techsenger.patternfx.mvp;
 
 import com.techsenger.annotations.Nullable;
 import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Tab;
 
 /**
  *
@@ -33,8 +35,6 @@ public final class FxViewUtils {
      * This method stores a reference to the view in the node's property map, allowing the view to be
      * retrieved later by traversing the JavaFX node tree. This is useful in scenarios where only a node is available
      * (e.g., during focus traversal or event handling) and the associated view needs to be identified.
-     * <p>
-     * This method should be called during initialization.
      *
      * @param node the JavaFX node to associate with the component; must not be {@code null}
      * @param view the view to associate with the node; must not be {@code null}
@@ -58,6 +58,21 @@ public final class FxViewUtils {
     }
 
     /**
+     * Removes the {@link FxView} associated with the specified {@link Node}.
+     * <p>
+     * This method clears the reference previously stored via {@link #setView(Node, FxView)} from the node's property
+     * map. After calling this method, {@link #getView(Node)} will return {@code null} for the given node.
+     * <p>
+     * This can be useful during cleanup or when the association between a node and its view
+     * is no longer valid.
+     *
+     * @param node the JavaFX node whose associated view should be removed; must not be {@code null}
+     */
+    public static void clearView(Node node) {
+        node.getProperties().remove(VIEW_KEY);
+    }
+
+    /**
      * Traverses the JavaFX node tree upward from the given {@link Node}, searching for the nearest node that has
      * an associated {@link ComponentFxView} component.
      * <p>
@@ -78,6 +93,50 @@ public final class FxViewUtils {
             current = current.getParent();
         }
         return null;
+    }
+
+    /**
+     * Associates the given root {@link FxView} with the specified JavaFX {@link Scene}.
+     */
+    public static void setView(Scene scene, FxView<?> root) {
+        scene.getProperties().put(VIEW_KEY, root);
+    }
+
+    /**
+     * Returns the root {@link FxView} associated with the given {@link Scene}, or {@code null} if no view
+     * has been associated with it.
+     */
+    public static @Nullable FxView<?> getView(Scene scene) {
+        return (FxView<?>) scene.getProperties().get(VIEW_KEY);
+    }
+
+    /**
+     * Removes the {@link FxView} associated with the specified {@link Scene}.
+     */
+    public static void clearView(Scene scene) {
+        scene.getProperties().remove(VIEW_KEY);
+    }
+
+    /**
+     * Associates the given {@link FxView} view with the specified JavaFX {@link Tab}.
+     */
+    public static void setView(Tab tab, FxView<?> root) {
+        tab.getProperties().put(VIEW_KEY, root);
+    }
+
+    /**
+     * Returns the {@link FxView} view associated with the given {@link Tab}, or {@code null} if no view has been
+     * associated with it.
+     */
+    public static @Nullable FxView<?> getView(Tab tab) {
+        return (FxView<?>) tab.getProperties().get(VIEW_KEY);
+    }
+
+    /**
+     * Removes the {@link FxView} associated with the specified {@link Tab}.
+     */
+    public static void clearView(Tab tab) {
+        tab.getProperties().remove(VIEW_KEY);
     }
 
     private FxViewUtils() {

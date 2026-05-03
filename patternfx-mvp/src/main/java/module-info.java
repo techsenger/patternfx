@@ -21,6 +21,7 @@ module com.techsenger.patternfx.mvp {
     requires com.google.errorprone.annotations;
     requires javafx.base;
     requires javafx.graphics;
+    requires javafx.controls;
 
     exports com.techsenger.patternfx.mvp;
 }
