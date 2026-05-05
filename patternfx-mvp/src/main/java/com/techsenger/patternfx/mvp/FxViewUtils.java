@@ -73,29 +73,6 @@ public final class FxViewUtils {
     }
 
     /**
-     * Traverses the JavaFX node tree upward from the given {@link Node}, searching for the nearest node that has
-     * an associated {@link ComponentFxView} component.
-     * <p>
-     * The search starts at the given node itself and walks up the parent chain until a component is found or the
-     * root is reached.
-     *
-     * @param node the JavaFX node to start the search from; must not be {@code null}
-     * @return the nearest {@link ComponentFxView} component found in the parent chain,
-     *         or {@code null} if no component is associated with any node up to the root
-     */
-    public static @Nullable ComponentFxView<?> findComponent(Node node) {
-        Node current = node;
-        while (current != null) {
-            FxView<?> view = getView(current);
-            if (view instanceof ParentFxView<?> component) {
-                return component;
-            }
-            current = current.getParent();
-        }
-        return null;
-    }
-
-    /**
      * Associates the given root {@link FxView} with the specified JavaFX {@link Scene}.
      */
     public static void setView(Scene scene, FxView<?> root) {
@@ -137,6 +114,31 @@ public final class FxViewUtils {
      */
     public static void clearView(Tab tab) {
         tab.getProperties().remove(VIEW_KEY);
+    }
+
+    /**
+     * Traverses the JavaFX node tree upward from the given {@link Node}, searching for the nearest node that has
+     * an associated view of the specified type.
+     * <p>
+     * The search starts at the given node itself and walks up the parent chain until a matching view is found
+     * or the root is reached.
+     *
+     * @param node      the JavaFX node to start the search from; must not be {@code null}
+     * @param viewClass the class or interface of the view to search for; must not be {@code null}
+     * @param <T>       the type of the view to search for
+     * @return the nearest {@link FxView} of the specified type found in the parent chain,
+     *         or {@code null} if no matching view is associated with any node up to the root
+     */
+    public static <T extends FxView<?>> @Nullable T findView(Node node, Class<T> viewClass) {
+        Node current = node;
+        while (current != null) {
+            FxView<?> view = getView(current);
+            if (view != null && viewClass.isInstance(view)) {
+                return viewClass.cast(view);
+            }
+            current = current.getParent();
+        }
+        return null;
     }
 
     private FxViewUtils() {
