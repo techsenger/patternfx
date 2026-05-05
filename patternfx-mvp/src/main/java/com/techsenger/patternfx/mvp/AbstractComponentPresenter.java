@@ -62,9 +62,7 @@ public abstract class AbstractComponentPresenter<V extends View> extends Abstrac
             if (getView() instanceof AbstractView<?>) {
                 ((AbstractComponentView<?>) getView()).initialize();
             }
-            if (this.history != null) {
-                restoreHistory();
-            }
+            applyOrRestoreHistory();
             descriptor.setState(ComponentState.INITIALIZED);
             logger.debug("{} Initialized the component", getDescriptor().getLogPrefix());
             // post-initialization
@@ -85,9 +83,7 @@ public abstract class AbstractComponentPresenter<V extends View> extends Abstrac
             preDeinitialize();
             // deinitialization
             descriptor.setState(ComponentState.DEINITIALIZING);
-            if (this.history != null) {
-                saveHistory();
-            }
+            saveHistory();
             if (getView() instanceof AbstractView<?>) {
                 ((AbstractComponentView<?>) getView()).deinitialize();
             }
@@ -148,25 +144,23 @@ public abstract class AbstractComponentPresenter<V extends View> extends Abstrac
         return history;
     }
 
-    protected final void restoreHistory() {
-        var policy = getHistoryPolicy();
-        logger.debug("{} History policy during restore: {}", getDescriptor().getLogPrefix(), policy);
-        if (policy != NONE && history != null) {
-            if (history.isNew()) {
-                logger.debug("{} History is new. Skipping restoration", getDescriptor().getLogPrefix());
-            } else {
-                switch (policy) {
-                    case DATA -> restoreData();
-                    case APPEARANCE -> restoreAppearance();
-                    case ALL -> {
-                        restoreData();
-                        restoreAppearance();
-                    }
-                    default -> throw new AssertionError();
-                }
-            }
-        }
-    }
+    /**
+     * Applies default values for the component's persistent data.
+     * <p>
+     * This method is invoked when no previously persisted data is available or when the current {@link HistoryPolicy}
+     * does not include {@code DATA}. Implementations should assign meaningful default values to all data that
+     * participates in the history mechanism.
+     */
+    protected void applyData() { }
+
+    /**
+     * Applies default values for the component's persistent appearance state.
+     * <p>
+     * This method is invoked when no previously persisted appearance state is available or when the current
+     * {@link HistoryPolicy} does not include {@code APPEARANCE}. Implementations should initialize all
+     * appearance-related state that is managed through the history mechanism.
+     */
+    protected void applyAppearance() { }
 
     /**
      * Method copies all data from history to view. This method is called at the beginning of initialization
@@ -182,49 +176,119 @@ public abstract class AbstractComponentPresenter<V extends View> extends Abstrac
      */
     protected void restoreAppearance() { }
 
-    protected final void saveHistory() {
-        var policy = getHistoryPolicy();
-        logger.debug("{} History policy during save: {}", getDescriptor().getLogPrefix(), policy);
-        switch (policy) {
-            case DATA -> saveData();
-            case APPEARANCE -> saveAppearance();
-            case ALL -> {
-                saveData();
-                saveAppearance();
-            }
-            case NONE -> { }
-            default -> throw new AssertionError();
-        }
-    }
-
     /**
      * Method copies all data from view to history. This method is called at the beginning of deinitialization
      * when the policy is {@link HistoryPolicy#ALL} or {@link HistoryPolicy#DATA}.
      *
      */
-    protected void saveData() {
-        if (this.history != null) {
-            this.history.setNew(false);
-        }
-    }
+    protected void saveData() { }
 
     /**
      * Method copies all data from view to history. This method is called at the beginning of deinitialization
      * when the policy is {@link HistoryPolicy#ALL} or {@link HistoryPolicy#APPEARANCE}.
      *
      */
-    protected void saveAppearance() {
-        if (this.history != null) {
-            this.history.setNew(false);
-        }
-    }
+    protected void saveAppearance() { }
 
     protected abstract Descriptor createDescriptor();
 
-    void prepareHistory() {
+    private void prepareHistory() {
         if (this.historyProvider != null) {
             this.history = this.historyProvider.provide();
             this.historyProvider = null;
+        }
+    }
+
+    /**
+     * Resolves the component's persistent state by either restoring it from history or applying default values when
+     * necessary.
+     * <p>
+     * The component state is divided into two categories:
+     * <ul>
+     *     <li><b>Persistent state</b> — participates in the history mechanism and can be restored or saved across
+     *     component lifecycles.</li>
+     *     <li><b>Transient state</b> — does not participate in the history mechanism and exists only at runtime.</li>
+     * </ul>
+     * <p>
+     * This method operates exclusively on the <b>persistent state</b>. It does not initialize or modify transient data.
+     * <p>
+     * Behavior depends on the {@link HistoryPolicy} and the state of the history:
+     * <ul>
+     *     <li>If history is new or unavailable, default values are applied via {@link #applyData()} and
+     *     {@link #applyAppearance()}.</li>
+     *     <li>If history exists, the state is selectively restored via {@link #restoreData()} and/or
+     *     {@link #restoreAppearance()}, while missing parts are filled with defaults.</li>
+     * </ul>
+     */
+    private void applyOrRestoreHistory() {
+        logger.debug("{} History policy during initialization: {}", getDescriptor().getLogPrefix(), historyPolicy);
+        if (historyPolicy == NONE || history == null || history.isNew()) {
+            applyData();
+            applyAppearance();
+            logger.debug("{} Data and appearance set to defaults. Reason: {}", getDescriptor().getLogPrefix(),
+                    historyPolicy == NONE ? "policy is NONE" : history == null ? "history is null" : "history is new");
+        } else {
+            switch (historyPolicy) {
+                case DATA -> {
+                    restoreData();
+                    applyAppearance();
+                    logger.debug("{} Data restored from history, appearance set to defaults",
+                            getDescriptor().getLogPrefix());
+                }
+                case APPEARANCE -> {
+                    applyData();
+                    restoreAppearance();
+                    logger.debug("{} Data set to defaults, appearance restored from history",
+                            getDescriptor().getLogPrefix());
+                }
+                case ALL -> {
+                    restoreData();
+                    restoreAppearance();
+                    logger.debug("{} Data and appearance restored from history", getDescriptor().getLogPrefix());
+                }
+                default -> throw new AssertionError();
+            }
+        }
+    }
+
+    /**
+     * Saves the current persistent state of the component into its history.
+     * <p>
+     * The component state is conceptually divided into two categories:
+     * <ul>
+     *     <li><b>Persistent state</b> — data that is stored in and restored from history
+     *     (e.g., user input, UI state, configuration).</li>
+     *     <li><b>Transient state</b> — runtime-only data that is not persisted and
+     *     exists only for the duration of the component's lifecycle.</li>
+     * </ul>
+     * <p>
+     * This method operates exclusively on the <b>persistent state</b>.  Transient state is not affected and must be
+     * managed independently.
+     * <p>
+     * Depending on the {@link HistoryPolicy}, this method delegates to {@link #saveData()} and/or
+     * {@link #saveAppearance()}.
+     */
+    private void saveHistory() {
+        if (this.history == null) {
+            return;
+        }
+        logger.debug("{} History policy during deinitialization: {}", getDescriptor().getLogPrefix(), historyPolicy);
+        switch (historyPolicy) {
+            case DATA -> {
+                saveData();
+                this.history.setNew(false);
+            }
+            case APPEARANCE -> {
+                saveAppearance();
+                this.history.setNew(false);
+            }
+            case ALL -> {
+                saveData();
+                saveAppearance();
+                this.history.setNew(false);
+            }
+            case NONE -> { }
+            default -> throw new AssertionError();
         }
     }
 }
