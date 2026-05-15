@@ -34,6 +34,20 @@ public abstract class AbstractView<T extends Presenter<?>> implements View {
         return presenter;
     }
 
+    /**
+     * Initializes the ComponentView.
+     */
+    protected void initialize() {
+        // empty
+    }
+
+    /**
+     * Deiinitializes the ComponentView.
+     */
+    protected void deinitialize() {
+        // empty
+    }
+
     @SuppressWarnings("unchecked")
     void setPresenter(Presenter<?> presenter) {
         this.presenter = (T) presenter;

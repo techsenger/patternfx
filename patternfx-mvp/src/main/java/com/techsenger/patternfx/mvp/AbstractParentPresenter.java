@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractParentPresenter<V extends ParentView> extends AbstractComponentPresenter<V>
+public abstract class AbstractParentPresenter<V extends ParentView> extends AbstractPresenter<V>
         implements ParentPresenter<V> {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractParentPresenter.class);
