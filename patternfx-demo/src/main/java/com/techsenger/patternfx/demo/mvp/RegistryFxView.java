@@ -20,6 +20,7 @@ import com.techsenger.annotations.Nullable;
 import com.techsenger.patternfx.demo.Style;
 import com.techsenger.patternfx.demo.model.Person;
 import com.techsenger.patternfx.mvp.AbstractParentFxView;
+import com.techsenger.patternfx.mvp.ComponentParams;
 import java.util.List;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -48,7 +49,7 @@ public class RegistryFxView<P extends RegistryPresenter<?>> extends AbstractPare
         @Override
         public DialogPort showDialog() {
             var v = new DialogFxView(view.getStage());
-            var p = new DialogPresenter<>(v);
+            var p = new DialogPresenter<>(v, new ComponentParams());
             p.initialize();
             v.getDialog().showAndWait();
             return p;
@@ -68,7 +69,7 @@ public class RegistryFxView<P extends RegistryPresenter<?>> extends AbstractPare
                 throw new IllegalStateException("Report has been added");
             }
             var reportV = new ReportFxView();
-            var reportP = new ReportPresenter(reportV);
+            var reportP = new ReportPresenter(reportV, new ComponentParams());
             reportP.initialize();
             view.root.getChildren().add(reportV.getNode());
             view.getModifiableChildren().add(reportV);

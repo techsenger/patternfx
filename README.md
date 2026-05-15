@@ -533,7 +533,12 @@ maintain references to parent and child components, and also holds a `Composer` 
 
 A component  consists of the following classes: a `View`, `FxView`, `Presenter`. In addition to them, a component
 always has a `Descriptor` (which is provided by the framework and normally does not require custom implementation)
-and may include `Composer`, `Port` and a `History` classes.
+and may include `Params`, `Composer`, `Port` and a `History` classes.
+
+`Params` contains the initial parameter values required for component construction. Before use, the params are validated,
+and after the constructor completes, they are not retained. Using a `Params` object ensures that all required
+parameters are explicitly defined before initialization, preventing missing values at runtime. Additionally, `Params`
+is a convenient data container for passing information to the `Composer` when creating components.
 
 `Port` is an interface implemented by a `Presenter` to enable explicit communication between presenters. A single
 `Presenter` may implement multiple distinct `Port`s.
@@ -586,7 +591,7 @@ public interface FooView extends ParentView {
 
     interface Composer extends ParentView.Composer {
 
-        void addBar();
+        void addBar(ComponentConfig config);
 
         BarPort getBar();
     }
@@ -608,7 +613,9 @@ public class FooPresenter<V extends FooView> extends AbstractParentPresenter<V> 
     }
 
     public void onAction() {
-        getView().getComposer().addBar();
+        var config = new ComponentConfig();
+        ...
+        getView().getComposer().addBar(config);
         // use bar
     }
 
@@ -624,9 +631,9 @@ public class FooFxView<P extends FooPresenter<?>> extends AbstractParentFxView<P
     public class Composer extends AbstractParentFxView<P>.Composer implements FooView.Composer {
 
         @Override
-        public void addBar() {
+        public void addBar(ComponentConfig config) {
             bar = new BarFxView();
-            var p = new BarPresenter(bar);
+            var p = new BarPresenter(bar, config);
             p.initialize();
             getModifiableChildren().add(bar);
             someNode.getChildren().add(bar.getNode()); // adding bar view into foo view

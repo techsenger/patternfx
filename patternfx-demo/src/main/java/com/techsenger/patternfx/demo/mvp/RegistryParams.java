@@ -14,34 +14,24 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.mvvm;
+package com.techsenger.patternfx.demo.mvp;
 
-import com.techsenger.patternfx.core.ComponentHistory;
+import com.techsenger.patternfx.demo.model.PersonService;
+import com.techsenger.patternfx.mvp.ComponentParams;
 
 /**
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractHistory implements ComponentHistory {
+public class RegistryParams extends ComponentParams {
 
-    private boolean isNew = true;
+    private final PersonService service;
 
-    @Override
-    public boolean isNew() {
-        return isNew;
+    public RegistryParams(PersonService service) {
+        this.service = service;
     }
 
-    @Override
-    public void postDeserialize() {
-
-    }
-
-    @Override
-    public void preSerialize() {
-
-    }
-
-    void setNew(boolean value) {
-        this.isNew = value;
+    public PersonService getService() {
+        return service;
     }
 }

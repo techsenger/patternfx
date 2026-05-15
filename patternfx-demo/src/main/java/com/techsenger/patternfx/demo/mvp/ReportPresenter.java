@@ -19,7 +19,8 @@ package com.techsenger.patternfx.demo.mvp;
 import com.techsenger.patternfx.demo.DemoNames;
 import com.techsenger.patternfx.demo.model.Person;
 import com.techsenger.patternfx.mvp.AbstractChildPresenter;
-import com.techsenger.patternfx.mvp.Descriptor;
+import com.techsenger.patternfx.mvp.ComponentDescriptor;
+import com.techsenger.patternfx.mvp.ComponentParams;
 import java.util.List;
 
 /**
@@ -28,8 +29,8 @@ import java.util.List;
  */
 public class ReportPresenter extends AbstractChildPresenter<ReportView> implements ReportPort {
 
-    public ReportPresenter(ReportView view) {
-        super(view);
+    public ReportPresenter(ReportView view, ComponentParams params) {
+        super(view, params);
     }
 
     @Override
@@ -40,7 +41,7 @@ public class ReportPresenter extends AbstractChildPresenter<ReportView> implemen
     }
 
     @Override
-    protected Descriptor createDescriptor() {
-        return new Descriptor(DemoNames.PERSON_REPORT);
+    protected ComponentDescriptor createDescriptor() {
+        return new ComponentDescriptor(DemoNames.PERSON_REPORT);
     }
 }

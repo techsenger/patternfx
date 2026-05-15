@@ -27,13 +27,13 @@ import java.util.UUID;
  *
  * @author Pavel Castornii
  */
-public final class Descriptor extends AbstractDescriptor {
+public final class ComponentDescriptor extends AbstractDescriptor {
 
-    public Descriptor(ComponentName name) {
+    public ComponentDescriptor(ComponentName name) {
         super(name);
     }
 
-    public Descriptor(ComponentName name, UUID uuid) {
+    public ComponentDescriptor(ComponentName name, UUID uuid) {
         super(name, uuid);
     }
 

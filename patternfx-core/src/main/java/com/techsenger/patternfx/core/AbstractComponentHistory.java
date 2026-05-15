@@ -16,15 +16,11 @@
 
 package com.techsenger.patternfx.core;
 
-import java.io.Serializable;
-
 /**
- * Represents a serializable snapshot of a component's state. A history object stores only the information that
- * must persist between component sessions and excludes all transient or runtime aspects.
  *
  * @author Pavel Castornii
  */
-public interface ComponentHistory extends Serializable {
+public abstract class AbstractComponentHistory {
 
     /**
      * Returns whether this history instance is new, meaning it was newly created and has not yet been used to
@@ -36,17 +32,21 @@ public interface ComponentHistory extends Serializable {
      *
      * @return {@code true} if this history is new and has not yet been used, {@code false} otherwise
      */
-    boolean isNew();
+    public abstract boolean isNew();
 
     /**
      * Method called before the component is serialized. This can be used to prepare the object's state
      * before saving it in a binary format.
      */
-    void preSerialize();
+    public void preSerialize() {
+
+    }
 
     /**
      * Method called after the component is deserialized. This can be used to restore the object's state
      * after loading it from a binary format.
      */
-    void postDeserialize();
+    public void postDeserialize() {
+
+    }
 }

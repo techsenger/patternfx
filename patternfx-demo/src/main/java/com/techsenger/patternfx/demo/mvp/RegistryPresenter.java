@@ -20,7 +20,7 @@ import com.techsenger.patternfx.demo.DemoNames;
 import com.techsenger.patternfx.demo.model.Person;
 import com.techsenger.patternfx.demo.model.PersonService;
 import com.techsenger.patternfx.mvp.AbstractParentPresenter;
-import com.techsenger.patternfx.mvp.Descriptor;
+import com.techsenger.patternfx.mvp.ComponentDescriptor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -37,14 +37,14 @@ public class RegistryPresenter<V extends RegistryView> extends AbstractParentPre
 
     private int selectedIndex;
 
-    public RegistryPresenter(V view, PersonService service) {
-        super(view);
-        this.service = service;
+    public RegistryPresenter(V view, RegistryParams params) {
+        super(view, params);
+        this.service = params.getService();
     }
 
     @Override
-    protected Descriptor createDescriptor() {
-        return new Descriptor(DemoNames.PERSON_REGISTRY);
+    protected ComponentDescriptor createDescriptor() {
+        return new ComponentDescriptor(DemoNames.PERSON_REGISTRY);
     }
 
     protected void onSelectedChanged(int value) {

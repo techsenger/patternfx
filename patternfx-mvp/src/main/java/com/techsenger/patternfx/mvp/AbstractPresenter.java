@@ -37,17 +37,20 @@ public abstract class AbstractPresenter<V extends View> implements Presenter<V> 
 
     private final V view;
 
-    private final Descriptor descriptor;
+    private final ComponentDescriptor descriptor;
 
-    private HistoryPolicy historyPolicy = HistoryPolicy.NONE;
+    private HistoryPolicy historyPolicy;
 
-    private @Nullable HistoryProvider<? extends AbstractComponentHistory> historyProvider;
+    private @Nullable HistoryProvider<? extends ComponentHistory> historyProvider;
 
-    private @Nullable AbstractComponentHistory history;
+    private @Nullable ComponentHistory history;
 
-    public AbstractPresenter(V view) {
+    public AbstractPresenter(V view, ComponentParams params) {
+        params.validate();
         this.view = view;
         this.descriptor = createDescriptor();
+        this.historyPolicy = params.getHistoryPolicy();
+        this.historyProvider = params.getHistoryProvider();
         if (this.view instanceof AbstractView<?>) {
             ((AbstractView<?>) this.view).setPresenter(this);
         }
@@ -107,7 +110,7 @@ public abstract class AbstractPresenter<V extends View> implements Presenter<V> 
     }
 
     @Override
-    public Descriptor getDescriptor() {
+    public ComponentDescriptor getDescriptor() {
         return descriptor;
     }
 
@@ -143,14 +146,10 @@ public abstract class AbstractPresenter<V extends View> implements Presenter<V> 
      */
     protected void postDeinitialize() { }
 
-    protected void setHistoryProvider(@Nullable HistoryProvider<? extends AbstractComponentHistory> historyProvider) {
-        this.historyProvider = historyProvider;
-    }
-
     /**
      * Returns the history of the ComponentView.
      */
-    protected @Nullable AbstractComponentHistory getHistory() {
+    protected @Nullable ComponentHistory getHistory() {
         return history;
     }
 
@@ -200,7 +199,7 @@ public abstract class AbstractPresenter<V extends View> implements Presenter<V> 
      */
     protected void saveAppearance() { }
 
-    protected abstract Descriptor createDescriptor();
+    protected abstract ComponentDescriptor createDescriptor();
 
     private void prepareHistory() {
         if (this.historyProvider != null) {

@@ -28,8 +28,8 @@ public abstract class AbstractParentPresenter<V extends ParentView> extends Abst
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractParentPresenter.class);
 
-    public AbstractParentPresenter(V view) {
-        super(view);
+    public AbstractParentPresenter(V view, ComponentParams params) {
+        super(view, params);
     }
 
     @Override

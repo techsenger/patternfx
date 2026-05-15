@@ -14,31 +14,21 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.mvp;
+package com.techsenger.patternfx.mvvm;
 
-import com.techsenger.patternfx.core.ComponentHistory;
+import com.techsenger.patternfx.core.AbstractComponentHistory;
 
 /**
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractComponentHistory implements ComponentHistory {
+public class ComponentHistory extends AbstractComponentHistory {
 
     private boolean isNew = true;
 
     @Override
     public boolean isNew() {
         return isNew;
-    }
-
-    @Override
-    public void postDeserialize() {
-
-    }
-
-    @Override
-    public void preSerialize() {
-
     }
 
     void setNew(boolean value) {

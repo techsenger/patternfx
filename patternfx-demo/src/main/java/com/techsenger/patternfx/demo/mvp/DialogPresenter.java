@@ -21,7 +21,8 @@ import com.techsenger.patternfx.demo.DemoNames;
 import com.techsenger.patternfx.demo.model.Person;
 import com.techsenger.patternfx.demo.model.PersonValidator;
 import com.techsenger.patternfx.mvp.AbstractParentPresenter;
-import com.techsenger.patternfx.mvp.Descriptor;
+import com.techsenger.patternfx.mvp.ComponentDescriptor;
+import com.techsenger.patternfx.mvp.ComponentParams;
 
 /**
  *
@@ -37,8 +38,8 @@ public class DialogPresenter<V extends DialogView> extends AbstractParentPresent
 
     private @Nullable Person result;
 
-    public DialogPresenter(V view) {
-        super(view);
+    public DialogPresenter(V view, ComponentParams params) {
+        super(view, params);
     }
 
     @Override
@@ -47,8 +48,8 @@ public class DialogPresenter<V extends DialogView> extends AbstractParentPresent
     }
 
     @Override
-    protected Descriptor createDescriptor() {
-        return new Descriptor(DemoNames.PERSON_DIALOG);
+    protected ComponentDescriptor createDescriptor() {
+        return new ComponentDescriptor(DemoNames.PERSON_DIALOG);
     }
 
     protected void onFirstNameChanged(String value) {

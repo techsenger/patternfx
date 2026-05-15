@@ -25,8 +25,8 @@ import com.techsenger.annotations.Nullable;
 public abstract class AbstractChildPresenter<V extends ChildView> extends AbstractParentPresenter<V>
         implements ChildPresenter<V> {
 
-    public AbstractChildPresenter(V view) {
-        super(view);
+    public AbstractChildPresenter(V view, ComponentParams params) {
+        super(view, params);
     }
 
     @Override

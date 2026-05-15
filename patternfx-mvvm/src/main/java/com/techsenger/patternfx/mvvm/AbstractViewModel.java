@@ -44,9 +44,9 @@ public abstract class AbstractViewModel implements ViewModel {
 
     private final ObjectProperty<HistoryPolicy> historyPolicy = new SimpleObjectProperty<>(HistoryPolicy.NONE);
 
-    private @Nullable HistoryProvider<? extends AbstractHistory> historyProvider;
+    private @Nullable HistoryProvider<? extends ComponentHistory> historyProvider;
 
-    private @Nullable AbstractHistory history;
+    private @Nullable ComponentHistory history;
 
     public AbstractViewModel() {
         this.descriptor = createDescriptor();
@@ -77,14 +77,14 @@ public abstract class AbstractViewModel implements ViewModel {
         requestDeinitialize.next(null);
     }
 
-    protected void setHistoryProvider(@Nullable HistoryProvider<? extends AbstractHistory> historyProvider) {
+    protected void setHistoryProvider(@Nullable HistoryProvider<? extends ComponentHistory> historyProvider) {
         this.historyProvider = historyProvider;
     }
 
     /**
      * Returns the history of the view.
      */
-    protected @Nullable AbstractHistory getHistory() {
+    protected @Nullable ComponentHistory getHistory() {
         return history;
     }
 

@@ -18,6 +18,7 @@ package com.techsenger.patternfx.demo;
 
 import com.techsenger.patternfx.demo.model.PersonService;
 import com.techsenger.patternfx.demo.mvp.RegistryFxView;
+import com.techsenger.patternfx.demo.mvp.RegistryParams;
 import com.techsenger.patternfx.demo.mvp.RegistryPresenter;
 
 /**
@@ -28,9 +29,9 @@ public class MvpRunner implements Runnable {
 
     @Override
     public void run() {
-        var service = new PersonService();
         var view = new RegistryFxView<>();
-        var presenter = new RegistryPresenter<>(view, service);
+        var params = new RegistryParams(new PersonService());
+        var presenter = new RegistryPresenter<>(view, params);
         presenter.initialize();
     }
 

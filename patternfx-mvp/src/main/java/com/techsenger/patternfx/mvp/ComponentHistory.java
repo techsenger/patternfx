@@ -16,21 +16,22 @@
 
 package com.techsenger.patternfx.mvp;
 
+import com.techsenger.patternfx.core.AbstractComponentHistory;
+
 /**
  *
  * @author Pavel Castornii
  */
-public interface FxView<P extends Presenter<?>> extends View {
+public class ComponentHistory extends AbstractComponentHistory {
 
-    /**
-     * Returns the {@link ComponentDescriptor} associated with this component.
-     *
-     * <p>This method is provided as a convenience shortcut that delegates to the underlying presenter, allowing
-     * clients to access the descriptor without directly referencing the presenter.
-     *
-     * @return the view descriptor
-     */
-    ComponentDescriptor getDescriptor();
+    private boolean isNew = true;
 
-    P getPresenter();
+    @Override
+    public boolean isNew() {
+        return isNew;
+    }
+
+    void setNew(boolean value) {
+        this.isNew = value;
+    }
 }

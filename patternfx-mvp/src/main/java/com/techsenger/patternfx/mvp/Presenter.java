@@ -37,7 +37,7 @@ public interface Presenter<V extends View> {
     /**
      * Returns the descriptor.
      */
-    Descriptor getDescriptor();
+    ComponentDescriptor getDescriptor();
 
     /**
      * Returns the history policy.
