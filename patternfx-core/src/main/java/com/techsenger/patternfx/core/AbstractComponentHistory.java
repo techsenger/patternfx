@@ -16,11 +16,13 @@
 
 package com.techsenger.patternfx.core;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractComponentHistory {
+public abstract class AbstractComponentHistory implements Serializable {
 
     /**
      * Returns whether this history instance is new, meaning it was newly created and has not yet been used to
