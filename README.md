@@ -613,9 +613,9 @@ public class FooPresenter<V extends FooView> extends AbstractParentPresenter<V> 
     }
 
     public void onAction() {
-        var config = new ComponentConfig();
+        var params = new ComponentParams();
         ...
-        getView().getComposer().addBar(config);
+        getView().getComposer().addBar(params);
         // use bar
     }
 
@@ -631,9 +631,9 @@ public class FooFxView<P extends FooPresenter<?>> extends AbstractParentFxView<P
     public class Composer extends AbstractParentFxView<P>.Composer implements FooView.Composer {
 
         @Override
-        public void addBar(ComponentConfig config) {
+        public void addBar(ComponentParams params) {
             bar = new BarFxView();
-            var p = new BarPresenter(bar, config);
+            var p = new BarPresenter(bar, params);
             p.initialize();
             getModifiableChildren().add(bar);
             someNode.getChildren().add(bar.getNode()); // adding bar view into foo view
