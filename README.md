@@ -591,7 +591,9 @@ public interface FooView extends ParentView {
 
     interface Composer extends ParentView.Composer {
 
-        void addBar(ComponentConfig config);
+        void showBar(ComponentConfig config);
+
+        void hideBar();
 
         BarPort getBar();
     }
@@ -615,7 +617,7 @@ public class FooPresenter<V extends FooView> extends AbstractParentPresenter<V> 
     public void onAction() {
         var params = new ComponentParams();
         ...
-        getView().getComposer().addBar(params);
+        getView().getComposer().showBar(params);
         // use bar
     }
 
@@ -630,8 +632,10 @@ public class FooFxView<P extends FooPresenter<?>> extends AbstractParentFxView<P
 
     public class Composer extends AbstractParentFxView<P>.Composer implements FooView.Composer {
 
+        private BarFxView bar;
+
         @Override
-        public void addBar(ComponentParams params) {
+        public void showBar(ComponentParams params) {
             bar = new BarFxView();
             var p = new BarPresenter(bar, params);
             p.initialize();
@@ -647,9 +651,15 @@ public class FooFxView<P extends FooPresenter<?>> extends AbstractParentFxView<P
                 return null;
             }
         }
-    }
 
-    private BarFxView bar;
+        @Override
+        public void hideBar() {
+            getModifiableChildren().remove(bar);
+            someNode.getChildren().remove(bar.getNode()); // removing bar view from foo view
+            bar.getPresenter().deinitialize();
+            bar = null;
+        }
+    }
 
     public FooFxView() {
         ...

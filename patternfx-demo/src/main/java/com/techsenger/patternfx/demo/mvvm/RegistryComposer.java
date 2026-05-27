@@ -26,7 +26,7 @@ public interface RegistryComposer extends Composer {
 
     void openDialog(DialogViewModel dialog);
 
-    void addReport(ReportViewModel report);
+    void showReport(ReportViewModel report);
 
-    void removeReport();
+    void hideReport();
 }

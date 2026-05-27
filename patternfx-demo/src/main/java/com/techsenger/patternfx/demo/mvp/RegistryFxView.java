@@ -46,8 +46,10 @@ public class RegistryFxView<P extends RegistryPresenter<?>> extends AbstractPare
 
         private final RegistryFxView<P> view = RegistryFxView.this;
 
+        private @Nullable ReportFxView report;
+
         @Override
-        public DialogPort showDialog() {
+        public DialogPort openDialog() {
             var v = new DialogFxView(view.getStage());
             var p = new DialogPresenter<>(v, new ComponentParams());
             p.initialize();
@@ -57,35 +59,33 @@ public class RegistryFxView<P extends RegistryPresenter<?>> extends AbstractPare
 
         @Override
         public @Nullable ReportPort getReport() {
-            if (view.getReport() == null) {
+            if (report == null) {
                 return null;
             }
-            return view.getReport().getPresenter();
+            return report.getPresenter();
         }
 
         @Override
-        public void addReport() {
-            if (view.getReport() != null) {
+        public void showReport() {
+            if (report != null) {
                 throw new IllegalStateException("Report has been added");
             }
-            var reportV = new ReportFxView();
-            var reportP = new ReportPresenter(reportV, new ComponentParams());
+            report = new ReportFxView();
+            var reportP = new ReportPresenter(report, new ComponentParams());
             reportP.initialize();
-            view.root.getChildren().add(reportV.getNode());
-            view.getModifiableChildren().add(reportV);
-            view.report = reportV;
+            view.root.getChildren().add(report.getNode());
+            view.getModifiableChildren().add(report);
         }
 
         @Override
-        public void removeReport() {
-            var report = view.getReport();
+        public void hideReport() {
             if (report == null) {
                 throw new IllegalStateException("Report hasn't been added");
             }
             view.getModifiableChildren().remove(report);
             view.root.getChildren().remove(report.getNode());
-            view.report = null;
             report.getPresenter().deinitialize();
+            report = null;
         }
     }
 
@@ -108,8 +108,6 @@ public class RegistryFxView<P extends RegistryPresenter<?>> extends AbstractPare
     private final VBox root = new VBox(toolBar, content);
 
     private final Stage stage = new Stage();
-
-    private @Nullable ReportFxView report;
 
     public RegistryFxView() {
         super();
@@ -216,10 +214,6 @@ public class RegistryFxView<P extends RegistryPresenter<?>> extends AbstractPare
 
     Stage getStage() {
         return stage;
-    }
-
-    @Nullable ReportFxView getReport() {
-        return report;
     }
 
     private void setupColumn(TableColumn<?, ?> column) {

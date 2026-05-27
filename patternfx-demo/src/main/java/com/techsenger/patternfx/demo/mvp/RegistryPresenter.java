@@ -52,7 +52,7 @@ public class RegistryPresenter<V extends RegistryView> extends AbstractParentPre
     }
 
     protected void onAdd() {
-        var dialog = getView().getComposer().showDialog();
+        var dialog = getView().getComposer().openDialog();
         var newPerson = dialog.getResult();
         dialog.deinitialize();
         if (newPerson != null) {
@@ -86,11 +86,11 @@ public class RegistryPresenter<V extends RegistryView> extends AbstractParentPre
     protected void onReport() {
         var composer = getView().getComposer();
         if (composer.getReport() == null) {
-            composer.addReport();
+            composer.showReport();
             updateReport();
             getView().setReportShown(true);
         } else {
-            composer.removeReport();
+            composer.hideReport();
             getView().setReportShown(false);
         }
     }

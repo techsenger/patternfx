@@ -149,13 +149,13 @@ public class RegistryViewModel extends AbstractParentViewModel<RegistryComposer>
     void onToggleReport() {
         Objects.requireNonNull(getComposer());
         if (getReport() == null) {
-            getComposer().addReport(new ReportViewModel());
+            getComposer().showReport(new ReportViewModel());
             var report = getReport();
             Objects.requireNonNull(report);
             report.refresh(persons);
             updateReportButtonText(true);
         } else {
-            getComposer().removeReport();
+            getComposer().hideReport();
             updateReportButtonText(false);
         }
     }

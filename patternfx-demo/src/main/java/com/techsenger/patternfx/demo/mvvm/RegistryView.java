@@ -54,7 +54,7 @@ public class RegistryView extends AbstractParentView<RegistryViewModel> {
         }
 
         @Override
-        public void addReport(ReportViewModel vm) {
+        public void showReport(ReportViewModel vm) {
             var v = new ReportView(vm);
             v.initialize();
             root.getChildren().add(v.getNode());
@@ -63,7 +63,7 @@ public class RegistryView extends AbstractParentView<RegistryViewModel> {
         }
 
         @Override
-        public void removeReport() {
+        public void hideReport() {
             root.getChildren().remove(root.getChildren().size() - 1);
             getModifiableChildren().remove(report.get());
             report.get().deinitialize();

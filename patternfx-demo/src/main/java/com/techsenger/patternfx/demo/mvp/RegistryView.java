@@ -29,13 +29,13 @@ public interface RegistryView extends ParentView {
 
     interface Composer extends ParentView.Composer {
 
-        DialogPort showDialog();
+        DialogPort openDialog();
 
         @Nullable ReportPort getReport();
 
-        void addReport();
+        void showReport();
 
-        void removeReport();
+        void hideReport();
     }
 
     @Override
