@@ -39,7 +39,7 @@ public abstract class AbstractParentPresenter<V extends ParentView> extends Abst
             var tree = composer.toTreeString();
             logger.debug("{} Deinitializing this component tree:\n{}", getDescriptor().getLogPrefix(), tree);
         }
-        var iterator = composer.breadthFirstIterator();
+        var iterator = composer.breadthFirstPortIterator();
         while (iterator.hasNext()) {
             var port = iterator.next();
             var presenter = (ParentPresenter<?>) port;

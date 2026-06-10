@@ -27,41 +27,40 @@ public interface ChildFxView<P extends ChildPresenter<?>> extends ParentFxView<P
 
     interface Composer extends ParentFxView.Composer, ChildView.Composer {
 
+        /**
+         * Returns the property representing the parent view of this view. The property holds a reference to the
+         * parent if this view is currently added as a child to another view, or {@code null} if it has no parent.
+         *
+         * @return the property containing the parent view
+         */
+        ReadOnlyObjectProperty<? extends ParentFxView<?>> parentProperty();
+
+        /**
+         * Returns the value of {@link #parentProperty()}.
+         *
+         * @return the parent view, or {@code null} if this view has no parent
+         */
+         @Nullable ParentFxView<?> getParent();
+
+        /**
+         * Returns the value of {@link #parentProperty()} cast to the specified type.
+         *
+         * @param <T> the expected type of the parent view
+         * @param parentClass the class object representing the expected parent type
+         * @return the parent view cast to the specified type, or {@code null} if this view has no parent
+         * @throws ClassCastException if the parent exists but is not of the specified type
+         */
+        <T extends ParentFxView<?>> @Nullable T getParent(Class<T> parentClass);
+
+        /**
+         * Sets the parent view of this view.
+         *
+         * <p>Framework contract: This method is intended to be called exclusively by {@link ParentComposer}
+         * implementations while managing the view hierarchy. Direct invocation by user code results in undefined
+         * behavior.
+         */
+        void setParent(@Nullable ParentFxView<?> parent);
     }
-
-    /**
-     * Returns the property representing the parent view of this view. The property holds a reference to the
-     * parent if this view is currently added as a child to another view, or {@code null} if it has no parent.
-     *
-     * @return the property containing the parent view
-     */
-    ReadOnlyObjectProperty<? extends ParentFxView<?>> parentProperty();
-
-    /**
-     * Returns the value of {@link #parentProperty()}.
-     *
-     * @return the parent view, or {@code null} if this view has no parent
-     */
-     @Nullable ParentFxView<?> getParent();
-
-    /**
-     * Returns the value of {@link #parentProperty()} cast to the specified type.
-     *
-     * @param <T> the expected type of the parent view
-     * @param parentClass the class object representing the expected parent type
-     * @return the parent view cast to the specified type, or {@code null} if this view has no parent
-     * @throws ClassCastException if the parent exists but is not of the specified type
-     */
-    <T extends ParentFxView<?>> @Nullable T getParent(Class<T> parentClass);
-
-    /**
-     * Sets the parent view of this view.
-     *
-     * <p>Framework contract: This method is intended to be called exclusively by {@link ParentComposer}
-     * implementations while managing the view hierarchy. Direct invocation by user code results in undefined
-     * behavior.
-     */
-    void setParent(@Nullable ParentFxView<?> parent);
 
     /**
      * Returns the main node of the view. It can be Tab, Node etc.

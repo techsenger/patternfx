@@ -29,43 +29,41 @@ public abstract class AbstractChildFxView<P extends ChildPresenter<?>>
 
     public class Composer extends AbstractParentFxView<P>.Composer implements ChildFxView.Composer {
 
-        private final AbstractChildFxView<P> view = AbstractChildFxView.this;
+        private final ReadOnlyObjectWrapper<ParentFxView<?>> parent = new ReadOnlyObjectWrapper<>();
+
+        @Override
+        public ReadOnlyObjectProperty<ParentFxView<?>> parentProperty() {
+            return this.parent.getReadOnlyProperty();
+        }
+
+        @Override
+        public @Nullable ParentFxView<?> getParent() {
+            return this.parent.get();
+        }
+
+        @Override
+        public @Nullable <T extends ParentFxView<?>> T getParent(Class<T> parentClass) {
+            var parent = getParent();
+            if (parent != null) {
+                return parentClass.cast(parent);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        public void setParent(@Nullable ParentFxView<?> parent) {
+            this.parent.set(parent);
+        }
 
         @Override
         public @Nullable ParentPort getParentPort() {
-            var parent = view.getParent();
+            var parent = getParent();
             if (parent == null) {
                 return null;
             }
             return parent.getPresenter();
         }
-    }
-
-    private final ReadOnlyObjectWrapper<ParentFxView<?>> parent = new ReadOnlyObjectWrapper<>();
-
-    @Override
-    public ReadOnlyObjectProperty<ParentFxView<?>> parentProperty() {
-        return this.parent.getReadOnlyProperty();
-    }
-
-    @Override
-    public @Nullable ParentFxView<?> getParent() {
-        return this.parent.get();
-    }
-
-    @Override
-    public @Nullable <T extends ParentFxView<?>> T getParent(Class<T> parentClass) {
-        var parent = getParent();
-        if (parent != null) {
-            return parentClass.cast(parent);
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public void setParent(@Nullable ParentFxView<?> parent) {
-        this.parent.set(parent);
     }
 
     @Override

@@ -54,14 +54,14 @@ public interface ParentView extends View {
         *
         * @return an {@link Iterator} that iterates over this component and all of its descendants
         */
-       TreeIterator<ParentPort> depthFirstIterator();
+       TreeIterator<ParentPort> depthFirstPortIterator();
 
        /**
         * Returns an iterator that traverses the component subtree starting from this component in breadth-first order.
         *
         * @return an {@link Iterator} that iterates over this component and all of its descendants
         */
-       TreeIterator<ParentPort> breadthFirstIterator();
+       TreeIterator<ParentPort> breadthFirstPortIterator();
 
        /**
         * Returns a string representation of this component and all its descendants as a sub-tree with this
@@ -82,7 +82,7 @@ public interface ParentView extends View {
         * @param appender a callback used to append the full string representation of each component.
         * @return a tree-formatted string representation of this component
         */
-       String toTreeString(BiConsumer<ParentPort, StringBuilder> appender);
+       String toPortTreeString(BiConsumer<ParentPort, StringBuilder> appender);
     }
 
     /**

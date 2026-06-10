@@ -74,7 +74,7 @@ public class RegistryFxView<P extends RegistryPresenter<?>> extends AbstractPare
             var reportP = new ReportPresenter(report, new ComponentParams());
             reportP.initialize();
             view.root.getChildren().add(report.getNode());
-            view.getModifiableChildren().add(report);
+            getModifiableChildren().add(report);
         }
 
         @Override
@@ -82,7 +82,7 @@ public class RegistryFxView<P extends RegistryPresenter<?>> extends AbstractPare
             if (report == null) {
                 throw new IllegalStateException("Report hasn't been added");
             }
-            view.getModifiableChildren().remove(report);
+            getModifiableChildren().remove(report);
             view.root.getChildren().remove(report.getNode());
             report.getPresenter().deinitialize();
             report = null;
