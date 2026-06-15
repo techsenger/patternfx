@@ -33,4 +33,9 @@ public abstract class AbstractChildPresenter<V extends ChildView> extends Abstra
     public @Nullable ParentPort getParent() {
         return getView().getComposer().getParentPort();
     }
+
+    @Override
+    public void requestFocus() {
+        getView().requestFocus();
+    }
 }

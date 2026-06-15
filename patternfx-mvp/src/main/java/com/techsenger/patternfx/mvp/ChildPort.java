@@ -25,4 +25,6 @@ import com.techsenger.annotations.Nullable;
 public interface ChildPort extends ParentPort {
 
     @Nullable ParentPort getParent();
+
+    void requestFocus();
 }
