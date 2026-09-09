@@ -42,16 +42,6 @@ public abstract class AbstractChildFxView<P extends ChildPresenter<?>>
         }
 
         @Override
-        public @Nullable <T extends ParentFxView<?>> T getParent(Class<T> parentClass) {
-            var parent = getParent();
-            if (parent != null) {
-                return parentClass.cast(parent);
-            } else {
-                return null;
-            }
-        }
-
-        @Override
         public void setParent(@Nullable ParentFxView<?> parent) {
             this.parent.set(parent);
         }

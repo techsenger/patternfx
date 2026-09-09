@@ -43,16 +43,6 @@ public interface ChildFxView<P extends ChildPresenter<?>> extends ParentFxView<P
          @Nullable ParentFxView<?> getParent();
 
         /**
-         * Returns the value of {@link #parentProperty()} cast to the specified type.
-         *
-         * @param <T> the expected type of the parent view
-         * @param parentClass the class object representing the expected parent type
-         * @return the parent view cast to the specified type, or {@code null} if this view has no parent
-         * @throws ClassCastException if the parent exists but is not of the specified type
-         */
-        <T extends ParentFxView<?>> @Nullable T getParent(Class<T> parentClass);
-
-        /**
          * Sets the parent view of this view.
          *
          * <p>Framework contract: This method is intended to be called exclusively by {@link ParentComposer}

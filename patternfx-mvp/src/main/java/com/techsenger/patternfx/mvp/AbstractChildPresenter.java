@@ -16,8 +16,6 @@
 
 package com.techsenger.patternfx.mvp;
 
-import com.techsenger.annotations.Nullable;
-
 /**
  *
  * @author Pavel Castornii
@@ -30,8 +28,8 @@ public abstract class AbstractChildPresenter<V extends ChildView> extends Abstra
     }
 
     @Override
-    public @Nullable ParentPort getParent() {
-        return getView().getComposer().getParentPort();
+    public ComposerAccess getComposerAccess() {
+        return getView().getComposer();
     }
 
     @Override
