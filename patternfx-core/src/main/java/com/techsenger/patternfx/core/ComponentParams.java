@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.mvp;
+package com.techsenger.patternfx.core;
 
 import com.techsenger.annotations.Nullable;
-import com.techsenger.patternfx.core.HistoryProvider;
 
 /**
  *
@@ -25,19 +24,23 @@ import com.techsenger.patternfx.core.HistoryProvider;
  */
 public class ComponentParams {
 
-    private @Nullable HistoryProvider<? extends ComponentHistory> historyProvider;
+    private @Nullable HistoryProvider<? extends AbstractComponentHistory> historyProvider;
 
-    public @Nullable HistoryProvider<? extends ComponentHistory> getHistoryProvider() {
+    public @Nullable HistoryProvider<? extends AbstractComponentHistory> getHistoryProvider() {
         return historyProvider;
     }
 
-    public void setHistoryProvider(@Nullable HistoryProvider<? extends ComponentHistory> historyProvider) {
+    public void setHistoryProvider(@Nullable HistoryProvider<? extends AbstractComponentHistory> historyProvider) {
         this.historyProvider = historyProvider;
     }
 
     /**
-     * Validates the params. Called before the params are used to construct a {@link Presenter}. Subclasses adding
-     * their own required fields should override this method to validate them.
+     * Validates the params. Called before the params are used to construct a component. Subclasses adding their
+     * own required fields should override this method to validate them.
+     *
+     * <p>Framework contract: This method is intended to be called exclusively by the component being constructed
+     * from these params, which may live in a different module than this class. Direct invocation by user code
+     * results in undefined behavior.
      */
-    protected void validate() { }
+    public void validate() { }
 }

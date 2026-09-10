@@ -17,6 +17,7 @@
 package com.techsenger.patternfx.mvvm;
 
 import com.techsenger.annotations.Nullable;
+import com.techsenger.patternfx.core.ParentPort;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 
@@ -27,31 +28,49 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 public abstract class AbstractChildView<VM extends AbstractChildViewModel<?>>
         extends AbstractParentView<VM> implements ChildView<VM> {
 
-    private final ReadOnlyObjectWrapper<ParentView<?>> parent = new ReadOnlyObjectWrapper<>();
+    public class Composer extends AbstractParentView<VM>.Composer implements ChildView.Composer {
+
+        private final ReadOnlyObjectWrapper<ParentView<?>> parent = new ReadOnlyObjectWrapper<>();
+
+        @Override
+        public ReadOnlyObjectProperty<ParentView<?>> parentProperty() {
+            return this.parent.getReadOnlyProperty();
+        }
+
+        @Override
+        public @Nullable ParentView<?> getParent() {
+            return this.parent.get();
+        }
+
+        @Override
+        public void setParent(@Nullable ParentView<?> parent) {
+            this.parent.set(parent);
+        }
+
+        @Override
+        public @Nullable ParentPort getParentPort() {
+            var p = getParent();
+            return p == null ? null : p.getViewModel();
+        }
+    }
 
     public AbstractChildView(VM viewModel) {
         super(viewModel);
-        parent.addListener((ov, oldV, newV) -> {
-            if (newV != null) {
-                viewModel.setParent(newV.getViewModel());
-            } else {
-                viewModel.setParent(null);
-            }
-        });
     }
 
     @Override
-    public ReadOnlyObjectProperty<ParentView<?>> parentProperty() {
-        return this.parent.getReadOnlyProperty();
+    public Composer getComposer() {
+        return (Composer) super.getComposer();
     }
 
     @Override
-    public @Nullable ParentView<?> getParent() {
-        return this.parent.get();
+    protected Composer createComposer() {
+        return new AbstractChildView<VM>.Composer();
     }
 
     @Override
-    public void setParent(@Nullable ParentView<?> parent) {
-        this.parent.set(parent);
+    protected void addListeners() {
+        super.addListeners();
+        getViewModel().getRequestFocus().addListener((newV) -> requestFocus());
     }
 }

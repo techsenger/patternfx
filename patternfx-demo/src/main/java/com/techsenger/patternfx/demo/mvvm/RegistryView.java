@@ -16,13 +16,12 @@
 
 package com.techsenger.patternfx.demo.mvvm;
 
+import com.techsenger.annotations.Nullable;
+import com.techsenger.patternfx.core.ComponentParams;
 import com.techsenger.patternfx.demo.Style;
 import com.techsenger.patternfx.demo.model.Person;
 import com.techsenger.patternfx.mvvm.AbstractParentView;
-import com.techsenger.patternfx.mvvm.BindingUtils;
-import com.techsenger.patternfx.mvvm.Composer;
 import java.util.List;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
@@ -43,31 +42,46 @@ import javafx.stage.Stage;
  */
 public class RegistryView extends AbstractParentView<RegistryViewModel> {
 
-    private final class ComposerImpl implements RegistryComposer {
+    public class Composer extends AbstractParentView<RegistryViewModel>.Composer implements RegistryComposer {
+
+        private @Nullable ReportView report;
 
         @Override
-        public void openDialog(DialogViewModel vm) {
-            var dialogV = new DialogView(vm, stage);
-            dialogV.initialize();
-            dialogV.getDialog().showAndWait();
-            dialogV.deinitialize();
+        public DialogPort openDialog(ComponentParams params) {
+            var viewModel = new DialogViewModel(params);
+            var v = new DialogView(viewModel, stage);
+            v.initialize();
+            v.getDialog().showAndWait();
+            return viewModel;
         }
 
         @Override
-        public void showReport(ReportViewModel vm) {
-            var v = new ReportView(vm);
+        public @Nullable ReportPort getReport() {
+            return report == null ? null : report.getViewModel();
+        }
+
+        @Override
+        public void showReport(ComponentParams params) {
+            if (report != null) {
+                throw new IllegalStateException("Report has been added");
+            }
+            var viewModel = new ReportViewModel(params);
+            var v = new ReportView(viewModel);
             v.initialize();
             root.getChildren().add(v.getNode());
             getModifiableChildren().add(v);
-            report.set(v);
+            report = v;
         }
 
         @Override
         public void hideReport() {
-            root.getChildren().remove(root.getChildren().size() - 1);
-            getModifiableChildren().remove(report.get());
-            report.get().deinitialize();
-            report.set(null);
+            if (report == null) {
+                throw new IllegalStateException("Report hasn't been added");
+            }
+            getModifiableChildren().remove(report);
+            root.getChildren().remove(report.getNode());
+            report.deinitialize();
+            report = null;
         }
     }
 
@@ -89,12 +103,15 @@ public class RegistryView extends AbstractParentView<RegistryViewModel> {
 
     private final VBox root = new VBox(toolBar, content);
 
-    private final ReadOnlyObjectWrapper<ReportView> report = new ReadOnlyObjectWrapper<>();
-
     private final Stage stage = new Stage();
 
     public RegistryView(RegistryViewModel viewModel) {
         super(viewModel);
+    }
+
+    @Override
+    public Composer getComposer() {
+        return (Composer) super.getComposer();
     }
 
     @Override
@@ -134,7 +151,6 @@ public class RegistryView extends AbstractParentView<RegistryViewModel> {
         viewModel.selectedPersonProperty().bind(personTable.getSelectionModel().selectedItemProperty());
         removeButton.disableProperty().bind(viewModel.removeDisabledProperty());
         reportButton.textProperty().bind(viewModel.reportButtonTextProperty());
-        BindingUtils.bind(viewModel.getReportWrapper(), report);
     }
 
     @Override
@@ -156,7 +172,7 @@ public class RegistryView extends AbstractParentView<RegistryViewModel> {
 
     @Override
     protected Composer createComposer() {
-        return new ComposerImpl();
+        return new RegistryView.Composer();
     }
 
     Stage getStage() {

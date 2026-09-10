@@ -17,10 +17,10 @@
 package com.techsenger.patternfx.demo.mvp;
 
 import com.techsenger.annotations.Nullable;
+import com.techsenger.patternfx.core.ComponentParams;
 import com.techsenger.patternfx.demo.model.Person;
 import com.techsenger.patternfx.demo.model.PersonValidator;
 import com.techsenger.patternfx.mvp.AbstractParentPresenter;
-import com.techsenger.patternfx.mvp.ComponentParams;
 
 /**
  *

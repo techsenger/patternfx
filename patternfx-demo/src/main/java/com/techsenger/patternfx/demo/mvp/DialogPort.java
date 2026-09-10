@@ -17,8 +17,8 @@
 package com.techsenger.patternfx.demo.mvp;
 
 import com.techsenger.annotations.Nullable;
+import com.techsenger.patternfx.core.ParentPort;
 import com.techsenger.patternfx.demo.model.Person;
-import com.techsenger.patternfx.mvp.ParentPort;
 
 /**
  *

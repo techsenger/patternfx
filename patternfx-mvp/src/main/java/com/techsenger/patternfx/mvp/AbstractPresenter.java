@@ -17,6 +17,7 @@
 package com.techsenger.patternfx.mvp;
 
 import com.techsenger.annotations.Nullable;
+import com.techsenger.patternfx.core.ComponentParams;
 import com.techsenger.patternfx.core.ComponentState;
 import com.techsenger.patternfx.core.DefaultComponentName;
 import com.techsenger.patternfx.core.HistoryProvider;
@@ -39,11 +40,12 @@ public abstract class AbstractPresenter<V extends View> implements Presenter<V> 
 
     private @Nullable ComponentHistory history;
 
+    @SuppressWarnings("unchecked")
     public AbstractPresenter(V view, ComponentParams params) {
         params.validate();
         this.view = view;
         this.descriptor = createDescriptor();
-        this.historyProvider = params.getHistoryProvider();
+        this.historyProvider = (HistoryProvider<? extends ComponentHistory>) params.getHistoryProvider();
         if (this.view instanceof AbstractView<?>) {
             ((AbstractView<?>) this.view).setPresenter(this);
         }

@@ -16,8 +16,8 @@
 
 package com.techsenger.patternfx.demo.mvp;
 
+import com.techsenger.patternfx.core.ComponentParams;
 import com.techsenger.patternfx.demo.model.PersonService;
-import com.techsenger.patternfx.mvp.ComponentParams;
 
 /**
  *

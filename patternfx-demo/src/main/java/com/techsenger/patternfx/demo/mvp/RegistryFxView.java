@@ -17,10 +17,10 @@
 package com.techsenger.patternfx.demo.mvp;
 
 import com.techsenger.annotations.Nullable;
+import com.techsenger.patternfx.core.ComponentParams;
 import com.techsenger.patternfx.demo.Style;
 import com.techsenger.patternfx.demo.model.Person;
 import com.techsenger.patternfx.mvp.AbstractParentFxView;
-import com.techsenger.patternfx.mvp.ComponentParams;
 import java.util.List;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;

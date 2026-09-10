@@ -14,28 +14,16 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.mvp;
-
-import com.techsenger.annotations.Nullable;
+package com.techsenger.patternfx.core;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface ChildPort extends ParentPort {
+public interface ParentPort {
 
-    interface ComposerAccess {
-
-        /**
-        * Returns the parent if the component is currently added as a child to another component, or {@code null}
-        * if it has no parent.
-        *
-        * @return the Port of the parent component, or {@code null} if this component has no parent
-        */
-        @Nullable ParentPort getParentPort();
-    }
-
-    ComposerAccess getComposerAccess();
-
-    void requestFocus();
+    /**
+     * Returns the descriptor with minimal functionality.
+     */
+    DescriptorBase getDescriptor();
 }

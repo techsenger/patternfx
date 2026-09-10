@@ -14,18 +14,24 @@
  * limitations under the License.
  */
 
-package com.techsenger.patternfx.mvp;
+package com.techsenger.patternfx.demo.mvvm;
 
-import com.techsenger.patternfx.core.DescriptorBase;
+import com.techsenger.patternfx.core.ComponentParams;
+import com.techsenger.patternfx.demo.model.PersonService;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface ParentPort {
+public class RegistryParams extends ComponentParams {
 
-    /**
-     * Returns the descriptor with minimal functionality.
-     */
-    DescriptorBase getDescriptor();
+    private final PersonService service;
+
+    public RegistryParams(PersonService service) {
+        this.service = service;
+    }
+
+    public PersonService getService() {
+        return service;
+    }
 }

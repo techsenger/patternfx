@@ -16,34 +16,34 @@
 
 package com.techsenger.patternfx.mvvm;
 
-import com.techsenger.annotations.Nullable;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
+import com.techsenger.patternfx.core.ComponentParams;
+import com.techsenger.toolkit.fx.value.ObservableSource;
+import com.techsenger.toolkit.fx.value.SimpleObservableSource;
 
 /**
  *
  * @author Pavel Castornii
  */
-public abstract class AbstractChildViewModel<C extends Composer> extends AbstractParentViewModel<C>
+public abstract class AbstractChildViewModel<C extends ChildComposer> extends AbstractParentViewModel<C>
         implements ChildViewModel<C> {
 
-    private final ReadOnlyObjectWrapper<ParentViewModel<?>> parent = new ReadOnlyObjectWrapper<>();
+    private final ObservableSource<Void> requestFocus = new SimpleObservableSource<>();
 
-    public AbstractChildViewModel() {
-        super();
+    public AbstractChildViewModel(ComponentParams params) {
+        super(params);
     }
 
     @Override
-    public ReadOnlyObjectProperty<ParentViewModel<?>> parentProperty() {
-        return this.parent.getReadOnlyProperty();
+    public ComposerAccess getComposerAccess() {
+        return getComposer();
     }
 
     @Override
-    public @Nullable ParentViewModel<?> getParent() {
-        return this.parent.get();
+    public void requestFocus() {
+        requestFocus.next(null);
     }
 
-    protected void setParent(@Nullable ParentViewModel<?> parent) {
-        this.parent.set(parent);
+    ObservableSource<Void> getRequestFocus() {
+        return requestFocus;
     }
 }

@@ -17,6 +17,7 @@
 package com.techsenger.patternfx.mvvm;
 
 import com.techsenger.annotations.Nullable;
+import com.techsenger.patternfx.core.ComponentParams;
 import com.techsenger.patternfx.core.DefaultComponentName;
 import com.techsenger.patternfx.core.HistoryProvider;
 import com.techsenger.toolkit.fx.value.ObservableSource;
@@ -40,8 +41,11 @@ public abstract class AbstractViewModel implements ViewModel {
 
     private @Nullable ComponentHistory history;
 
-    public AbstractViewModel() {
+    @SuppressWarnings("unchecked")
+    public AbstractViewModel(ComponentParams params) {
+        params.validate();
         this.descriptor = createDescriptor();
+        this.historyProvider = (HistoryProvider<? extends ComponentHistory>) params.getHistoryProvider();
     }
 
     @Override
@@ -52,10 +56,6 @@ public abstract class AbstractViewModel implements ViewModel {
     @Override
     public void requestDeinitialize() {
         requestDeinitialize.next(null);
-    }
-
-    protected void setHistoryProvider(@Nullable HistoryProvider<? extends ComponentHistory> historyProvider) {
-        this.historyProvider = historyProvider;
     }
 
     /**

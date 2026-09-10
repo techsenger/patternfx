@@ -16,6 +16,8 @@
 
 package com.techsenger.patternfx.mvp;
 
+import com.techsenger.patternfx.core.ComponentParams;
+
 /**
  *
  * @author Pavel Castornii

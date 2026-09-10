@@ -16,10 +16,74 @@
 
 package com.techsenger.patternfx.mvvm;
 
+import com.techsenger.annotations.Unmodifiable;
+import com.techsenger.patternfx.core.ChildPort;
+import com.techsenger.patternfx.core.ParentPort;
+import com.techsenger.patternfx.core.TreeIterator;
+import java.util.List;
+import java.util.function.BiConsumer;
+
 /**
+ * The Port-level facet of a component's Composer &mdash; the type a {@link ParentViewModel} is parametrized with.
+ * It never references View types, so a ViewModel holding a {@code Composer} gains no access to the View tree; the
+ * View-typed facet (e.g. {@link ParentView.Composer}) is a separate, richer interface implemented by the same
+ * concrete Composer instance.
  *
  * @author Pavel Castornii
  */
 public interface Composer {
 
+    /**
+     * Composes the static structure of this component by creating and adding its default child components. This
+     * method is intended for static composition, where child components are created once during component
+     * initialization and remain present for the entire component lifecycle.
+     *
+     * <p>This method is automatically invoked during the {@code postInitialize} phase of the component lifecycle,
+     * after the main initialization has completed but before the component becomes fully operational. This ensures
+     * that all child components are properly initialized and integrated into the component tree before the parent
+     * component starts its normal operation.
+     */
+    void compose();
+
+    /**
+     * Returns an unmodifiable list of child Ports.
+     *
+     * @return a non-null, unmodifiable list of child Ports
+     */
+    @Unmodifiable List<? extends ChildPort> getChildPorts();
+
+    /**
+     * Returns an iterator that traverses the component subtree starting from this component in depth-first order.
+     *
+     * @return an {@link Iterator} that iterates over this component and all of its descendants
+     */
+    TreeIterator<ParentPort> depthFirstPortIterator();
+
+    /**
+     * Returns an iterator that traverses the component subtree starting from this component in breadth-first order.
+     *
+     * @return an {@link Iterator} that iterates over this component and all of its descendants
+     */
+    TreeIterator<ParentPort> breadthFirstPortIterator();
+
+    /**
+     * Returns a string representation of this component and all its descendants as a sub-tree with this component
+     * as root.
+     *
+     * @return a tree-formatted string representation of this component
+     */
+    String toTreeString();
+
+    /**
+     * Returns a string representation of this component and all its descendants as a sub-tree with this component
+     * as root, allowing the caller to customize the string output for each component.
+     *
+     * <p>The provided {@code appender} is invoked for each component and is responsible for appending the complete
+     * string representation of that component to the given {@link StringBuilder}. The tree structure and line
+     * separation are handled by this method.
+     *
+     * @param appender a callback used to append the full string representation of each component.
+     * @return a tree-formatted string representation of this component
+     */
+    String toPortTreeString(BiConsumer<ParentPort, StringBuilder> appender);
 }

@@ -16,27 +16,12 @@
 
 package com.techsenger.patternfx.mvvm;
 
-import com.techsenger.annotations.Nullable;
-import javafx.beans.property.ReadOnlyObjectProperty;
+import com.techsenger.patternfx.core.ChildPort;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface ChildViewModel<T extends Composer> extends ParentViewModel<T> {
+public interface ChildViewModel<C extends ChildComposer> extends ParentViewModel<C>, ChildPort {
 
-    /**
-     * Returns the property representing the ViewModel of the parent View. The property holds a reference to the
-     * parent if this View is currently added as a child to another View, or {@code null} if it has no parent.
-     *
-     * @return the property containing the ViewModel of the parent View
-     */
-    ReadOnlyObjectProperty<ParentViewModel<?>> parentProperty();
-
-    /**
-     * Returns the value of {@link #parentProperty()}.
-     *
-     * @return the ViewModel of the parent View, or {@code null} if this View has no parent
-     */
-    @Nullable ParentViewModel<?> getParent();
 }

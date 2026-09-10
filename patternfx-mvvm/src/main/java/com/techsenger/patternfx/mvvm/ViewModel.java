@@ -28,7 +28,7 @@ public interface ViewModel {
     Descriptor getDescriptor();
 
     /**
-     * Requests the deinitialization of the View.
+     * Deinitializes this ViewModel; its View reacts by deinitializing itself as well.
      */
     void requestDeinitialize();
 }

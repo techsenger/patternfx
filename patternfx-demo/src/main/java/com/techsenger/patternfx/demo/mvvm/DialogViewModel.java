@@ -17,10 +17,10 @@
 package com.techsenger.patternfx.demo.mvvm;
 
 import com.techsenger.annotations.Nullable;
+import com.techsenger.patternfx.core.ComponentParams;
 import com.techsenger.patternfx.demo.model.Person;
 import com.techsenger.patternfx.demo.model.PersonValidator;
 import com.techsenger.patternfx.mvvm.AbstractViewModel;
-import java.util.function.Consumer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -32,7 +32,7 @@ import javafx.beans.property.StringProperty;
  *
  * @author Pavel Castornii
  */
-public class DialogViewModel extends AbstractViewModel {
+public class DialogViewModel extends AbstractViewModel implements DialogPort {
 
     private final StringProperty title = new SimpleStringProperty("New Person");
 
@@ -48,10 +48,15 @@ public class DialogViewModel extends AbstractViewModel {
 
     private final BooleanProperty ageValid = new SimpleBooleanProperty(true);
 
-    private final Consumer<Person> resultCallback;
+    private @Nullable Person result;
 
-    public DialogViewModel(Consumer<Person> resultCallback) {
-        this.resultCallback = resultCallback;
+    public DialogViewModel(ComponentParams params) {
+        super(params);
+    }
+
+    @Override
+    public @Nullable Person getResult() {
+        return this.result;
     }
 
     public @Nullable String getFirstName() {
@@ -106,19 +111,19 @@ public class DialogViewModel extends AbstractViewModel {
         return ageValid;
     }
 
-    boolean addNewPerson() {
-        if (isPersonValid()) {
-            var newPerson = new Person(getFirstName(), getLastName(), getAge());
-            this.resultCallback.accept(newPerson);
+    boolean onOk() {
+        var person = new Person(getFirstName(), getLastName(), getAge());
+        if (isPersonValid(person)) {
+            this.result = person;
             return true;
         }
         return false;
     }
 
-    private boolean isPersonValid() {
-        firstNameValid.set(PersonValidator.isFirstNameValid(getFirstName()));
-        lastNameValid.set(PersonValidator.isLastNameValid(getLastName()));
-        ageValid.set(PersonValidator.isAgeValid(getAge()));
+    private boolean isPersonValid(Person person) {
+        firstNameValid.set(PersonValidator.isFirstNameValid(person.getFirstName()));
+        lastNameValid.set(PersonValidator.isLastNameValid(person.getLastName()));
+        ageValid.set(PersonValidator.isAgeValid(person.getAge()));
         return firstNameValid.get() && lastNameValid.get() && ageValid.get();
     }
 }

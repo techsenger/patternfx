@@ -16,8 +16,8 @@
 
 package com.techsenger.patternfx.demo.mvp;
 
+import com.techsenger.patternfx.core.ChildPort;
 import com.techsenger.patternfx.demo.model.Person;
-import com.techsenger.patternfx.mvp.ChildPort;
 import java.util.List;
 
 /**

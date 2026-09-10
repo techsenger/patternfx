@@ -16,7 +16,7 @@
 
 package com.techsenger.patternfx.demo.mvvm;
 
-import com.techsenger.annotations.Nullable;
+import com.techsenger.patternfx.core.ComponentParams;
 import com.techsenger.patternfx.core.ComponentState;
 import com.techsenger.patternfx.demo.model.Person;
 import com.techsenger.patternfx.demo.model.PersonService;
@@ -25,8 +25,6 @@ import java.util.Iterator;
 import java.util.Objects;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -55,10 +53,9 @@ public class RegistryViewModel extends AbstractParentViewModel<RegistryComposer>
 
     private final ReadOnlyStringWrapper reportButtonText = new ReadOnlyStringWrapper();
 
-    private final ReadOnlyObjectWrapper<ReportViewModel> report = new ReadOnlyObjectWrapper<>();
-
-    public RegistryViewModel(PersonService service) {
-        this.service = service;
+    public RegistryViewModel(RegistryParams params) {
+        super(params);
+        this.service = params.getService();
     }
 
     @Override
@@ -75,9 +72,9 @@ public class RegistryViewModel extends AbstractParentViewModel<RegistryComposer>
             }
         });
         persons.addListener((ListChangeListener<Person>) e -> {
-            var r = getReport();
-            if (r != null) {
-                r.refresh(persons);
+            var report = getComposer().getReport();
+            if (report != null) {
+                report.refresh(persons);
             }
         });
         updateReportButtonText(false);
@@ -99,20 +96,8 @@ public class RegistryViewModel extends AbstractParentViewModel<RegistryComposer>
         return reportButtonText.getReadOnlyProperty();
     }
 
-    ReadOnlyObjectProperty<ReportViewModel> reportProperty() {
-        return report.getReadOnlyProperty();
-    }
-
     String getReportButtonText() {
         return reportButtonText.get();
-    }
-
-    @Nullable ReportViewModel getReport() {
-        return report.get();
-    }
-
-    ReadOnlyObjectWrapper<ReportViewModel> getReportWrapper() {
-        return report;
     }
 
     void onRefresh() {
@@ -121,9 +106,12 @@ public class RegistryViewModel extends AbstractParentViewModel<RegistryComposer>
     }
 
     void onAdd() {
-        var dialogVM = new DialogViewModel((p) -> add(p));
-        Objects.requireNonNull(getComposer());
-        getComposer().openDialog(dialogVM);
+        var dialog = getComposer().openDialog(new ComponentParams());
+        var newPerson = dialog.getResult();
+        dialog.requestDeinitialize();
+        if (newPerson != null) {
+            add(newPerson);
+        }
     }
 
     void onRemove() {
@@ -140,24 +128,20 @@ public class RegistryViewModel extends AbstractParentViewModel<RegistryComposer>
     }
 
     void onToggleReport() {
-        Objects.requireNonNull(getComposer());
-        if (getReport() == null) {
-            getComposer().showReport(new ReportViewModel());
-            var report = getReport();
-            Objects.requireNonNull(report);
+        var composer = getComposer();
+        if (composer.getReport() == null) {
+            composer.showReport(new ComponentParams());
+            var report = Objects.requireNonNull(composer.getReport());
             report.refresh(persons);
             updateReportButtonText(true);
         } else {
-            getComposer().hideReport();
+            composer.hideReport();
             updateReportButtonText(false);
         }
     }
 
     void onClose() {
-        var iterator = breadthFirstIterator();
-        while (iterator.hasNext()) {
-            iterator.next().requestDeinitialize();
-        }
+        requestDeinitializeTree();
     }
 
     private void add(Person person) {

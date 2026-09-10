@@ -31,7 +31,9 @@ As a real example of using this framework, see [ShellFX](https://github.com/tech
         * [Architecture Overview](#patterns-arch-overview)
         * [State vs Actions](#patterns-state-vs-actions)
         * [Control Flow](#patterns-control-flow)
+        * [Nested State](#patterns-nested-state)
         * [Testability](#patterns-testability)
+        * [JavaFX Support](#patterns-javafx-support)
         * [Choosing the Right Pattern](#patterns-right-choice)
 * [Templates](#templates)
     * [Component](#templates-component)
@@ -40,6 +42,8 @@ As a real example of using this framework, see [ShellFX](https://github.com/tech
         * [Component Logging](#templates-component-logging)
         * [Component Types](#templates-component-types)
         * [Component Tree](#templates-component-tree)
+        * [Component Params](#templates-component-params)
+        * [Component Port](#templates-component-port)
         * [Component Composer](#templates-component-composer)
         * [Imperative Component Management](#templates-component-management)
         * [Component History](#templates-component-history)
@@ -303,10 +307,70 @@ MVP keeps the workflow explicit. User interactions are processed sequentially in
 the required operations directly on the model and the view. This results in a linear, predictable execution flow that
 is generally easier to trace, debug, and maintain, especially in interaction-heavy desktop applications.
 
+#### Nested State <a name="patterns-nested-state"></a>
+
+MVP has no built-in mechanism for notifying about a change to a nested field, a single element inside a collection,
+or one property of an object held deep inside the `Presenter`'s state. The `Presenter`'s state is just plain fields
+and plain objects; nothing observes them. If, say, a single cell in a table row changes, or one field inside a
+nested domain object changes, the `Presenter` itself has to notice this happened and decide what to do about it —
+there is no framework-level signal it can rely on. In practice this pushes the `Presenter` toward one of two
+unsatisfying options: re-push the entire collection or object to the `View` on every change (wasteful, and for a
+`TableView` it can mean losing selection, scroll position, or triggering a visible flicker for a one-cell edit), or
+hand-write a dedicated `updateX(index, value)`-style `View` method for every granular case that needs it (which does
+not scale as the number of such cases grows).
+
+This is not a flaw specific to this framework's MVP template — it is inherent to the pattern itself. The `Presenter`
+holds state, but nothing in MVP requires or provides a way for that state to be observable at a sub-field or
+sub-element granularity. MVVM does not have this problem, for a reason covered in the next section: it is built
+directly on the platform's own tools for exactly this purpose.
+
 #### Testability <a name="patterns-testability"></a>
 
 From a testability perspective, MVVM has an advantage because the `ViewModel` is an ideal unit for isolated testing.
 In contrast, MVP requires mocking the `View` in `Presenter` tests, which introduces additional boilerplate.
+
+#### JavaFX Support <a name="patterns-javafx-support"></a>
+
+So far the comparison has been pattern-vs-pattern, on their own terms. It is equally important to ask a different
+question: how well does each pattern align with what the JavaFX platform itself already provides, as opposed to
+requiring an abstraction layer to be built on top of it?
+
+JavaFX does not favor MVC, MVP, or MVVM as a multi-component application architecture. Its own `Controller` concept
+(via FXML's `fx:controller` and `@FXML` field/method injection) is deliberately thin — an event-handling class wired
+with direct access to the nodes it was given — and JavaFX has no equivalent built-in concept for a `Presenter` or
+a `ViewModel` at all. So the one concrete architectural stance JavaFX does take, its FXML `Controller`, leans toward
+MVC's shape specifically, not MVP's or MVVM's — which is exactly the FXML-based approach this framework deliberately
+avoids.
+
+Where JavaFX most clearly aligns with MVVM is at the state layer:
+
+* Every JavaFX control already exposes its state as `Property` objects (`selected`, `disable`, `text`, and so on),
+and `Bindings`/`ObjectBinding` let derived state be expressed declaratively instead of recomputed manually after every
+change. MVVM's `View` and `ViewModel` can make direct use of this machinery. MVC and MVP can also use JavaFX properties,
+but an imperative MVC/MVP design does not normally make them the central mechanism for application state; it can instead
+work with ordinary fields and explicit method calls.
+
+* `ObservableList`/`ObservableMap`/`ObservableSet` (via `FXCollections`) fire fine-grained change events — additions,
+removals, permutations, and updates at specific indices — rather than an opaque "something changed" signal. This is
+exactly the capability [Nested State](#patterns-nested-state) above identifies as difficult to express with a purely
+imperative MVP approach. A `TableView` bound to an `ObservableList<RowViewModel>`, where each row's columns are
+themselves `Property`-typed, can update an affected cell natively when that property's value changes. An imperative
+MVP design has no equivalent platform-native mechanism that provides this behavior automatically; it must explicitly
+propagate the relevant changes to the `View` or introduce its own observable mechanism.
+
+* This is a genuine platform alignment, not just a library preference: MVVM can use JavaFX's reactive state machinery
+directly, rather than introducing a separate mechanism for observable UI state. MVC and MVP do not necessarily need to
+reject that machinery, but an imperative implementation deliberately keeps state propagation explicit instead of making
+bindings and listeners the primary control-flow mechanism.
+
+This alignment is not free of cost, and it does not make MVVM strictly better. JavaFX's `Property` and binding system
+introduces additional objects and listener/binding lifecycle management, and UI-bound state is closely tied to JavaFX's
+Application Thread model. An imperative MVC or MVP implementation can avoid much of this machinery when ordinary fields
+and explicit method calls are sufficient.
+
+The trade-off therefore still depends on whether the UI is primarily state-driven or action-driven, as discussed above.
+JavaFX's native support for observable state gives MVVM a strong platform fit, but that fit is not, by itself, an
+argument that MVVM is the better architecture for every JavaFX application.
 
 #### Choosing the Right Pattern <a name="patterns-right-choice"></a>
 
@@ -446,6 +510,44 @@ Keeping the component layer thin prevents it from becoming a God object and ensu
 properly distributed between the View and the ViewModel. This constraint is essential for preserving architectural
 clarity, testability, and long-term maintainability.
 
+#### Component Params <a name="templates-component-params"></a>
+
+`Params` contains the initial parameter values required to bring a component into existence — construction and
+initialization are the two real steps of that, so a component's `Presenter` or `ViewModel` may retain its `Params`
+(typically as its own field) across both: through the constructor and through its `initialize()` call, most commonly
+to read a value it only needs once, during `preInitialize()`/`postInitialize()` (MVP) or the equivalent lifecycle
+hooks (MVVM). Once initialization completes, the component is fully synchronized with its `View`, and no longer
+needs its construction-time input, so `Params` must not be retained beyond that point. Before use, the params are
+validated via the overridable `validate()` method. Using a `Params` object ensures that all required parameters are
+explicitly defined before initialization, preventing missing values at runtime. Subclasses that introduce their own
+required fields should override `validate()` to validate them. Additionally, `Params` is a convenient data container
+for passing information to the `Composer` when creating components.
+
+`Params` is defined once, at the component layer shared by every template, and is used identically by `Presenter`s
+in MVP and `ViewModel`s in MVVM — there is no template-specific variant of it.
+
+#### Component Port <a name="templates-component-port"></a>
+
+`Port` is an interface implemented by a `Presenter` (MVP) or a `ViewModel` (MVVM) to enable explicit communication
+between components. A single `Presenter`/`ViewModel` may implement multiple distinct `Port`s.
+
+This interface is introduced to achieve the following objectives:
+
+* To maintain component encapsulation by avoiding direct presenter-to-presenter or viewmodel-to-viewmodel references.
+* To establish a well-defined and strictly controlled interaction boundary between a component and its external
+  environment.
+
+It is important to note that `Presenter`/`ViewModel` instances should never be shared directly between components.
+A `Port` is the only intended mechanism for inter-component communication.
+
+Like `Params`, `Port` is defined once, at the component layer shared by every template.
+
+In the MVVM template specifically, a `Port` is deliberately non-reactive: it never exposes JavaFX `Property` or
+`ObservableList` types, only plain methods and values. Reactivity is confined to within a single component's `View`
+and `ViewModel`; once state needs to cross a `Port` into another component, it is expressed the same way it would be
+in MVP — through ordinary method calls and return values, not bindings. This keeps a `ViewModel`'s reactive machinery
+from leaking into, and coupling, the rest of the component tree.
+
 #### Component Composer <a name="templates-component-composer"></a>
 
 The `Composer` serves two primary purposes:
@@ -570,30 +672,9 @@ maintain references to parent and child components, and also holds a `Composer` 
 
 A component  consists of the following classes: a `View`, `FxView`, `Presenter`. In addition to them, a component
 always has a `Descriptor` (which is provided by the framework and normally does not require custom implementation)
-and may include `Params`, `Composer`, `Port` and a `History` classes.
-
-`Params` contains the initial parameter values required to bring a component into existence — construction and
-initialization are the two real steps of that, so a `Presenter` may retain its `Params` (typically as its own field)
-across both: through the constructor and through its `initialize()` call, most commonly to read a value it only
-needs once, during `preInitialize()`/`postInitialize()`. Once `initialize()` returns, the `Presenter` is fully
-synchronized with its `View` and no longer needs its construction-time input, so `Params` must not be retained
-beyond that point. Before use, the params are validated via the overridable `validate()` method. Using a `Params`
-object ensures that all required parameters are explicitly defined before initialization, preventing missing values
-at runtime. Subclasses that introduce their own required fields should override `validate()` to validate them.
-Additionally, `Params` is a convenient data container for passing information to the `Composer` when creating
-components.
-
-`Port` is an interface implemented by a `Presenter` to enable explicit communication between presenters. A single
-`Presenter` may implement multiple distinct `Port`s.
-
-This interface is introduced to achieve the following objectives:
-
-* To maintain component encapsulation by avoiding direct presenter-to-presenter references.
-* To establish a well-defined and strictly controlled interaction boundary between a presenter and its external
-  environment.
-
-It is important to note that `Presenter` instances should never be shared directly between components. A `Port` is the
-only intended mechanism for inter-presenter communication.
+and may include `Params`, `Composer`, `Port` and a `History` classes. `Params` and `Port` are not MVP-specific — see
+[Component Params](#templates-component-params) and [Component Port](#templates-component-port) — the `Presenter` is
+simply the class that, in this template, retains `Params` across initialization and implements a `Port`.
 
 #### MVP Component Lifecycle <a name="templates-mvp-lifecycle"></a>
 
@@ -634,7 +715,7 @@ public interface FooView extends ParentView {
 
     interface Composer extends ParentView.Composer {
 
-        void showBar(ComponentConfig config);
+        void showBar(ComponentParams params);
 
         void hideBar();
 
@@ -653,8 +734,8 @@ public interface FooView extends ParentView {
 ```java
 public class FooPresenter<V extends FooView> extends AbstractParentPresenter<V> {
 
-    public FooPresenter(V view) {
-        super(view);
+    public FooPresenter(V view, ComponentParams params) {
+        super(view, params);
     }
 
     public void onAction() {
@@ -689,7 +770,7 @@ public class FooFxView<P extends FooPresenter<?>> extends AbstractParentFxView<P
         @Override
         public BarPort getBar() {
             if (bar != null) {
-                return bar.getPresenter().getPort();
+                return bar.getPresenter();
             } else {
                 return null;
             }
@@ -709,7 +790,7 @@ public class FooFxView<P extends FooPresenter<?>> extends AbstractParentFxView<P
     }
 
     @Override
-    public void initialize() {
+    protected void initialize() {
         super.initialize();
         logger.debug("{} View is initializing", getDescriptor().getLogPrefix());
     }
@@ -730,7 +811,8 @@ This code demonstrates how to create the foo component instance:
 
 ```java
 var view = new FooFxView<>();
-var presenter = new FooPresenter<>(view);
+var params = new ComponentParams();
+var presenter = new FooPresenter<>(view, params);
 presenter.initialize();
 ... // use the component
 presenter.deinitialize();
@@ -757,11 +839,22 @@ them within a classic MVVM template. The `View`, which should operate solely at 
 handle component initialization, maintain references to parent and child components, and also holds a `Composer`
 in its structure. As for the `ViewModel`, it gains a descriptor and stores references to parent and child components.
 
+A boundary this template enforces strictly is that reactivity stays within a single component. Inside a component,
+the `ViewModel` freely exposes JavaFX `Property` and `ObservableList` state, and the `View` binds to it directly —
+this is where MVVM's advantages actually apply. That reactive state, however, never crosses into another component:
+a `ViewModel`'s `Port` (see [Component Port](#templates-component-port)) is plain and non-reactive, so a parent or
+sibling component interacting with it uses ordinary method calls, exactly as in MVP. A `ViewModel` is, in effect, its
+own self-contained reactive universe — it has no notion that a `View`, let alone other components, exist on the other
+side of it.
+
 #### MVVM Component Structure <a name="templates-mvvm-structure"></a>
 
 A component  consists of the following classes: a `View` and a `ViewModel`. In addition to them, a component
 always has a `Descriptor` (which is provided by the framework and normally does not require custom implementation)
-and may include a `Composer` and a `History` classes.
+and may include `Params`, a `Composer`, a `Port`, and a `History` classes. `Params` and `Port` are not MVVM-specific
+— see [Component Params](#templates-component-params) and [Component Port](#templates-component-port) — the
+`ViewModel` is simply the class that, in this template, retains `Params` across initialization and implements a
+`Port`.
 
 #### MVVM Component Lifecycle <a name="templates-mvvm-lifecycle"></a>
 
@@ -800,25 +893,28 @@ The `Composer` is created and assigned to `AbstractParentViewModel` in the const
 ```java
 public interface FooComposer extends Composer {
 
-    void addBar(BarViewModel bar);
+    void showBar(ComponentParams params);
 
-    ...
+    void hideBar();
+
+    BarPort getBar();
 }
 ```
 
 `ViewModel` class:
 
 ```java
-public class FooViewModel extends AbstractChildViewModel<FooComposer> {
+public class FooViewModel extends AbstractParentViewModel<FooComposer> {
 
-    public FooViewModel() {
-        ...
+    public FooViewModel(ComponentParams params) {
+        super(params);
     }
 
-    public void doSomething() {
-        var bar = new BarViewModel();
-        ... // set up the bar
-        getComposer().addBar(bar);
+    public void onAction() {
+        var params = new ComponentParams();
+        ...
+        getComposer().showBar(params);
+        // use bar
     }
 
     ...
@@ -828,32 +924,53 @@ public class FooViewModel extends AbstractChildViewModel<FooComposer> {
 `View` class:
 
 ```java
-public class FooView extends AbstractChildView<FooViewModel> {
+public class FooView extends AbstractParentView<FooViewModel> {
 
-    private final class ComposerImpl implements FooComposer {
+    public class Composer extends AbstractParentView<FooViewModel>.Composer implements FooComposer {
+
+        private BarView bar;
 
         @Override
-        public void addBar(BarViewModel bar) {
-            var v = new BarView(vm);
-            v.initialize();
-            getModifiableChildren().add(v);
-            someNode.getChildren().add(v.getNode()); // adding bar view into foo view
+        public void showBar(ComponentParams params) {
+            var vm = new BarViewModel(params);
+            bar = new BarView(vm);
+            bar.initialize();
+            getModifiableChildren().add(bar);
+            someNode.getChildren().add(bar.getNode()); // adding bar view into foo view
+        }
+
+        @Override
+        public BarPort getBar() {
+            return this.bar == null ? null : bar.getViewModel();
+        }
+
+        @Override
+        public void hideBar() {
+            getModifiableChildren().remove(bar);
+            someNode.getChildren().remove(bar.getNode()); // removing bar view from foo view
+            bar.deinitialize();
+            bar = null;
         }
     }
 
     public FooView(FooViewModel viewModel) {
-        ...
+        super(viewModel);
     }
 
     @Override
-    protected void initialize() {
-        super.initialize();
+    protected void build() {
+        super.build();
         logger.debug("{} View is initializing", getDescriptor().getLogPrefix());
     }
 
     @Override
+    public Composer getComposer() {
+        return (Composer) super.getComposer();
+    }
+
+    @Override
     protected Composer createComposer() {
-        return new ComposerImpl();
+        return new Composer();
     }
     ...
 }
@@ -861,12 +978,19 @@ public class FooView extends AbstractChildView<FooViewModel> {
 This code demonstrates how to create the foo component instance:
 
 ```java
-var viewModel = new FooViewModel();
+var params = new ComponentParams();
+var viewModel = new FooViewModel(params);
 var view = new FooView(viewModel);
 view.initialize();
 ... // use the component
 view.deinitialize();
 ```
+
+Note the symmetry with the MVP example above: `Params` is always built by the caller that initiates creation (here,
+`FooViewModel#onAction()`),  and `showBar()`/`hideBar()`/`getBar()` return and accept only `Port`s (`BarPort`) and
+`Params` — never a `BarView` or a `BarViewModel` directly. This is what keeps the `ViewModel`'s reactive
+`Property`/`ObservableList` state, discussed in [JavaFX Support](#patterns-javafx-support), from ever crossing into
+`FooViewModel` through `FooComposer`.
 
 ## Limitations <a name="limitations"></a>
 

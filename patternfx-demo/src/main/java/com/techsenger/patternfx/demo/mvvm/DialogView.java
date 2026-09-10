@@ -108,7 +108,7 @@ public class DialogView extends AbstractView<DialogViewModel> {
     protected void addHandlers() {
         super.addHandlers();
         okButton.addEventFilter(ActionEvent.ACTION, event -> {
-            if (!getViewModel().addNewPerson()) {
+            if (!getViewModel().onOk()) {
                 event.consume();
             }
         });

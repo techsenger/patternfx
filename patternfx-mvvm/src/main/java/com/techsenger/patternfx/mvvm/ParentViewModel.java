@@ -16,62 +16,20 @@
 
 package com.techsenger.patternfx.mvvm;
 
-import com.techsenger.annotations.Nullable;
-import com.techsenger.annotations.Unmodifiable;
-import com.techsenger.patternfx.core.TreeIterator;
-import java.util.Iterator;
-import java.util.function.BiConsumer;
-import javafx.collections.ObservableList;
+import com.techsenger.patternfx.core.ParentPort;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface ParentViewModel<C extends Composer> extends ViewModel {
-
-    @Nullable C getComposer();
+public interface ParentViewModel<C extends Composer> extends ViewModel, ParentPort {
 
     /**
-     * Returns an unmodifiable observable list of child ViewModels.
-     *
-     * @return a non-null, unmodifiable observable list of child ViewModels
+     * Returns the Composer of this ViewModel's View. All references to this component's children and, for a
+     * {@link ChildViewModel}, its parent are owned by the Composer &mdash; this ViewModel holds none of them
+     * itself.
      */
-    @Unmodifiable ObservableList<ChildViewModel<?>> getChildren();
-
-    /**
-     * Returns an iterator that traverses the ViewModel subtree starting from this ViewModel in depth-first order.
-     *
-     * @return an {@link Iterator} that iterates over this ViewModel and all of its descendants
-     */
-    TreeIterator<ParentViewModel<?>> depthFirstIterator();
-
-    /**
-     * Returns an iterator that traverses the ViewModel subtree starting from this ViewModel in breadth-first order.
-     *
-     * @return an {@link Iterator} that iterates over this ViewModel and all of its descendants
-     */
-    TreeIterator<ParentViewModel<?>> breadthFirstIterator();
-
-    /**
-     * Returns a string representation of this ViewModel and all its descendants as a sub-tree with this
-     * ViewModel as root.
-     *
-     * @return a tree-formatted string representation of this ViewModel
-     */
-    String toTreeString();
-
-    /**
-     * Returns a string representation of this ViewModel and all its descendants as a sub-tree with this ViewModel
-     * as root, allowing the caller to customize the string output for each ViewModel.
-     *
-     * <p>The provided {@code appender} is invoked for each ViewModel and is responsible for appending the
-     * complete string representation of that ViewModel to the given {@link StringBuilder}. The tree structure and
-     * line separation are handled by this method.
-     *
-     * @param appender a callback used to append the full string representation of each ViewModel.
-     * @return a tree-formatted string representation of this ViewModel
-     */
-    String toTreeString(BiConsumer<ParentViewModel<?>, StringBuilder> appender);
+    C getComposer();
 
     /**
      * Deinitializes this ViewModel and all its descendants as a sub-tree with this ViewModel as the root.

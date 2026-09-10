@@ -18,7 +18,6 @@ package com.techsenger.patternfx.mvvm;
 
 import com.techsenger.annotations.Unmodifiable;
 import com.techsenger.patternfx.core.TreeIterator;
-import java.util.Iterator;
 import java.util.function.BiConsumer;
 import javafx.collections.ObservableList;
 
@@ -28,47 +27,48 @@ import javafx.collections.ObservableList;
  */
 public interface ParentView<VM extends ParentViewModel<?>> extends View<VM> {
 
-    /**
-     * Returns an unmodifiable list of child Views.
-     *
-     * @return an unmodifiable list of child Views (never {@code null})
-     */
-    @Unmodifiable ObservableList<ChildView<?>> getChildren();
+    interface Composer extends com.techsenger.patternfx.mvvm.Composer {
+
+        /**
+         * Returns an unmodifiable observable list of child Views.
+         *
+         * @return a non-null, unmodifiable observable list of child Views
+         */
+        @Unmodifiable ObservableList<? extends ChildView<?>> getChildren();
+
+        /**
+         * Returns an iterator that traverses the View subtree starting from this View in depth-first order.
+         *
+         * @return an {@link Iterator} that iterates over this View and all of its descendants
+         */
+        TreeIterator<ParentView<?>> depthFirstIterator();
+
+        /**
+         * Returns an iterator that traverses the View subtree starting from this View in breadth-first order.
+         *
+         * @return an {@link Iterator} that iterates over this View and all of its descendants
+         */
+        TreeIterator<ParentView<?>> breadthFirstIterator();
+
+        /**
+         * Returns a string representation of this View and all its descendants as a sub-tree with this View
+         * as root, allowing the caller to customize the string output for each View.
+         *
+         * The provided {@code appender} is invoked for each View and is responsible for appending the
+         * complete string representation of that View to the given {@link StringBuilder}. The tree structure and
+         * line separation are handled by this method.
+         *
+         * @param appender a callback used to append the full string representation of each View.
+         * @return a tree-formatted string representation of this View
+         */
+        String toTreeString(BiConsumer<ParentView<?>, StringBuilder> appender);
+    }
 
     /**
-     * Returns an iterator that traverses the View subtree starting from this View in depth-first order.
-     *
-     * @return an {@link Iterator} that iterates over this View and all of its descendants
+     * Returns the Composer of this View. All references to this component's children are owned by the Composer
+     * &mdash; this View holds none of them itself.
      */
-    TreeIterator<ParentView<?>> depthFirstIterator();
-
-    /**
-     * Returns an iterator that traverses the View subtree starting from this View in breadth-first order.
-     *
-     * @return an {@link Iterator} that iterates over this View and all of its descendants
-     */
-    TreeIterator<ParentView<?>> breadthFirstIterator();
-
-    /**
-     * Returns a string representation of this View and all its descendants as a sub-tree with this
-     * View as root.
-     *
-     * @return a tree-formatted string representation of this View
-     */
-    String toTreeString();
-
-    /**
-     * Returns a string representation of this View and all its descendants as a sub-tree with this View
-     * as root, allowing the caller to customize the string output for each View.
-     *
-     * The provided {@code appender} is invoked for each View and is responsible for appending the
-     * complete string representation of that View to the given {@link StringBuilder}. The tree structure and
-     * line separation are handled by this method.
-     *
-     * @param appender a callback used to append the full string representation of each View.
-     * @return a tree-formatted string representation of this View
-     */
-    String toTreeString(BiConsumer<ParentView<?>, StringBuilder> appender);
+    Composer getComposer();
 
     /**
      * Deinitializes this View and all its descendants as a sub-tree with this View as the root.

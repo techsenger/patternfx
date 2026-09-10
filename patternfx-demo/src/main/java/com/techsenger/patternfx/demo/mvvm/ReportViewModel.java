@@ -16,9 +16,10 @@
 
 package com.techsenger.patternfx.demo.mvvm;
 
+import com.techsenger.patternfx.core.ComponentParams;
 import com.techsenger.patternfx.demo.model.Person;
 import com.techsenger.patternfx.mvvm.AbstractChildViewModel;
-import com.techsenger.patternfx.mvvm.Composer;
+import com.techsenger.patternfx.mvvm.ChildComposer;
 import java.util.List;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
@@ -29,14 +30,14 @@ import javafx.beans.property.ReadOnlyIntegerWrapper;
  *
  * @author Pavel Castornii
  */
-public class ReportViewModel extends AbstractChildViewModel<Composer> {
+public class ReportViewModel extends AbstractChildViewModel<ChildComposer> implements ReportPort {
 
     private final ReadOnlyIntegerWrapper totalPeople = new ReadOnlyIntegerWrapper();
 
     private final ReadOnlyDoubleWrapper averageAge = new ReadOnlyDoubleWrapper();
 
-    public ReportViewModel() {
-
+    public ReportViewModel(ComponentParams params) {
+        super(params);
     }
 
     public ReadOnlyIntegerProperty totalPeopleProperty() {
@@ -55,17 +56,18 @@ public class ReportViewModel extends AbstractChildViewModel<Composer> {
         return averageAge.get();
     }
 
+    @Override
+    public void refresh(List<Person> persons) {
+        setTotalPeople(persons.size());
+        double average = persons.stream().mapToDouble(Person::getAge).average().orElse(0.0);
+        setAverageAge(average);
+    }
+
     void setTotalPeople(int value) {
         totalPeople.set(value);
     }
 
     void setAverageAge(double value) {
         averageAge.set(value);
-    }
-
-    void refresh(List<Person> persons) {
-        setTotalPeople(persons.size());
-        double average = persons.stream().mapToDouble(Person::getAge).average().orElse(0.0);
-        setAverageAge(average);
     }
 }

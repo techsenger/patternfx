@@ -16,10 +16,8 @@
 
 package com.techsenger.patternfx.demo.mvvm;
 
-import com.techsenger.annotations.Nullable;
 import com.techsenger.patternfx.demo.Style;
 import com.techsenger.patternfx.mvvm.AbstractChildView;
-import com.techsenger.patternfx.mvvm.Composer;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
@@ -83,10 +81,5 @@ public class ReportView extends AbstractChildView<ReportViewModel> {
         var vm = getViewModel();
         totalPeopleValueLabel.textProperty().bind(vm.totalPeopleProperty().asString());
         averageAgeValueLabel.textProperty().bind(vm.averageAgeProperty().asString());
-    }
-
-    @Override
-    protected @Nullable Composer createComposer() {
-        return null;
     }
 }

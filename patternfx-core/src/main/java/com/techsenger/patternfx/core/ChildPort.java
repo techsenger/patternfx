@@ -1,0 +1,41 @@
+/*
+ * Copyright 2024-2026 Pavel Castornii.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.techsenger.patternfx.core;
+
+import com.techsenger.annotations.Nullable;
+
+/**
+ *
+ * @author Pavel Castornii
+ */
+public interface ChildPort extends ParentPort {
+
+    interface ComposerAccess {
+
+        /**
+        * Returns the parent if the component is currently added as a child to another component, or {@code null}
+        * if it has no parent.
+        *
+        * @return the Port of the parent component, or {@code null} if this component has no parent
+        */
+        @Nullable ParentPort getParentPort();
+    }
+
+    ComposerAccess getComposerAccess();
+
+    void requestFocus();
+}

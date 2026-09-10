@@ -19,6 +19,8 @@ package com.techsenger.patternfx.mvp;
 import com.techsenger.annotations.Unmodifiable;
 import com.techsenger.patternfx.core.AbstractBreadthFirstIterator;
 import com.techsenger.patternfx.core.AbstractDepthFirstIterator;
+import com.techsenger.patternfx.core.ChildPort;
+import com.techsenger.patternfx.core.ParentPort;
 import com.techsenger.patternfx.core.TreeIterator;
 import java.util.List;
 import java.util.function.BiConsumer;

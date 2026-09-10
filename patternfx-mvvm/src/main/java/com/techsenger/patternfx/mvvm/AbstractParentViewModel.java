@@ -16,17 +16,10 @@
 
 package com.techsenger.patternfx.mvvm;
 
-import com.techsenger.annotations.Nullable;
-import com.techsenger.annotations.Unmodifiable;
-import com.techsenger.patternfx.core.AbstractBreadthFirstIterator;
-import com.techsenger.patternfx.core.AbstractDepthFirstIterator;
-import com.techsenger.patternfx.core.TreeIterator;
+import com.google.errorprone.annotations.concurrent.LazyInit;
+import com.techsenger.patternfx.core.ComponentParams;
 import com.techsenger.toolkit.fx.value.ObservableSource;
 import com.techsenger.toolkit.fx.value.SimpleObservableSource;
-import java.util.List;
-import java.util.function.BiConsumer;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 /**
  *
@@ -35,71 +28,18 @@ import javafx.collections.ObservableList;
 public abstract class AbstractParentViewModel<C extends Composer> extends AbstractViewModel
         implements ParentViewModel<C> {
 
-    private @Nullable C composer;
-
-    private final ObservableList<ChildViewModel<?>> modifiableChildren = FXCollections.observableArrayList();
-
-    private final ObservableList<ChildViewModel<?>> children =
-            FXCollections.unmodifiableObservableList(modifiableChildren);
+    @LazyInit
+    private C composer;
 
     private final ObservableSource<Void> requestDeinitializeTree = new SimpleObservableSource<>();
 
-    public AbstractParentViewModel() {
-        super();
+    public AbstractParentViewModel(ComponentParams params) {
+        super(params);
     }
 
     @Override
-    public @Nullable C getComposer() {
+    public C getComposer() {
         return this.composer;
-    }
-
-    @Override
-    public @Unmodifiable ObservableList<ChildViewModel<?>> getChildren() {
-        return children;
-    }
-
-    @Override
-    public TreeIterator<ParentViewModel<?>> depthFirstIterator() {
-        return new AbstractDepthFirstIterator<ParentViewModel<?>, ParentViewModel<?>>(this) {
-
-            @Override
-            @SuppressWarnings("unchecked")
-            protected List<ParentViewModel<?>> getChildren(ParentViewModel<?> parent) {
-                return (List<ParentViewModel<?>>) (List<?>) parent.getChildren();
-            }
-
-            @Override
-            protected ParentViewModel<?> map(ParentViewModel<?> value) {
-                return value;
-            }
-        };
-    }
-
-    @Override
-    public TreeIterator<ParentViewModel<?>> breadthFirstIterator() {
-        return new AbstractBreadthFirstIterator<ParentViewModel<?>, ParentViewModel<?>>(this) {
-
-            @Override
-            @SuppressWarnings("unchecked")
-            protected List<ParentViewModel<?>> getChildren(ParentViewModel<?> parent) {
-                return (List<ParentViewModel<?>>) (List<?>) parent.getChildren();
-            }
-
-            @Override
-            protected ParentViewModel<?> map(ParentViewModel<?> value) {
-                return value;
-            }
-        };
-    }
-
-    @Override
-    public String toTreeString() {
-        return toTreeString(depthFirstIterator(), (vm, b) -> b.append(vm.getDescriptor().getFullName()));
-    }
-
-    @Override
-    public String toTreeString(BiConsumer<ParentViewModel<?>, StringBuilder> appender) {
-        return toTreeString(depthFirstIterator(), appender);
     }
 
     @Override
@@ -108,26 +48,8 @@ public abstract class AbstractParentViewModel<C extends Composer> extends Abstra
     }
 
     @SuppressWarnings("unchecked")
-    protected void setComposer(@Nullable Composer composer) {
+    protected void setComposer(Composer composer) {
         this.composer = (C) composer;
-    }
-
-    protected ObservableList<ChildViewModel<?>> getModifiableChildren() {
-        return modifiableChildren;
-    }
-
-    <T> String toTreeString(TreeIterator<T> iterator, BiConsumer<T, StringBuilder> appender) {
-        var builder = new StringBuilder();
-        var sep = System.lineSeparator();
-        while (iterator.hasNext()) {
-            var c = iterator.next();
-            if (builder.length() > 0) {
-                builder.append(sep);
-            }
-            builder.append("    ".repeat(iterator.getDepth()));
-            appender.accept(c, builder);
-        }
-        return builder.toString();
     }
 
     ObservableSource<Void> getRequestDeinitializeTree() {

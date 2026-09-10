@@ -16,14 +16,15 @@
 
 package com.techsenger.patternfx.mvvm;
 
-import com.techsenger.annotations.Nullable;
 import com.techsenger.annotations.Unmodifiable;
 import com.techsenger.patternfx.core.AbstractBreadthFirstIterator;
 import com.techsenger.patternfx.core.AbstractDepthFirstIterator;
+import com.techsenger.patternfx.core.ChildPort;
+import com.techsenger.patternfx.core.ParentPort;
 import com.techsenger.patternfx.core.TreeIterator;
-import com.techsenger.toolkit.fx.binding.ListBinder;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -39,95 +40,178 @@ public abstract class AbstractParentView<VM extends AbstractParentViewModel<?>>
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractParentView.class);
 
-    private final ObservableList<ChildView<?>> modifiableChildren = FXCollections.observableArrayList();
+    public class Composer implements ParentView.Composer {
 
-    private final ObservableList<ChildView<?>> children =
-            FXCollections.unmodifiableObservableList(modifiableChildren);
+        private final AbstractParentView<?> view = AbstractParentView.this;
+
+        private final ObservableList<ChildView<?>> modifiableChildren = FXCollections.observableArrayList();
+
+        private final ObservableList<ChildView<?>> children =
+                FXCollections.unmodifiableObservableList(modifiableChildren);
+
+        public Composer() {
+            modifiableChildren.addListener((ListChangeListener<ChildView<?>>) (e) -> {
+                while (e.next()) {
+                    if (e.wasAdded() || e.wasReplaced()) {
+                        for (var c: e.getAddedSubList()) {
+                            c.getComposer().setParent(view);
+                        }
+                    }
+                    if (e.wasRemoved() || e.wasReplaced()) {
+                        for (var c: e.getRemoved()) {
+                            c.getComposer().setParent(null);
+                        }
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void compose() {
+            // empty
+        }
+
+        @Override
+        public @Unmodifiable ObservableList<? extends ChildView<?>> getChildren() {
+            return children;
+        }
+
+        @Override
+        public @Unmodifiable List<? extends ChildPort> getChildPorts() {
+            return getChildren().stream().<ChildPort>map(v -> v.getViewModel()).collect(Collectors.toList());
+        }
+
+        @Override
+        public TreeIterator<ParentPort> depthFirstPortIterator() {
+            return new AbstractDepthFirstIterator<ParentPort, ParentView<?>>(view) {
+
+                @Override
+                @SuppressWarnings("unchecked")
+                protected List<ParentView<?>> getChildren(ParentView<?> parent) {
+                    return (List<ParentView<?>>) (List<?>) parent.getComposer().getChildren();
+                }
+
+                @Override
+                protected ParentPort map(ParentView<?> value) {
+                    return value.getViewModel();
+                }
+            };
+        }
+
+        @Override
+        public TreeIterator<ParentPort> breadthFirstPortIterator() {
+            return new AbstractBreadthFirstIterator<ParentPort, ParentView<?>>(view) {
+
+                @Override
+                @SuppressWarnings("unchecked")
+                protected List<ParentView<?>> getChildren(ParentView<?> parent) {
+                    return (List<ParentView<?>>) (List<?>) parent.getComposer().getChildren();
+                }
+
+                @Override
+                protected ParentPort map(ParentView<?> value) {
+                    return value.getViewModel();
+                }
+            };
+        }
+
+        @Override
+        public TreeIterator<ParentView<?>> depthFirstIterator() {
+            return new AbstractDepthFirstIterator<ParentView<?>, ParentView<?>>(view) {
+
+                @Override
+                @SuppressWarnings("unchecked")
+                protected List<ParentView<?>> getChildren(ParentView<?> parent) {
+                    return (List<ParentView<?>>) (List<?>) parent.getComposer().getChildren();
+                }
+
+                @Override
+                protected ParentView<?> map(ParentView<?> value) {
+                    return value;
+                }
+            };
+        }
+
+        @Override
+        public TreeIterator<ParentView<?>> breadthFirstIterator() {
+            return new AbstractBreadthFirstIterator<ParentView<?>, ParentView<?>>(view) {
+
+                @Override
+                @SuppressWarnings("unchecked")
+                protected List<ParentView<?>> getChildren(ParentView<?> parent) {
+                    return (List<ParentView<?>>) (List<?>) parent.getComposer().getChildren();
+                }
+
+                @Override
+                protected ParentView<?> map(ParentView<?> value) {
+                    return value;
+                }
+            };
+        }
+
+        @Override
+        public String toTreeString() {
+            return toTreeString(depthFirstIterator(),
+                    (v, b) -> b.append(v.getViewModel().getDescriptor().getFullName()));
+        }
+
+        @Override
+        public String toTreeString(BiConsumer<ParentView<?>, StringBuilder> appender) {
+            return toTreeString(depthFirstIterator(), appender);
+        }
+
+        @Override
+        public String toPortTreeString(BiConsumer<ParentPort, StringBuilder> appender) {
+            return toTreeString(depthFirstPortIterator(), appender);
+        }
+
+        protected ObservableList<ChildView<?>> getModifiableChildren() {
+            return modifiableChildren;
+        }
+
+        private <T> String toTreeString(TreeIterator<T> iterator, BiConsumer<T, StringBuilder> appender) {
+            var builder = new StringBuilder();
+            var sep = System.lineSeparator();
+            while (iterator.hasNext()) {
+                var c = iterator.next();
+                if (builder.length() > 0) {
+                    builder.append(sep);
+                }
+                builder.append("    ".repeat(iterator.getDepth()));
+                appender.accept(c, builder);
+            }
+            return builder.toString();
+        }
+    }
+
+    private final Composer composer;
 
     public AbstractParentView(VM viewModel) {
         super(viewModel);
-        modifiableChildren.addListener((ListChangeListener<ChildView<?>>) (e) -> {
-            while (e.next()) {
-                if (e.wasAdded() || e.wasReplaced()) {
-                    for (var c: e.getAddedSubList()) {
-                        c.setParent(this);
-                    }
-                }
-                if (e.wasRemoved() || e.wasReplaced()) {
-                    for (var c: e.getRemoved()) {
-                        c.setParent(null);
-                    }
-                }
-            }
-        });
-        ListBinder.bindContent(getViewModel().getModifiableChildren(), modifiableChildren,
-                    (v) -> v.getViewModel());
-        getViewModel().setComposer(createComposer());
+        this.composer = createComposer();
+        viewModel.setComposer(composer);
     }
 
     @Override
-    public @Unmodifiable ObservableList<ChildView<?>> getChildren() {
-        return children;
-    }
-
-    @Override
-    public TreeIterator<ParentView<?>> depthFirstIterator() {
-        return new AbstractDepthFirstIterator<ParentView<?>, ParentView<?>>(this) {
-
-            @Override
-            @SuppressWarnings("unchecked")
-            protected List<ParentView<?>> getChildren(ParentView<?> parent) {
-                return (List<ParentView<?>>) (List<?>) parent.getChildren();
-            }
-
-            @Override
-            protected ParentView<?> map(ParentView<?> value) {
-                return value;
-            }
-        };
-    }
-
-    @Override
-    public TreeIterator<ParentView<?>> breadthFirstIterator() {
-        return new AbstractBreadthFirstIterator<ParentView<?>, ParentView<?>>(this) {
-
-            @Override
-            @SuppressWarnings("unchecked")
-            protected List<ParentView<?>> getChildren(ParentView<?> parent) {
-                return (List<ParentView<?>>) (List<?>) parent.getChildren();
-            }
-
-            @Override
-            protected ParentView<?> map(ParentView<?> value) {
-                return value;
-            }
-        };
-    }
-
-    @Override
-    public String toTreeString() {
-        return getViewModel().toTreeString(depthFirstIterator(),
-                (v, b) -> b.append(v.getViewModel().getDescriptor().getFullName()));
-    }
-
-    @Override
-    public String toTreeString(BiConsumer<ParentView<?>, StringBuilder> appender) {
-        return getViewModel().toTreeString(depthFirstIterator(), appender);
+    public Composer getComposer() {
+        return composer;
     }
 
     @Override
     public void deinitializeTree() {
         if (logger.isDebugEnabled()) {
-            var tree = toTreeString();
+            var tree = getComposer().toTreeString();
             logger.debug("{} Deinitializing this view tree:\n{}", getDescriptor().getLogPrefix(), tree);
         }
-        var iterator = breadthFirstIterator();
+        var iterator = getComposer().breadthFirstIterator();
         while (iterator.hasNext()) {
             iterator.next().deinitialize();
         }
     }
 
-    protected abstract @Nullable Composer createComposer();
+    protected Composer createComposer() {
+        return new AbstractParentView<VM>.Composer();
+    }
 
     @Override
     protected void addListeners() {
@@ -135,7 +219,9 @@ public abstract class AbstractParentView<VM extends AbstractParentViewModel<?>>
         getViewModel().getRequestDeinitializeTree().addListener((newV) -> deinitializeTree());
     }
 
-    protected ObservableList<ChildView<?>> getModifiableChildren() {
-        return modifiableChildren;
+    @Override
+    protected void postInitialize() {
+        super.postInitialize();
+        getComposer().compose();
     }
 }

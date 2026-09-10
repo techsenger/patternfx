@@ -17,6 +17,7 @@
 package com.techsenger.patternfx.mvp;
 
 import com.techsenger.annotations.Nullable;
+import com.techsenger.patternfx.core.ParentPort;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 

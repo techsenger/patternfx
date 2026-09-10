@@ -25,29 +25,35 @@ import javafx.beans.property.ReadOnlyObjectProperty;
  */
 public interface ChildView<VM extends ChildViewModel<?>> extends ParentView<VM> {
 
-    /**
-     * Returns the property representing the parent view of this view. The property holds a reference to the
-     * parent if this view is currently added as a child to another view, or {@code null} if it has no parent.
-     *
-     * @return the property containing the parent view
-     */
-    ReadOnlyObjectProperty<? extends ParentView<?>> parentProperty();
+    interface Composer extends ParentView.Composer, ChildComposer {
 
-    /**
-     * Returns the value of {@link #parentProperty()}.
-     *
-     * @return the parent view, or {@code null} if this view has no parent
-     */
-     @Nullable ParentView<?> getParent();
+        /**
+         * Returns the property representing the parent View of this View. The property holds a reference to the
+         * parent if this View is currently added as a child to another View, or {@code null} if it has no parent.
+         *
+         * @return the property containing the parent View
+         */
+        ReadOnlyObjectProperty<? extends ParentView<?>> parentProperty();
 
-    /**
-     * Sets the parent view of this view.
-     *
-     * <p>Framework contract: This method is intended to be called exclusively by {@link ParentComposer}
-     * implementations while managing the view hierarchy. Direct invocation by user code results in undefined
-     * behavior.
-     */
-    void setParent(@Nullable ParentView<?> parent);
+        /**
+         * Returns the value of {@link #parentProperty()}.
+         *
+         * @return the parent View, or {@code null} if this View has no parent
+         */
+        @Nullable ParentView<?> getParent();
+
+        /**
+         * Sets the parent View of this View.
+         *
+         * <p>Framework contract: This method is intended to be called exclusively by {@link Composer}
+         * implementations while managing the View hierarchy. Direct invocation by user code results in undefined
+         * behavior.
+         */
+        void setParent(@Nullable ParentView<?> parent);
+    }
+
+    @Override
+    Composer getComposer();
 
     /**
      * Requests focus. Child view implements this method via selecting FX node that will request focus.

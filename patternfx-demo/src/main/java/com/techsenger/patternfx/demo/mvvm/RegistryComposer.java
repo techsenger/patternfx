@@ -16,6 +16,8 @@
 
 package com.techsenger.patternfx.demo.mvvm;
 
+import com.techsenger.annotations.Nullable;
+import com.techsenger.patternfx.core.ComponentParams;
 import com.techsenger.patternfx.mvvm.Composer;
 
 /**
@@ -24,9 +26,11 @@ import com.techsenger.patternfx.mvvm.Composer;
  */
 public interface RegistryComposer extends Composer {
 
-    void openDialog(DialogViewModel dialog);
+    DialogPort openDialog(ComponentParams params);
 
-    void showReport(ReportViewModel report);
+    @Nullable ReportPort getReport();
+
+    void showReport(ComponentParams params);
 
     void hideReport();
 }

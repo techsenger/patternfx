@@ -16,6 +16,7 @@
 
 package com.techsenger.patternfx.mvp;
 
+import com.techsenger.patternfx.core.ComponentParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

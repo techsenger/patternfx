@@ -17,6 +17,7 @@
 package com.techsenger.patternfx.demo;
 
 import com.techsenger.patternfx.demo.model.PersonService;
+import com.techsenger.patternfx.demo.mvvm.RegistryParams;
 import com.techsenger.patternfx.demo.mvvm.RegistryView;
 import com.techsenger.patternfx.demo.mvvm.RegistryViewModel;
 
@@ -28,8 +29,8 @@ public class MvvmRunner implements Runnable {
 
     @Override
     public void run() {
-        var service = new PersonService();
-        var viewModel = new RegistryViewModel(service);
+        var params = new RegistryParams(new PersonService());
+        var viewModel = new RegistryViewModel(params);
         var view = new RegistryView(viewModel);
         view.initialize();
     }
