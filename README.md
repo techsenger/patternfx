@@ -515,8 +515,8 @@ clarity, testability, and long-term maintainability.
 `Params` contains the initial parameter values required to bring a component into existence — construction and
 initialization are the two real steps of that, so a component's `Presenter` or `ViewModel` may retain its `Params`
 (typically as its own field) across both: through the constructor and through its `initialize()` call, most commonly
-to read a value it only needs once, during `preInitialize()`/`postInitialize()` (MVP) or the equivalent lifecycle
-hooks (MVVM). Once initialization completes, the component is fully synchronized with its `View`, and no longer
+to read a value it only needs once, during `preInitialize()`/`postInitialize()` on the `Presenter` (MVP) or the
+`ViewModel` (MVVM). Once initialization completes, the component is fully synchronized with its `View`, and no longer
 needs its construction-time input, so `Params` must not be retained beyond that point. Before use, the params are
 validated via the overridable `validate()` method. Using a `Params` object ensures that all required parameters are
 explicitly defined before initialization, preventing missing values at runtime. Subclasses that introduce their own
@@ -828,7 +828,7 @@ that cannot be performed without creating an additional element, a `Composer` is
 | **Task**                                              | **Responsible**             |
 |-------------------------------------------------------|-----------------------------|
 | Storing component metadata and state                  | `Descriptor` in `ViewModel` |
-| Managing the component lifecycle                      | `View`                      |
+| Managing the component lifecycle                      | `View` / `ViewModel`        |
 | Creating and removing components                      | `Composer`, View.Composer   |
 | Composing and decomposing components                  | `Composer`, View.Composer   |
 | Maintaining references to parent and child components | `View` / `ViewModel`        |
@@ -836,8 +836,9 @@ that cannot be performed without creating an additional element, a `Composer` is
 
 Thus, we can see that the `View` and `ViewModel` start to accumulate logic that does not traditionally belong to
 them within a classic MVVM template. The `View`, which should operate solely at the JavaFX node level, begins to
-handle component initialization, maintain references to parent and child components, and also holds a `Composer`
-in its structure. As for the `ViewModel`, it gains a descriptor and stores references to parent and child components.
+maintain references to parent and child components, and also holds a `Composer` in its structure. As for the
+`ViewModel`, it gains a descriptor, handles component initialization, and stores references to parent and child
+components.
 
 A boundary this template enforces strictly is that reactivity stays within a single component. Inside a component,
 the `ViewModel` freely exposes JavaFX `Property` and `ObservableList` state, and the `View` binds to it directly —
@@ -859,21 +860,23 @@ and may include `Params`, a `Composer`, a `Port`, and a `History` classes. `Para
 #### MVVM Component Lifecycle <a name="templates-mvvm-lifecycle"></a>
 
 Each `View` provides the `View#initialize()` and `View#deinitialize()` methods, which initialize and deinitialize all
-parts of the component respectively, updating its state.
+parts of the component respectively. They are the template's only public entry points into the lifecycle, because the
+`ViewModel` holds no reference back to the `View` and therefore cannot trigger them itself.
 
 The default implementation of these methods in `AbstractView` is based on the Template Method pattern. Initialization
-and deinitialization are divided into three phases.
+and deinitialization are divided into three phases, mirroring MVP, except that here it is the `ViewModel` — not the
+`View` — that owns the phases surrounding the fixed core, exactly as the `Presenter` does in MVP.
 
-The first phase consists of invoking the protected methods `preInitialize()` / `preDeinitialize()`, which may be
-overridden. The second phase is strictly fixed and performs the core initialization and deinitialization logic.
-The third phase consists of invoking the protected methods `postInitialize()` / `postDeinitialize()`, which may also
-be overridden.
+The first phase consists of invoking the protected methods `AbstractViewModel#preInitialize()` /
+`AbstractViewModel#preDeinitialize()`, which may be overridden. The second phase is strictly fixed and performs the
+core initialization and deinitialization logic. The third phase consists of invoking the protected methods
+`AbstractViewModel#postInitialize()` / `AbstractViewModel#postDeinitialize()`, which may also be overridden. The
+`ViewModel` also validates and advances the component's `ComponentState` around these phases, since it is the owner
+of the `Descriptor` (see the responsibility table above) — the `View` never touches the state directly.
 
-The second phase is the most important one. During this phase, the `ViewModel` is initialized and deinitialized via
-calls to the protected methods `AbstractViewModel#initialize()` and `AbstractViewModel#deinitialize()`, which may be
-overridden. Additionally, during the second phase, the `AbstractView` itself is initialized and deinitialized by invoking
-four protected methods that perform the core `View` operations. These protected methods may be overridden and are
-responsible for the following:
+The second phase is the most important one. During this phase, the `AbstractView` itself is initialized and
+deinitialized by invoking four protected methods that perform the core `View` operations. These protected methods
+may be overridden and are responsible for the following:
 
 - building/unbuilding
 - binding/unbinding
@@ -884,7 +887,9 @@ It is important to note that these protected methods should not be considered th
 (e.g., adding or removing handlers) within the `View`; rather, they represent one part of the
 initialization/deinitialization process. Thus, such tasks may also be performed in other methods.
 
-The `Composer` is created and assigned to `AbstractParentViewModel` in the constructor of `AbstractParentView`.
+The `Composer` is created and assigned to `AbstractParentViewModel` in the constructor of `AbstractParentView`. Its
+`compose()` method is invoked automatically from `AbstractParentViewModel#postInitialize()`, mirroring how
+`AbstractParentPresenter#postInitialize()` invokes it in MVP.
 
 #### MVVM Component Example<a name="templates-mvvm-example"></a>
 

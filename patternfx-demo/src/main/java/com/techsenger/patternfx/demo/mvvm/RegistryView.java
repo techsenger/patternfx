@@ -148,7 +148,7 @@ public class RegistryView extends AbstractParentView<RegistryViewModel> {
     protected void bind() {
         super.bind();
         var viewModel = getViewModel();
-        viewModel.selectedPersonProperty().bind(personTable.getSelectionModel().selectedItemProperty());
+        viewModel.selectedPersonWrapper().bind(personTable.getSelectionModel().selectedItemProperty());
         removeButton.disableProperty().bind(viewModel.removeDisabledProperty());
         reportButton.textProperty().bind(viewModel.reportButtonTextProperty());
     }
@@ -162,11 +162,6 @@ public class RegistryView extends AbstractParentView<RegistryViewModel> {
         refreshButton.setOnAction(e -> viewModel.onRefresh());
         reportButton.setOnAction(e -> viewModel.onToggleReport());
         stage.setOnCloseRequest(e -> viewModel.onClose());
-    }
-
-    @Override
-    protected void postInitialize() {
-        super.postInitialize();
         stage.show();
     }
 

@@ -18,6 +18,7 @@ package com.techsenger.patternfx.mvvm;
 
 import com.techsenger.annotations.Nullable;
 import com.techsenger.patternfx.core.ComponentParams;
+import com.techsenger.patternfx.core.ComponentState;
 import com.techsenger.patternfx.core.DefaultComponentName;
 import com.techsenger.patternfx.core.HistoryProvider;
 import com.techsenger.toolkit.fx.value.ObservableSource;
@@ -66,11 +67,26 @@ public abstract class AbstractViewModel implements ViewModel {
     }
 
     /**
-     * Initializes the view model.
+     * The first method called in initialization.
      */
-    protected void initialize() {
-        applyOrRestorePersistentState();
+    protected void preInitialize() {
+        prepareHistory();
     }
+
+    /**
+     * The last method called in initialization.
+     */
+    protected void postInitialize() { }
+
+    /**
+     * The first method called in deinitialization.
+     */
+    protected void preDeinitialize() { }
+
+    /**
+     * The last method called in deinitialization.
+     */
+    protected void postDeinitialize() { }
 
     /**
      * Applies default values for the view model's persistent state.
@@ -87,13 +103,6 @@ public abstract class AbstractViewModel implements ViewModel {
      * {@link #applyPersistentState()}.
      */
     protected void restorePersistentState() { }
-
-    /**
-     * Deinitializes the view model.
-     */
-    protected void deinitialize() {
-        savePersistentStateToHistory();
-    }
 
     /**
      * Saves the view model's persistent state into history.
@@ -115,15 +124,45 @@ public abstract class AbstractViewModel implements ViewModel {
         return new Descriptor(new DefaultComponentName(name));
     }
 
-    void prepareHistory() {
-        if (this.historyProvider != null) {
-            this.history = this.historyProvider.provide();
-            this.historyProvider = null;
+    final void beginInitialize() {
+        if (descriptor.getState() != ComponentState.CREATING) {
+            throw new IllegalStateException("Unexpected state of the component - " + descriptor.getState().name());
         }
+        preInitialize();
+        descriptor.setState(ComponentState.INITIALIZING);
+    }
+
+    final void endInitialize() {
+        applyOrRestorePersistentState();
+        descriptor.setState(ComponentState.INITIALIZED);
+        logger.debug("{} Initialized the component", getDescriptor().getLogPrefix());
+        postInitialize();
+    }
+
+    final void beginDeinitialize() {
+        if (descriptor.getState() != ComponentState.INITIALIZED) {
+            throw new IllegalStateException("Unexpected state of the component - " + descriptor.getState().name());
+        }
+        preDeinitialize();
+        descriptor.setState(ComponentState.DEINITIALIZING);
+        savePersistentStateToHistory();
+    }
+
+    final void endDeinitialize() {
+        descriptor.setState(ComponentState.DEINITIALIZED);
+        logger.debug("{} Deinitialized the component", getDescriptor().getLogPrefix());
+        postDeinitialize();
     }
 
     ObservableSource<Void> getRequestDeinitialize() {
         return requestDeinitialize;
+    }
+
+    private void prepareHistory() {
+        if (this.historyProvider != null) {
+            this.history = this.historyProvider.provide();
+            this.historyProvider = null;
+        }
     }
 
     /**

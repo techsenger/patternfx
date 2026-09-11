@@ -17,18 +17,17 @@
 package com.techsenger.patternfx.demo.mvvm;
 
 import com.techsenger.patternfx.core.ComponentParams;
-import com.techsenger.patternfx.core.ComponentState;
 import com.techsenger.patternfx.demo.model.Person;
 import com.techsenger.patternfx.demo.model.PersonService;
 import com.techsenger.patternfx.mvvm.AbstractParentViewModel;
 import java.util.Iterator;
 import java.util.Objects;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -47,7 +46,7 @@ public class RegistryViewModel extends AbstractParentViewModel<RegistryComposer>
 
     private final ObservableList<Person> persons = FXCollections.observableArrayList();
 
-    private final ObjectProperty<Person> selectedPerson = new SimpleObjectProperty<>();
+    private final ReadOnlyObjectWrapper<Person> selectedPerson = new ReadOnlyObjectWrapper<>();
 
     private final BooleanProperty removeDisabled = new SimpleBooleanProperty(true);
 
@@ -59,17 +58,12 @@ public class RegistryViewModel extends AbstractParentViewModel<RegistryComposer>
     }
 
     @Override
-    protected void initialize() {
-        super.initialize();
+    protected void preInitialize() {
+        super.preInitialize();
         selectedPerson.addListener((ov, oldV, newV) -> {
             removeDisabled.set(newV == null);
             // log message example with component meta
             logger.debug("{} Selected person property changed", getDescriptor().getLogPrefix());
-        });
-        getDescriptor().stateProperty().addListener((ov, oldV, newV) -> {
-            if (newV == ComponentState.INITIALIZED) {
-                onRefresh();
-            }
         });
         persons.addListener((ListChangeListener<Person>) e -> {
             var report = getComposer().getReport();
@@ -80,11 +74,21 @@ public class RegistryViewModel extends AbstractParentViewModel<RegistryComposer>
         updateReportButtonText(false);
     }
 
+    @Override
+    protected void postInitialize() {
+        super.postInitialize();
+        onRefresh();
+    }
+
     ObservableList<Person> getPersons() {
         return persons;
     }
 
-    ObjectProperty<Person> selectedPersonProperty() {
+    ReadOnlyObjectProperty<Person> selectedPersonProperty() {
+        return selectedPerson.getReadOnlyProperty();
+    }
+
+    ReadOnlyObjectWrapper<Person> selectedPersonWrapper() {
         return selectedPerson;
     }
 

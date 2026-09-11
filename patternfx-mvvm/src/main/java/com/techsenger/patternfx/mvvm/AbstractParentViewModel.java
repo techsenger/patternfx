@@ -52,6 +52,12 @@ public abstract class AbstractParentViewModel<C extends Composer> extends Abstra
         this.composer = (C) composer;
     }
 
+    @Override
+    protected void postInitialize() {
+        super.postInitialize();
+        getComposer().compose();
+    }
+
     ObservableSource<Void> getRequestDeinitializeTree() {
         return requestDeinitializeTree;
     }

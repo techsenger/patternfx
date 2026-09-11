@@ -201,7 +201,7 @@ public abstract class AbstractParentView<VM extends AbstractParentViewModel<?>>
     public void deinitializeTree() {
         if (logger.isDebugEnabled()) {
             var tree = getComposer().toTreeString();
-            logger.debug("{} Deinitializing this view tree:\n{}", getDescriptor().getLogPrefix(), tree);
+            logger.debug("{} Deinitializing this component tree:\n{}", getDescriptor().getLogPrefix(), tree);
         }
         var iterator = getComposer().breadthFirstIterator();
         while (iterator.hasNext()) {
@@ -217,11 +217,5 @@ public abstract class AbstractParentView<VM extends AbstractParentViewModel<?>>
     protected void addListeners() {
         super.addListeners();
         getViewModel().getRequestDeinitializeTree().addListener((newV) -> deinitializeTree());
-    }
-
-    @Override
-    protected void postInitialize() {
-        super.postInitialize();
-        getComposer().compose();
     }
 }
