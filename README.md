@@ -542,12 +542,6 @@ A `Port` is the only intended mechanism for inter-component communication.
 
 Like `Params`, `Port` is defined once, at the component layer shared by every template.
 
-In the MVVM template specifically, a `Port` is deliberately non-reactive: it never exposes JavaFX `Property` or
-`ObservableList` types, only plain methods and values. Reactivity is confined to within a single component's `View`
-and `ViewModel`; once state needs to cross a `Port` into another component, it is expressed the same way it would be
-in MVP — through ordinary method calls and return values, not bindings. This keeps a `ViewModel`'s reactive machinery
-from leaking into, and coupling, the rest of the component tree.
-
 #### Component Composer <a name="templates-component-composer"></a>
 
 The `Composer` serves two primary purposes:
@@ -658,15 +652,14 @@ that cannot be performed without creating an additional element, a `Composer` is
 |-------------------------------------------------------|-----------------------------|
 | Storing component metadata and state                  | `Descriptor` in `Presenter` |
 | Managing the component lifecycle                      | `Presenter`                 |
-| Creating and removing components                      | `Composer`, View.Composer   |
-| Composing and decomposing components                  | `Composer`, View.Composer   |
-| Maintaining references to parent and child components | `View` / `Composer`         |
+| Creating and removing components                      | `Composer`                  |
+| Composing and decomposing components                  | `Composer`                  |
+| Maintaining references to parent and child components | `Composer`                  |
 | Representing the node in the "component" tree         | `View`                      |
 
 As you can see the `View` and `Presenter` start to accumulate logic that does not traditionally belong to
-them within a classic MVP template. The `View`, which should operate solely at the JavaFX node level, begins to
-maintain references to parent and child components, and also holds a `Composer` in its structure. As for the
-`Presenter`, it gains a descriptor and handles component initialization.
+them within a classic MVP template. The `View`, which should operate solely at the JavaFX node level holds a
+`Composer` in its structure. As for the `Presenter`, it gains a descriptor and handles component initialization.
 
 #### MVP Component Structure <a name="templates-mvp-structure"></a>
 
@@ -829,24 +822,14 @@ that cannot be performed without creating an additional element, a `Composer` is
 |-------------------------------------------------------|-----------------------------|
 | Storing component metadata and state                  | `Descriptor` in `ViewModel` |
 | Managing the component lifecycle                      | `View` / `ViewModel`        |
-| Creating and removing components                      | `Composer`, View.Composer   |
-| Composing and decomposing components                  | `Composer`, View.Composer   |
-| Maintaining references to parent and child components | `View` / `ViewModel`        |
+| Creating and removing components                      | `Composer`                  |
+| Composing and decomposing components                  | `Composer`                  |
+| Maintaining references to parent and child components | `Composer`                  |
 | Representing the node in the "component" tree         | `View`                      |
 
 Thus, we can see that the `View` and `ViewModel` start to accumulate logic that does not traditionally belong to
-them within a classic MVVM template. The `View`, which should operate solely at the JavaFX node level, begins to
-maintain references to parent and child components, and also holds a `Composer` in its structure. As for the
-`ViewModel`, it gains a descriptor, handles component initialization, and stores references to parent and child
-components.
-
-A boundary this template enforces strictly is that reactivity stays within a single component. Inside a component,
-the `ViewModel` freely exposes JavaFX `Property` and `ObservableList` state, and the `View` binds to it directly —
-this is where MVVM's advantages actually apply. That reactive state, however, never crosses into another component:
-a `ViewModel`'s `Port` (see [Component Port](#templates-component-port)) is plain and non-reactive, so a parent or
-sibling component interacting with it uses ordinary method calls, exactly as in MVP. A `ViewModel` is, in effect, its
-own self-contained reactive universe — it has no notion that a `View`, let alone other components, exist on the other
-side of it.
+them within a classic MVVM template. The `View`, which should operate solely at the JavaFX node level holds a `Composer`
+in its structure. As for the `ViewModel`, it gains a descriptor and handles component initialization.
 
 #### MVVM Component Structure <a name="templates-mvvm-structure"></a>
 
@@ -993,9 +976,7 @@ view.deinitialize();
 
 Note the symmetry with the MVP example above: `Params` is always built by the caller that initiates creation (here,
 `FooViewModel#onAction()`),  and `showBar()`/`hideBar()`/`getBar()` return and accept only `Port`s (`BarPort`) and
-`Params` — never a `BarView` or a `BarViewModel` directly. This is what keeps the `ViewModel`'s reactive
-`Property`/`ObservableList` state, discussed in [JavaFX Support](#patterns-javafx-support), from ever crossing into
-`FooViewModel` through `FooComposer`.
+`Params` — never a `BarView` or a `BarViewModel` directly.
 
 ## Limitations <a name="limitations"></a>
 
