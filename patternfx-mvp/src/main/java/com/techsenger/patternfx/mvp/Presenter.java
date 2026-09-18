@@ -33,7 +33,7 @@ public interface Presenter<V extends View> {
     void deinitialize();
 
     /**
-     * Returns the descriptor.
+     * Returns the descriptor identifying this whole component (view included), not just this presenter.
      */
     ComponentDescriptor getDescriptor();
 

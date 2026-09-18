@@ -30,11 +30,7 @@ public final class ViewUtils {
     private static final Object VIEW_KEY = new Object();
 
     /**
-     * Associates the given {@link View} view with the specified JavaFX {@link Node}.
-     * <p>
-     * This method stores a reference to the view in the node's property map, allowing the view to be
-     * retrieved later by traversing the JavaFX node tree. This is useful in scenarios where only a node is available
-     * (e.g., during focus traversal or event handling) and the associated view needs to be identified.
+     * Associates the given view with the specified JavaFX node, so it can be looked up later via the node tree.
      *
      * @param node the JavaFX node to associate with the component; must not be {@code null}
      * @param view the view to associate with the node; must not be {@code null}
@@ -44,11 +40,7 @@ public final class ViewUtils {
     }
 
     /**
-     * Returns the {@link View} associated with the given {@link Node}, or {@code null} if no view has been
-     * associated with it.
-     * <p>
-     * This method is intended for use when traversing the JavaFX node tree — for example, when walking up the parent
-     * chain from a focused node to find the nearest component boundary.
+     * Returns the view associated with the given node, or {@code null} if none is associated.
      *
      * @param node the JavaFX node to look up; must not be {@code null}
      * @return the associated view, or {@code null} if none is associated
@@ -58,12 +50,7 @@ public final class ViewUtils {
     }
 
     /**
-     * Removes the {@link View} associated with the specified {@link Node}.
-     * <p>
-     * This method clears the reference previously stored via {@link #setView(Node, View)} from the node's property
-     * map. After calling this method, {@link #getView(Node)} will return {@code null} for the given node.
-     * <p>
-     * This can be useful during cleanup or when the association between a node and its view is no longer valid.
+     * Removes the view associated with the specified node, if any.
      *
      * @param node the JavaFX node whose associated view should be removed; must not be {@code null}
      */
@@ -116,17 +103,12 @@ public final class ViewUtils {
     }
 
     /**
-     * Traverses the JavaFX node tree upward from the given {@link Node}, searching for the nearest node that has
-     * an associated view of the specified type.
-     * <p>
-     * The search starts at the given node itself and walks up the parent chain until a matching view is found
-     * or the root is reached.
+     * Searches the given node and its ancestors for the nearest view of the specified type.
      *
      * @param node      the JavaFX node to start the search from; must not be {@code null}
      * @param viewClass the class or interface of the view to search for; must not be {@code null}
      * @param <T>       the type of the view to search for
-     * @return the nearest {@link View} of the specified type found in the parent chain,
-     *         or {@code null} if no matching view is associated with any node up to the root
+     * @return the nearest matching view, or {@code null} if none is found up to the root
      */
     public static <T extends View<?>> @Nullable T findView(Node node, Class<T> viewClass) {
         Node current = node;

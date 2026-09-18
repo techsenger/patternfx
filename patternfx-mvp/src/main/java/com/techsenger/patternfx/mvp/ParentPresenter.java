@@ -25,10 +25,8 @@ import com.techsenger.patternfx.core.ParentPort;
 public interface ParentPresenter<V extends ParentView> extends Presenter<V>, ParentPort {
 
     /**
-     * Deinitializes this component and all its descendants as a sub-tree with this component as the root.
-     *
-     * <p>The deinitialization is performed using a breadth-first traversal: the parent component is deinitialized
-     * first, followed by its children level by level.
+     * Deinitializes this component and its whole subtree, breadth-first: this component first, then its children
+     * level by level.
      */
     void deinitializeTree();
 }

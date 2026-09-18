@@ -131,40 +131,33 @@ public abstract class AbstractPresenter<V extends View> implements Presenter<V> 
     protected void postDeinitialize() { }
 
     /**
-     * Returns the history of the ComponentView.
+     * Returns the history of this component, or {@code null} before it has been prepared.
      */
     protected @Nullable ComponentHistory getHistory() {
         return history;
     }
 
     /**
-     * Applies default values for the component's persistent state.
-     * <p>
-     * This method is invoked during initialization when no history is available or the available history is new.
-     * Implementations should assign meaningful default values to all state that will be persisted in history.
+     * Applies default values for this component's persistent state; invoked when no history is available or it
+     * is new.
      */
     protected void applyPersistentState() { }
 
     /**
-     * Restores the component's persistent state from history.
-     * <p>
-     * This method is invoked during initialization when a non-new history is available, in place of
-     * {@link #applyPersistentState()}.
+     * Restores this component's persistent state from history; invoked instead of {@link #applyPersistentState()}
+     * when non-new history is available.
      */
     protected void restorePersistentState() { }
 
     /**
-     * Saves the component's persistent state into history.
-     * <p>
-     * This method is invoked during deinitialization when history is available. Restoring and persisting the
-     * {@link ComponentHistory} instance itself is the responsibility of a history manager, not of this method.
+     * Saves this component's persistent state into history; invoked during deinitialization whenever history is
+     * available.
      */
     protected void savePersistentState() { }
 
     /**
-     * Creates this component's descriptor. Defaults to the concrete class's simple name with a trailing
-     * "Presenter" stripped, if present &mdash; the descriptor identifies the whole component (view included,
-     * e.g. in log messages the view itself emits), not just its presenter half.
+     * Creates this component's descriptor, defaulting to the class's simple name with any trailing "Presenter"
+     * suffix removed.
      */
     protected ComponentDescriptor createDescriptor() {
         var simpleName = getClass().getSimpleName();
@@ -181,19 +174,8 @@ public abstract class AbstractPresenter<V extends View> implements Presenter<V> 
     }
 
     /**
-     * Resolves the component's persistent state by either restoring it from history or applying default values when
-     * necessary.
-     * <p>
-     * The component state is divided into two categories:
-     * <ul>
-     *     <li><b>Persistent state</b> — participates in the history mechanism and can be restored or saved across
-     *     component lifecycles.</li>
-     *     <li><b>Transient state</b> — does not participate in the history mechanism and exists only at runtime.</li>
-     * </ul>
-     * <p>
-     * This method operates exclusively on the <b>persistent state</b>. It does not initialize or modify transient data.
-     * If history is unavailable or new, defaults are applied via {@link #applyPersistentState()}; otherwise, the state
-     * is restored via {@link #restorePersistentState()}.
+     * Applies default persistent state, or restores it from history, depending on whether history is missing or
+     * new.
      */
     private void applyOrRestorePersistentState() {
         if (history == null || history.isNew()) {
@@ -207,18 +189,7 @@ public abstract class AbstractPresenter<V extends View> implements Presenter<V> 
     }
 
     /**
-     * Saves the current persistent state of the component into its history, provided that history is available.
-     * <p>
-     * The component state is conceptually divided into two categories:
-     * <ul>
-     *     <li><b>Persistent state</b> — data that is stored in and restored from history
-     *     (e.g., user input, UI state, configuration).</li>
-     *     <li><b>Transient state</b> — runtime-only data that is not persisted and
-     *     exists only for the duration of the component's lifecycle.</li>
-     * </ul>
-     * <p>
-     * This method operates exclusively on the <b>persistent state</b>. Transient state is not affected and must be
-     * managed independently.
+     * Saves the current persistent state to history and marks it no longer new, when history is available.
      */
     private void savePersistentStateToHistory() {
         if (this.history == null) {

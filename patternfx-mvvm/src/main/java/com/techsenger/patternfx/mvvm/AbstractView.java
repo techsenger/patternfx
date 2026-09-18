@@ -67,12 +67,12 @@ public abstract class AbstractView<T extends AbstractViewModel> implements View<
     }
 
     /**
-     * Builds view.
+     * Builds the view.
      */
     protected void build() { }
 
     /**
-     * Binds view to viewModel etc.
+     * Binds the view to the view model, etc.
      */
     protected void bind() { }
 
@@ -99,22 +99,18 @@ public abstract class AbstractView<T extends AbstractViewModel> implements View<
     protected void removeListeners() { }
 
     /**
-     * Unbinds view from viewModel etc.
+     * Unbinds the view from the view model, etc.
      */
     protected void unbind() { }
 
     /**
-     * Unbuilds view.
+     * Unbuilds the view.
      */
     protected void unbuild() { }
 
     /**
-     * Returns the {@link Descriptor} associated with this view.
-     *
-     * <p>This method is provided as a convenience shortcut that delegates to the underlying view model, allowing
-     * subclasses to access the descriptor without directly referencing the view model.
-     *
-     * @return the view descriptor
+     * Returns the {@link Descriptor} of this view &mdash; a shortcut that delegates to the underlying view model,
+     * sparing subclasses a direct reference to it.
      */
     protected Descriptor getDescriptor() {
         return this.viewModel.getDescriptor();

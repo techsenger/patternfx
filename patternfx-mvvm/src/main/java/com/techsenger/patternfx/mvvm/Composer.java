@@ -34,14 +34,8 @@ import java.util.function.BiConsumer;
 public interface Composer {
 
     /**
-     * Composes the static structure of this component by creating and adding its default child components. This
-     * method is intended for static composition, where child components are created once during component
-     * initialization and remain present for the entire component lifecycle.
-     *
-     * <p>This method is automatically invoked during the {@code postInitialize} phase of the component lifecycle,
-     * after the main initialization has completed but before the component becomes fully operational. This ensures
-     * that all child components are properly initialized and integrated into the component tree before the parent
-     * component starts its normal operation.
+     * Creates and adds this component's default child components; invoked once, automatically, near the end of
+     * initialization.
      */
     void compose();
 
@@ -75,15 +69,13 @@ public interface Composer {
     String toTreeString();
 
     /**
-     * Returns a string representation of this component and all its descendants as a sub-tree with this component
-     * as root, allowing the caller to customize the string output for each component.
+     * Returns a tree-formatted string representation of this component's subtree, rooted at this component.
      *
-     * <p>The provided {@code appender} is invoked for each component and is responsible for appending the complete
-     * string representation of that component to the given {@link StringBuilder}. The tree structure and line
-     * separation are handled by this method.
+     * <p>The given {@code appender} renders each component into the shared {@link StringBuilder}; this method
+     * handles the tree structure and line breaks.
      *
-     * @param appender a callback used to append the full string representation of each component.
-     * @return a tree-formatted string representation of this component
+     * @param appender renders a single component's line into the shared builder
+     * @return a tree-formatted string representation of this component's subtree
      */
     String toPortTreeString(BiConsumer<ParentPort, StringBuilder> appender);
 }

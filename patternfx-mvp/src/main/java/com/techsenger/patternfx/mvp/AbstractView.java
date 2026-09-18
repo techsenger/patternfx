@@ -27,22 +27,19 @@ public abstract class AbstractView<T extends Presenter<?>> implements View {
     @LazyInit
     private T presenter;
 
-    /**
-     * Returns the presenter.
-     */
     public T getPresenter() {
         return presenter;
     }
 
     /**
-     * Initializes the ComponentView.
+     * Initializes the view.
      */
     protected void initialize() {
         // empty
     }
 
     /**
-     * Deiinitializes the ComponentView.
+     * Deinitializes the view.
      */
     protected void deinitialize() {
         // empty

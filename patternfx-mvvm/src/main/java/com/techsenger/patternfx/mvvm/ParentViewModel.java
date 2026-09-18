@@ -25,17 +25,14 @@ import com.techsenger.patternfx.core.ParentPort;
 public interface ParentViewModel<C extends Composer> extends ViewModel, ParentPort {
 
     /**
-     * Returns the Composer of this ViewModel's View. All references to this component's children and, for a
-     * {@link ChildViewModel}, its parent are owned by the Composer &mdash; this ViewModel holds none of them
-     * itself.
+     * Returns the Composer that owns this component's child references (and, for a {@link ChildViewModel}, its
+     * parent reference); this ViewModel holds none of them itself.
      */
     C getComposer();
 
     /**
-     * Deinitializes this ViewModel and all its descendants as a sub-tree with this ViewModel as the root.
-     *
-     * The deinitialization is performed using a breadth-first traversal: the parent ViewModel is deinitialized first,
-     * followed by its children level by level.
+     * Requests deinitialization of this ViewModel and its whole subtree, breadth-first: this ViewModel first, then
+     * its children level by level.
      */
     void requestDeinitializeTree();
 }

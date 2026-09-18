@@ -51,30 +51,26 @@ public interface ParentView<VM extends ParentViewModel<?>> extends View<VM> {
         TreeIterator<ParentView<?>> breadthFirstIterator();
 
         /**
-         * Returns a string representation of this View and all its descendants as a sub-tree with this View
-         * as root, allowing the caller to customize the string output for each View.
+         * Returns a tree-formatted string representation of this View's subtree, rooted at this View.
          *
-         * The provided {@code appender} is invoked for each View and is responsible for appending the
-         * complete string representation of that View to the given {@link StringBuilder}. The tree structure and
-         * line separation are handled by this method.
+         * <p>The given {@code appender} renders each View into the shared {@link StringBuilder}; this method
+         * handles the tree structure and line breaks.
          *
-         * @param appender a callback used to append the full string representation of each View.
-         * @return a tree-formatted string representation of this View
+         * @param appender renders a single View's line into the shared builder
+         * @return a tree-formatted string representation of this View's subtree
          */
         String toTreeString(BiConsumer<ParentView<?>, StringBuilder> appender);
     }
 
     /**
-     * Returns the Composer of this View. All references to this component's children are owned by the Composer
-     * &mdash; this View holds none of them itself.
+     * Returns the Composer of this View; all references to this component's children are owned by the Composer,
+     * not by this View.
      */
     Composer getComposer();
 
     /**
-     * Deinitializes this View and all its descendants as a sub-tree with this View as the root.
-     *
-     * The deinitialization is performed using a breadth-first traversal: the parent View is deinitialized first,
-     * followed by its children level by level.
+     * Deinitializes this View and its whole subtree, breadth-first: this View first, then its children level by
+     * level.
      */
     void deinitializeTree();
 }

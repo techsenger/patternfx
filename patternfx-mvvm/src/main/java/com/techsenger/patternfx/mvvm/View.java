@@ -22,9 +22,6 @@ package com.techsenger.patternfx.mvvm;
  */
 public interface View<VM extends ViewModel> {
 
-    /**
-     * Returns the view model.
-     */
     VM getViewModel();
 
     /**

@@ -49,7 +49,7 @@ public abstract class AbstractFxView<P extends Presenter<?>> extends AbstractVie
     protected void build() { }
 
     /**
-     * Makes all bindings.
+     * Binds the view to the presenter, etc.
      */
     protected void bind() { }
 
@@ -65,19 +65,16 @@ public abstract class AbstractFxView<P extends Presenter<?>> extends AbstractVie
 
     /**
      * Removes handlers.
-     *
      */
     protected void removeHandlers() { }
 
     /**
      * Removes listeners.
-     *
      */
     protected void removeListeners() { }
 
     /**
-     * Unbinds existing bindings.
-     *
+     * Unbinds the view from the presenter, etc.
      */
     protected void unbind() { }
 

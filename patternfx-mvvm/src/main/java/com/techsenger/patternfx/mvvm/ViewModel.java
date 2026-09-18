@@ -23,12 +23,12 @@ package com.techsenger.patternfx.mvvm;
 public interface ViewModel {
 
     /**
-     * Returns the descriptor of the View.
+     * Returns the descriptor identifying this whole component (View included), not just this view model.
      */
     Descriptor getDescriptor();
 
     /**
-     * Deinitializes this ViewModel; its View reacts by deinitializing itself as well.
+     * Requests deinitialization of this ViewModel; its View reacts by deinitializing itself.
      */
     void requestDeinitialize();
 }

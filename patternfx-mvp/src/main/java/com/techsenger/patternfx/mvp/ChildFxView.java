@@ -45,7 +45,7 @@ public interface ChildFxView<P extends ChildPresenter<?>> extends ParentFxView<P
         /**
          * Sets the parent view of this view.
          *
-         * <p>Framework contract: This method is intended to be called exclusively by {@link ParentComposer}
+         * <p>Framework contract: This method is intended to be called exclusively by {@link ParentFxView.Composer}
          * implementations while managing the view hierarchy. Direct invocation by user code results in undefined
          * behavior.
          */

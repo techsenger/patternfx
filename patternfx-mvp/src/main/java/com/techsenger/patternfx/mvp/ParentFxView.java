@@ -30,9 +30,9 @@ public interface ParentFxView<P extends ParentPresenter<?>> extends FxView<P>, P
     interface Composer extends ParentView.Composer {
 
         /**
-         * Returns an unmodifiable list of child Views.
+         * Returns an unmodifiable observable list of child Views.
          *
-         * @return an unmodifiable list of child Views (never {@code null})
+         * @return a non-null, unmodifiable observable list of child Views
          */
         @Unmodifiable ObservableList<? extends ChildFxView<?>> getChildren();
 
@@ -51,15 +51,13 @@ public interface ParentFxView<P extends ParentPresenter<?>> extends FxView<P>, P
         TreeIterator<ParentFxView<?>> breadthFirstIterator();
 
         /**
-         * Returns a string representation of this View and all its descendants as a sub-tree with this View
-         * as root, allowing the caller to customize the string output for each View.
+         * Returns a tree-formatted string representation of this View's subtree, rooted at this View.
          *
-         * The provided {@code appender} is invoked for each View and is responsible for appending the
-         * complete string representation of that View to the given {@link StringBuilder}. The tree structure and
-         * line separation are handled by this method.
+         * <p>The given {@code appender} renders each View into the shared {@link StringBuilder}; this method
+         * handles the tree structure and line breaks.
          *
-         * @param appender a callback used to append the full string representation of each View.
-         * @return a tree-formatted string representation of this View
+         * @param appender renders a single View's line into the shared builder
+         * @return a tree-formatted string representation of this View's subtree
          */
         String toTreeString(BiConsumer<ParentFxView<?>, StringBuilder> appender);
 
