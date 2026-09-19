@@ -10,7 +10,7 @@ All templates provide a complete implementation required for building complex ap
 and are intended for practical, real-world use. For each template, a demo consisting of three components is provided,
 demonstrating its practical usage.
 
-The main feature of PatternFX is its application model, which represents an application as a dynamically modifiable
+The main feature of PatternFX is its component model, which represents a window as a dynamically modifiable
 tree of components where a component is a fundamental, self-contained building block of a user interface that
 provides a specific piece of functionality and enables user interaction. This approach enables a clear and consistent
 structure, predictable dynamic composition, and controlled lifecycle management.
@@ -106,7 +106,7 @@ Key features include:
 
 * Component-oriented architecture.
 * Support for the component lifecycle.
-* Models the application as a component tree.
+* Models the window as a component tree.
 * Supports dynamic component composition.
 * Convenient component tree API.
 * Organizes core tasks within the view.
