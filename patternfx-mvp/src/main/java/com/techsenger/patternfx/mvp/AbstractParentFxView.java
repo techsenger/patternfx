@@ -153,7 +153,7 @@ public abstract class AbstractParentFxView<P extends ParentPresenter<?>> extends
         @Override
         public String toTreeString() {
             return toTreeString(depthFirstIterator(),
-                    (v, b) -> b.append(v.getDescriptor().getFullName()));
+                    (v, b) -> b.append(v.getPresenter().getDescriptor().getFullName()));
         }
 
         @Override

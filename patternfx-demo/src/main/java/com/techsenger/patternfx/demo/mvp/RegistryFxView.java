@@ -133,11 +133,6 @@ public class RegistryFxView<P extends RegistryPresenter<?>> extends AbstractPare
     }
 
     @Override
-    public void requestFocus() {
-        personTable.requestFocus();
-    }
-
-    @Override
     public void addPersons(List<Person> persons) {
         this.personTable.getItems().addAll(persons);
     }

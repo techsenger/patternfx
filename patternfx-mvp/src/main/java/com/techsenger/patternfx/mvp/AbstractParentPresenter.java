@@ -34,6 +34,11 @@ public abstract class AbstractParentPresenter<V extends ParentView> extends Abst
     }
 
     @Override
+    public ComposerAccess getComposerAccess() {
+        return getView().getComposer();
+    }
+
+    @Override
     public void deinitializeTree() {
         var composer = getView().getComposer();
         if (logger.isDebugEnabled()) {

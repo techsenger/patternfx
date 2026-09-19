@@ -17,14 +17,14 @@
 package com.techsenger.patternfx.demo.mvp;
 
 import com.techsenger.annotations.Nullable;
-import com.techsenger.patternfx.core.ParentPort;
+import com.techsenger.patternfx.core.Port;
 import com.techsenger.patternfx.demo.model.Person;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface DialogPort extends ParentPort {
+public interface DialogPort extends Port {
 
     @Nullable Person getResult();
 

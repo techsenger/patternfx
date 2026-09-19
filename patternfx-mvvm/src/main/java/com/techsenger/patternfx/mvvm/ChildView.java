@@ -56,12 +56,12 @@ public interface ChildView<VM extends ChildViewModel<?>> extends ParentView<VM> 
     Composer getComposer();
 
     /**
-     * Requests focus. Child view implements this method via selecting FX node that will request focus.
-     */
-    void requestFocus();
-
-    /**
      * Returns the main node of the view. It can be Tab, Node etc.
      */
     Object getNode();
+
+    /**
+     * Requests focus for this component's primary control, as determined by the concrete implementation.
+     */
+    void requestFocus();
 }

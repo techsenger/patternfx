@@ -16,14 +16,28 @@
 
 package com.techsenger.patternfx.core;
 
+import com.techsenger.annotations.Unmodifiable;
+import java.util.List;
+
 /**
  *
  * @author Pavel Castornii
  */
-public interface ParentPort {
+public interface ParentPort extends Port {
+
+    interface ComposerAccess {
+
+        /**
+         * Returns an unmodifiable list of child Ports.
+         *
+         * @return a non-null, unmodifiable list of child Ports
+         */
+        @Unmodifiable List<? extends ChildPort> getChildPorts();
+    }
 
     /**
-     * Returns the descriptor with minimal functionality.
+     * Returns the Port-safe facet of this component's Composer, without requiring the caller to know how to reach
+     * the Composer itself.
      */
-    DescriptorBase getDescriptor();
+    ComposerAccess getComposerAccess();
 }

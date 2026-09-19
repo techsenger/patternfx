@@ -31,8 +31,8 @@ public interface ParentViewModel<C extends Composer> extends ViewModel, ParentPo
     C getComposer();
 
     /**
-     * Requests deinitialization of this ViewModel and its whole subtree, breadth-first: this ViewModel first, then
-     * its children level by level.
+     * Deinitializes this ViewModel and its whole subtree, breadth-first: this ViewModel first, then its children
+     * level by level; each View reacts by deinitializing itself.
      */
-    void requestDeinitializeTree();
+    void deinitializeTree();
 }

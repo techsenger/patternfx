@@ -12,7 +12,7 @@
     <version>2.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>PatternFX</name>
-    <description>Techsenger PatternFX is a compact, practical, component-oriented framework for building JavaFX applications using an extended MVVM pattern</description>
+    <description>Techsenger PatternFX – MVC, MVP and MVVM templates for building JavaFX applications.</description>
 
     <licenses>
         <license>
@@ -94,6 +94,11 @@
             </dependency>
             <dependency>
                 <groupId>com.techsenger.patternfx</groupId>
+                <artifactId>patternfx-mvc</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.techsenger.patternfx</groupId>
                 <artifactId>patternfx-mvp</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -107,9 +112,10 @@
 
     <modules>
         <module>patternfx-core</module>
+        <module>patternfx-mvc</module>
+        <module>patternfx-mvp</module>
         <module>patternfx-mvvm</module>
         <module>patternfx-demo</module>
-        <module>patternfx-mvp</module>
     </modules>
 
     <build>

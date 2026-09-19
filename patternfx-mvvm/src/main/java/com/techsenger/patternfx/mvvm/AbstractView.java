@@ -80,7 +80,7 @@ public abstract class AbstractView<T extends AbstractViewModel> implements View<
      * Initializes listeners to different properties etc.
      */
     protected void addListeners() {
-        getViewModel().getRequestDeinitialize().addListener((newV) -> deinitialize());
+        getViewModel().deinitializeSource().addListener((newV) -> deinitialize());
     }
 
     /**
@@ -109,10 +109,10 @@ public abstract class AbstractView<T extends AbstractViewModel> implements View<
     protected void unbuild() { }
 
     /**
-     * Returns the {@link Descriptor} of this view &mdash; a shortcut that delegates to the underlying view model,
-     * sparing subclasses a direct reference to it.
+     * Returns the {@link ComponentDescriptor} of this view &mdash; a shortcut that delegates to the underlying view
+     * model, sparing subclasses a direct reference to it.
      */
-    protected Descriptor getDescriptor() {
+    protected ComponentDescriptor getDescriptor() {
         return this.viewModel.getDescriptor();
     }
 }

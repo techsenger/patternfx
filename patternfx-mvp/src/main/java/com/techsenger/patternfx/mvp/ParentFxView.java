@@ -17,8 +17,7 @@
 package com.techsenger.patternfx.mvp;
 
 import com.techsenger.annotations.Unmodifiable;
-import com.techsenger.patternfx.core.TreeIterator;
-import java.util.function.BiConsumer;
+import com.techsenger.patternfx.core.ViewTreeComposer;
 import javafx.collections.ObservableList;
 
 /**
@@ -27,7 +26,7 @@ import javafx.collections.ObservableList;
  */
 public interface ParentFxView<P extends ParentPresenter<?>> extends FxView<P>, ParentView {
 
-    interface Composer extends ParentView.Composer {
+    interface Composer extends ParentView.Composer, ViewTreeComposer<ParentFxView<?>> {
 
         /**
          * Returns an unmodifiable observable list of child Views.
@@ -35,32 +34,6 @@ public interface ParentFxView<P extends ParentPresenter<?>> extends FxView<P>, P
          * @return a non-null, unmodifiable observable list of child Views
          */
         @Unmodifiable ObservableList<? extends ChildFxView<?>> getChildren();
-
-        /**
-         * Returns an iterator that traverses the View subtree starting from this View in depth-first order.
-         *
-         * @return an {@link Iterator} that iterates over this View and all of its descendants
-         */
-        TreeIterator<ParentFxView<?>> depthFirstIterator();
-
-        /**
-         * Returns an iterator that traverses the View subtree starting from this View in breadth-first order.
-         *
-         * @return an {@link Iterator} that iterates over this View and all of its descendants
-         */
-        TreeIterator<ParentFxView<?>> breadthFirstIterator();
-
-        /**
-         * Returns a tree-formatted string representation of this View's subtree, rooted at this View.
-         *
-         * <p>The given {@code appender} renders each View into the shared {@link StringBuilder}; this method
-         * handles the tree structure and line breaks.
-         *
-         * @param appender renders a single View's line into the shared builder
-         * @return a tree-formatted string representation of this View's subtree
-         */
-        String toTreeString(BiConsumer<ParentFxView<?>, StringBuilder> appender);
-
     }
 
     @Override

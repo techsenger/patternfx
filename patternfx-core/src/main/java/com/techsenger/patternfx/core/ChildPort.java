@@ -24,7 +24,7 @@ import com.techsenger.annotations.Nullable;
  */
 public interface ChildPort extends ParentPort {
 
-    interface ComposerAccess {
+    interface ComposerAccess extends ParentPort.ComposerAccess {
 
         /**
         * Returns the parent if the component is currently added as a child to another component, or {@code null}
@@ -35,7 +35,11 @@ public interface ChildPort extends ParentPort {
         @Nullable ParentPort getParentPort();
     }
 
+    @Override
     ComposerAccess getComposerAccess();
 
+    /**
+     * Requests focus for this component's primary control, as determined by the concrete implementation.
+     */
     void requestFocus();
 }

@@ -23,11 +23,6 @@ package com.techsenger.patternfx.mvp;
 public abstract class AbstractFxView<P extends Presenter<?>> extends AbstractView<P> implements FxView<P> {
 
     @Override
-    public ComponentDescriptor getDescriptor() {
-        return getPresenter().getDescriptor();
-    }
-
-    @Override
     protected void initialize() {
         build();
         bind();
@@ -82,4 +77,12 @@ public abstract class AbstractFxView<P extends Presenter<?>> extends AbstractVie
      * Unbuilds the view.
      */
     protected void unbuild() { }
+
+    /**
+     * Returns the {@link ComponentDescriptor} of this view &mdash; a shortcut that delegates to the underlying
+     * presenter, sparing subclasses a direct reference to it.
+     */
+    protected ComponentDescriptor getDescriptor() {
+        return getPresenter().getDescriptor();
+    }
 }

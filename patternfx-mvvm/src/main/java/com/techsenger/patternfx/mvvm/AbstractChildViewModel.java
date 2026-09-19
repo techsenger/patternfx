@@ -16,6 +16,7 @@
 
 package com.techsenger.patternfx.mvvm;
 
+import com.techsenger.patternfx.core.ChildPort;
 import com.techsenger.patternfx.core.ComponentParams;
 import com.techsenger.toolkit.fx.value.ObservableSource;
 import com.techsenger.toolkit.fx.value.SimpleObservableSource;
@@ -34,7 +35,7 @@ public abstract class AbstractChildViewModel<C extends ChildComposer> extends Ab
     }
 
     @Override
-    public ComposerAccess getComposerAccess() {
+    public ChildPort.ComposerAccess getComposerAccess() {
         return getComposer();
     }
 
@@ -43,7 +44,7 @@ public abstract class AbstractChildViewModel<C extends ChildComposer> extends Ab
         requestFocus.next(null);
     }
 
-    ObservableSource<Void> getRequestFocus() {
+    ObservableSource<Void> requestFocusSource() {
         return requestFocus;
     }
 }

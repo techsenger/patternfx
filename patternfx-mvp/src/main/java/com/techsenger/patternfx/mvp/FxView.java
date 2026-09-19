@@ -22,11 +22,5 @@ package com.techsenger.patternfx.mvp;
  */
 public interface FxView<P extends Presenter<?>> extends View {
 
-    /**
-     * Returns the {@link ComponentDescriptor} of this component &mdash; a shortcut that delegates to the underlying
-     * presenter, sparing clients a direct reference to it.
-     */
-    ComponentDescriptor getDescriptor();
-
     P getPresenter();
 }

@@ -25,10 +25,10 @@ public interface ViewModel {
     /**
      * Returns the descriptor identifying this whole component (View included), not just this view model.
      */
-    Descriptor getDescriptor();
+    ComponentDescriptor getDescriptor();
 
     /**
-     * Requests deinitialization of this ViewModel; its View reacts by deinitializing itself.
+     * Deinitializes this ViewModel; its View reacts by deinitializing itself.
      */
-    void requestDeinitialize();
+    void deinitialize();
 }

@@ -34,7 +34,7 @@ import javafx.stage.Stage;
 public class Demo extends Application {
 
     private enum Pattern {
-        MVP, MVVM
+        MVC, MVP, MVVM
     }
 
     private final Label label = new Label("Select Pattern:");
@@ -62,6 +62,7 @@ public class Demo extends Application {
                     // the unit will be deinitialized automatically when the stage
                     // is closed, via the handler registered with stage#setOnCloseRequest
                     switch (pattern) {
+                        case MVC -> new MvcRunner().run();
                         case MVP -> new MvpRunner().run();
                         case MVVM -> new MvvmRunner().run();
                         default -> throw new AssertionError();

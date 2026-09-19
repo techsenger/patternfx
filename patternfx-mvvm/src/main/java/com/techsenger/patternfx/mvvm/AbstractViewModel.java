@@ -34,9 +34,9 @@ public abstract class AbstractViewModel implements ViewModel {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractViewModel.class);
 
-    private final Descriptor descriptor;
+    private final ComponentDescriptor descriptor;
 
-    private final ObservableSource<Void> requestDeinitialize = new SimpleObservableSource<>();
+    private final ObservableSource<Void> deinitialize = new SimpleObservableSource<>();
 
     private @Nullable HistoryProvider<? extends ComponentHistory> historyProvider;
 
@@ -50,13 +50,13 @@ public abstract class AbstractViewModel implements ViewModel {
     }
 
     @Override
-    public Descriptor getDescriptor() {
+    public ComponentDescriptor getDescriptor() {
         return descriptor;
     }
 
     @Override
-    public void requestDeinitialize() {
-        requestDeinitialize.next(null);
+    public void deinitialize() {
+        deinitialize.next(null);
     }
 
     /**
@@ -110,11 +110,11 @@ public abstract class AbstractViewModel implements ViewModel {
      * Creates this component's descriptor, defaulting to the class's simple name with any trailing "ViewModel"
      * suffix removed.
      */
-    protected Descriptor createDescriptor() {
+    protected ComponentDescriptor createDescriptor() {
         var simpleName = getClass().getSimpleName();
         var name = simpleName.endsWith("ViewModel")
                 ? simpleName.substring(0, simpleName.length() - "ViewModel".length()) : simpleName;
-        return new Descriptor(new DefaultComponentName(name));
+        return new ComponentDescriptor(new DefaultComponentName(name));
     }
 
     final void beginInitialize() {
@@ -147,8 +147,8 @@ public abstract class AbstractViewModel implements ViewModel {
         postDeinitialize();
     }
 
-    ObservableSource<Void> getRequestDeinitialize() {
-        return requestDeinitialize;
+    ObservableSource<Void> deinitializeSource() {
+        return deinitialize;
     }
 
     private void prepareHistory() {

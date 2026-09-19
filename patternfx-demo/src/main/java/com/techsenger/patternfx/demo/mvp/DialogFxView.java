@@ -17,7 +17,7 @@
 package com.techsenger.patternfx.demo.mvp;
 
 import com.google.errorprone.annotations.concurrent.LazyInit;
-import com.techsenger.patternfx.mvp.AbstractParentFxView;
+import com.techsenger.patternfx.mvp.AbstractFxView;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -35,7 +35,7 @@ import javafx.stage.Stage;
  *
  * @author Pavel Castornii
  */
-public class DialogFxView extends AbstractParentFxView<DialogPresenter<?>> implements DialogView {
+public class DialogFxView extends AbstractFxView<DialogPresenter<?>> implements DialogView {
 
     private final Stage stage;
 
@@ -61,11 +61,6 @@ public class DialogFxView extends AbstractParentFxView<DialogPresenter<?>> imple
 
     public DialogFxView(Stage stage) {
         this.stage = stage;
-    }
-
-    @Override
-    public void requestFocus() {
-        firstNameTextField.requestFocus();
     }
 
     @Override
@@ -104,6 +99,7 @@ public class DialogFxView extends AbstractParentFxView<DialogPresenter<?>> imple
         dialog.getDialogPane().setContent(hBox);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
         this.okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+        dialog.setOnShown(e -> firstNameTextField.requestFocus());
     }
 
     @Override

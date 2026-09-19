@@ -16,13 +16,13 @@
 
 package com.techsenger.patternfx.demo.mvp;
 
-import com.techsenger.patternfx.mvp.ParentView;
+import com.techsenger.patternfx.mvp.View;
 
 /**
  *
  * @author Pavel Castornii
  */
-public interface DialogView extends ParentView {
+public interface DialogView extends View {
 
     void updateFirstNameValid(boolean value);
 

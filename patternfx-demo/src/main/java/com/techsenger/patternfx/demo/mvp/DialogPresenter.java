@@ -20,13 +20,13 @@ import com.techsenger.annotations.Nullable;
 import com.techsenger.patternfx.core.ComponentParams;
 import com.techsenger.patternfx.demo.model.Person;
 import com.techsenger.patternfx.demo.model.PersonValidator;
-import com.techsenger.patternfx.mvp.AbstractParentPresenter;
+import com.techsenger.patternfx.mvp.AbstractPresenter;
 
 /**
  *
  * @author Pavel Castornii
  */
-public class DialogPresenter<V extends DialogView> extends AbstractParentPresenter<V> implements DialogPort {
+public class DialogPresenter<V extends DialogView> extends AbstractPresenter<V> implements DialogPort {
 
     private @Nullable String firstName;
 

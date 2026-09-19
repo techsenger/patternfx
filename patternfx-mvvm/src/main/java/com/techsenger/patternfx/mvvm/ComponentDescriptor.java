@@ -28,13 +28,13 @@ import javafx.beans.property.ObjectProperty;
  *
  * @author Pavel Castornii
  */
-public final class Descriptor extends AbstractObservableDescriptor {
+public final class ComponentDescriptor extends AbstractObservableDescriptor {
 
-    public Descriptor(ComponentName name) {
+    public ComponentDescriptor(ComponentName name) {
         super(name);
     }
 
-    public Descriptor(ComponentName name, UUID uuid) {
+    public ComponentDescriptor(ComponentName name, UUID uuid) {
         super(name, uuid);
     }
 

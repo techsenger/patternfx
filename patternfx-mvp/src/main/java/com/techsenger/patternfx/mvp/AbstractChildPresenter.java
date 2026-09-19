@@ -16,6 +16,7 @@
 
 package com.techsenger.patternfx.mvp;
 
+import com.techsenger.patternfx.core.ChildPort;
 import com.techsenger.patternfx.core.ComponentParams;
 
 /**
@@ -30,7 +31,7 @@ public abstract class AbstractChildPresenter<V extends ChildView> extends Abstra
     }
 
     @Override
-    public ComposerAccess getComposerAccess() {
+    public ChildPort.ComposerAccess getComposerAccess() {
         return getView().getComposer();
     }
 

@@ -30,4 +30,9 @@ public interface ChildView extends ParentView {
 
     @Override
     Composer getComposer();
+
+    /**
+     * Requests focus for this component's primary control, as determined by the concrete implementation.
+     */
+    void requestFocus();
 }

@@ -216,6 +216,6 @@ public abstract class AbstractParentView<VM extends AbstractParentViewModel<?>>
     @Override
     protected void addListeners() {
         super.addListeners();
-        getViewModel().getRequestDeinitializeTree().addListener((newV) -> deinitializeTree());
+        getViewModel().deinitializeTreeSource().addListener((newV) -> deinitializeTree());
     }
 }

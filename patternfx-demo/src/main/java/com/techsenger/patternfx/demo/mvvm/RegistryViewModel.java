@@ -112,7 +112,7 @@ public class RegistryViewModel extends AbstractParentViewModel<RegistryComposer>
     void onAdd() {
         var dialog = getComposer().openDialog(new ComponentParams());
         var newPerson = dialog.getResult();
-        dialog.requestDeinitialize();
+        dialog.deinitialize();
         if (newPerson != null) {
             add(newPerson);
         }
@@ -145,7 +145,7 @@ public class RegistryViewModel extends AbstractParentViewModel<RegistryComposer>
     }
 
     void onClose() {
-        requestDeinitializeTree();
+        deinitializeTree();
     }
 
     private void add(Person person) {

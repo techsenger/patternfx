@@ -16,12 +16,8 @@
 
 package com.techsenger.patternfx.mvp;
 
-import com.techsenger.annotations.Unmodifiable;
-import com.techsenger.patternfx.core.ChildPort;
 import com.techsenger.patternfx.core.ParentPort;
-import com.techsenger.patternfx.core.TreeIterator;
-import java.util.List;
-import java.util.function.BiConsumer;
+import com.techsenger.patternfx.core.PortTreeComposer;
 
 /**
  *
@@ -29,54 +25,13 @@ import java.util.function.BiConsumer;
  */
 public interface ParentView extends View {
 
-    interface Composer {
+    interface Composer extends PortTreeComposer, ParentPort.ComposerAccess {
 
         /**
-         * Creates and adds this component's default child components; invoked once, automatically, near the end
-         * of initialization.
+         * Creates and adds this component's default child components; invoked automatically and exactly once,
+         * from {@code postInitialize()}, right after the component's core initialization phase completes.
          */
         void compose();
-
-        /**
-         * Returns an unmodifiable list of child Ports.
-         *
-         * @return a non-null, unmodifiable list of child Ports
-         */
-        @Unmodifiable List<? extends ChildPort> getChildPorts();
-
-        /**
-         * Returns an iterator that traverses the component subtree starting from this component in depth-first order.
-         *
-         * @return an {@link Iterator} that iterates over this component and all of its descendants
-         */
-        TreeIterator<ParentPort> depthFirstPortIterator();
-
-        /**
-         * Returns an iterator that traverses the component subtree starting from this component in breadth-first
-         * order.
-         *
-         * @return an {@link Iterator} that iterates over this component and all of its descendants
-         */
-        TreeIterator<ParentPort> breadthFirstPortIterator();
-
-        /**
-         * Returns a string representation of this component and all its descendants as a sub-tree with this
-         * component as root.
-         *
-         * @return a tree-formatted string representation of this component
-         */
-        String toTreeString();
-
-        /**
-         * Returns a tree-formatted string representation of this component's subtree, rooted at this component.
-         *
-         * <p>The given {@code appender} renders each component into the shared {@link StringBuilder}; this method
-         * handles the tree structure and line breaks.
-         *
-         * @param appender renders a single component's line into the shared builder
-         * @return a tree-formatted string representation of this component's subtree
-         */
-        String toPortTreeString(BiConsumer<ParentPort, StringBuilder> appender);
     }
 
     /**
@@ -84,9 +39,4 @@ public interface ParentView extends View {
      * not by this view.
      */
     Composer getComposer();
-
-    /**
-     * Requests focus. Child view implements this method via selecting FX node that will request focus.
-     */
-    void requestFocus();
 }

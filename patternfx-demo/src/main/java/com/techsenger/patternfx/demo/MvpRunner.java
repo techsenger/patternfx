@@ -29,8 +29,8 @@ public class MvpRunner implements Runnable {
 
     @Override
     public void run() {
-        var view = new RegistryFxView<>();
         var params = new RegistryParams(new PersonService());
+        var view = new RegistryFxView<>();
         var presenter = new RegistryPresenter<>(view, params);
         presenter.initialize();
     }

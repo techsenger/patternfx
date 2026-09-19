@@ -31,10 +31,15 @@ public abstract class AbstractParentViewModel<C extends Composer> extends Abstra
     @LazyInit
     private C composer;
 
-    private final ObservableSource<Void> requestDeinitializeTree = new SimpleObservableSource<>();
+    private final ObservableSource<Void> deinitializeTree = new SimpleObservableSource<>();
 
     public AbstractParentViewModel(ComponentParams params) {
         super(params);
+    }
+
+    @Override
+    public ComposerAccess getComposerAccess() {
+        return getComposer();
     }
 
     @Override
@@ -43,8 +48,8 @@ public abstract class AbstractParentViewModel<C extends Composer> extends Abstra
     }
 
     @Override
-    public void requestDeinitializeTree() {
-        requestDeinitializeTree.next(null);
+    public void deinitializeTree() {
+        deinitializeTree.next(null);
     }
 
     @SuppressWarnings("unchecked")
@@ -58,7 +63,7 @@ public abstract class AbstractParentViewModel<C extends Composer> extends Abstra
         getComposer().compose();
     }
 
-    ObservableSource<Void> getRequestDeinitializeTree() {
-        return requestDeinitializeTree;
+    ObservableSource<Void> deinitializeTreeSource() {
+        return deinitializeTree;
     }
 }

@@ -71,6 +71,6 @@ public abstract class AbstractChildView<VM extends AbstractChildViewModel<?>>
     @Override
     protected void addListeners() {
         super.addListeners();
-        getViewModel().getRequestFocus().addListener((newV) -> requestFocus());
+        getViewModel().requestFocusSource().addListener((newV) -> requestFocus());
     }
 }

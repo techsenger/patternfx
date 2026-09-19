@@ -5,12 +5,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Overview
 
 PatternFX is a compact, component-oriented, modular framework providing architectural pattern templates
-(MVP and MVVM) for building JavaFX applications. Each template is a complete implementation of one pattern,
+(MVC, MVP, and MVVM) for building JavaFX applications. Each template is a complete implementation of one pattern,
 including lifecycle management, dynamic composition, and component history — not just a conceptual guideline.
 Mixing templates within a single application is unsupported by design. Full conceptual documentation (pattern
 comparisons, when to create a component, complete worked examples) lives in `README.md` — read it before making
-non-trivial design changes to `patternfx-mvp` or `patternfx-mvvm`, since the class responsibilities are only
-fully explained there.
+non-trivial design changes to `patternfx-mvc`, `patternfx-mvp`, or `patternfx-mvvm`, since the class
+responsibilities are only fully explained there.
 
 ## Scope of work
 
@@ -24,13 +24,24 @@ outside directory on your own is strictly forbidden.
 
 ## Module Layout
 
-Reactor build with four Maven modules (Java 25 / JavaFX 25, uses the Java module system):
+Reactor build with five Maven modules (Java 25 / JavaFX 25, uses the Java module system):
 
-- **patternfx-core** (`com.techsenger.patternfx.core`) — pattern-agnostic building blocks shared by both
+- **patternfx-core** (`com.techsenger.patternfx.core`) — pattern-agnostic building blocks shared by all
   templates: `AbstractDescriptor`/`ObservableDescriptor` (component metadata/state, kept separate from
   business data), `ComponentState` (CREATING → INITIALIZING → INITIALIZED → DEINITIALIZING → DEINITIALIZED),
   `AbstractComponentHistory`/`HistoryProvider` (lazy, per-component state persistence),
   `ComponentName`/`ComponentGroup`, and `TreeIterator` (breadth/depth-first traversal of the component tree).
+- **patternfx-mvc** (`com.techsenger.patternfx.mvc`, depends on core) — the MVC template. Controller owns the
+  `Descriptor` and lifecycle, exactly like MVP's Presenter, but is expected to hold a direct reference to the
+  concrete `View` and manipulate it imperatively rather than through a passive interface — so, unlike MVP, there
+  is no separate toolkit-agnostic `View` layer: `View`/`ParentView`/`ChildView` are JavaFX-based from the start.
+  `Composer` centralizes child/derived component creation, same as in the other templates, but since the
+  `Controller` already depends on the concrete `View`, a component's `Composer` doesn't need its own dedicated
+  interface either — it can be a plain concrete inner class. Type hierarchy: `Controller` → `ParentController`
+  (+ `ParentPort`) → `ChildController` (+ `ChildPort`), with `AbstractController` → `AbstractParentController` →
+  `AbstractChildController` as the base implementations, mirrored on the view side by `View` → `ParentView` →
+  `ChildView`, implemented by `AbstractView` → `AbstractParentView` → `AbstractChildView`. `Controller` instances
+  are never shared directly between components — cross-component communication goes through a `Port`.
 - **patternfx-mvp** (`com.techsenger.patternfx.mvp`, depends on core) — the MVP template. Presenter owns the
   `Descriptor` and lifecycle; `View`/`FxView` are passive; `Composer` centralizes child/derived component
   creation. Type hierarchy: `Presenter` → `ParentPresenter` (+ `ParentPort`) → `ChildPresenter` (+ `ChildPort`),
@@ -43,13 +54,14 @@ Reactor build with four Maven modules (Java 25 / JavaFX 25, uses the Java module
   `BindingUtils`); `Composer` again centralizes composition. Hierarchy: `ViewModel` → `ParentViewModel` →
   `ChildViewModel`, with `AbstractViewModel` → `AbstractParentViewModel` → `AbstractChildViewModel`. Views:
   `View` → `ParentView` → `ChildView`, with `AbstractView` → `AbstractParentView` → `AbstractChildView`.
-- **patternfx-demo** (`com.techsenger.patternfx.demo`, depends on core + mvp + mvvm) — runnable JavaFX app
-  demonstrating both templates side by side (`demo.mvp` and `demo.mvvm` packages), each with an equivalent
-  Registry/Report/Dialog component set built from the same `demo.model` (Person/PersonService/PersonValidator).
-  Entry point is `Demo`, which delegates to `MvpRunner` or `MvvmRunner`.
+- **patternfx-demo** (`com.techsenger.patternfx.demo`, depends on core + mvc + mvp + mvvm) — runnable JavaFX app
+  demonstrating all three templates side by side (`demo.mvc`, `demo.mvp`, and `demo.mvvm` packages), each with an
+  equivalent Registry/Report/Dialog component set built from the same `demo.model`
+  (Person/PersonService/PersonValidator). Entry point is `Demo`, which delegates to `MvcRunner`, `MvpRunner`, or
+  `MvvmRunner`.
 
-In both templates, base `Component`/`Presenter`/`ViewModel` types are for isolated windows/dialogs with no
-tree participation; `Parent*` types add child-management; `Child*` types add a parent reference and full
+In all templates, base `Component`/`Controller`/`Presenter`/`ViewModel` types are for isolated windows/dialogs
+with no tree participation; `Parent*` types add child-management; `Child*` types add a parent reference and full
 composition-tree integration. All templates enforce the Unidirectional Hierarchy Rule: no circular parent/child
 relationships in the component tree (which is a logical ownership tree, independent of the JavaFX scene graph).
 
@@ -77,7 +89,7 @@ Run a single test class or method (surefire):
 mvn -pl patternfx-core test -Dtest=SomeTestClass
 mvn -pl patternfx-core test -Dtest=SomeTestClass#someMethod
 ```
-(swap `patternfx-core` for `patternfx-mvp`/`patternfx-mvvm`/`patternfx-demo` as needed; `-pl` targets a
+(swap `patternfx-core` for `patternfx-mvc`/`patternfx-mvp`/`patternfx-mvvm`/`patternfx-demo` as needed; `-pl` targets a
 single module in this multi-module reactor.)
 
 Checkstyle only:

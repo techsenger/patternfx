@@ -21,6 +21,9 @@ As a real example of using this framework, see [ShellFX](https://github.com/tech
 * [Features](#features)
 * [Patterns](#patterns)
     * [What is a Model?](#patterns-model)
+    * [MVC Pattern](#patterns-mvc)
+        * [MVC Pattern Advantages](#patterns-mvc-advantages)
+        * [MVC Pattern Disadvantages](#patterns-mvc-disadvantages)
     * [MVP Pattern](#patterns-mvp)
         * [MVP Pattern Advantages](#patterns-mvp-advantages)
         * [MVP Pattern Disadvantages](#patterns-mvp-disadvantages)
@@ -49,6 +52,10 @@ As a real example of using this framework, see [ShellFX](https://github.com/tech
         * [Component History](#templates-component-history)
         * [When to Create a Component?](#templates-component-when-to-create)
         * [When Not to Create a Component?](#templates-component-when-not-to-create)
+    * [MVC Template](#templates-mvc)
+        * [MVC Component Structure](#templates-mvc-structure)
+        * [MVC Component Lifecycle](#templates-mvc-lifecycle)
+        * [MVC Component Example](#templates-mvc-example)
     * [MVP Template](#templates-mvp)
         * [MVP Component Structure](#templates-mvp-structure)
         * [MVP Component Lifecycle](#templates-mvp-lifecycle)
@@ -144,6 +151,69 @@ In PatternFX, it is supposed the Model is reusable and interchangeable. The same
 presentation patterns without modification. The fundamental principle is that the `Model` never references the
 `View` or presentation logic. It has no awareness of how its data is displayed. This strict isolation makes the
 application core robust, easily testable, and independent of the UI layer.
+
+### MVC Pattern <a name="patterns-mvc"></a>
+
+MVC (`Model`-`View`-`Controller`) is an architectural pattern that separates an application's logic into three main
+parts: `Model`, `View`, and `Controller`.
+
+`View` — represents the user interface and is responsible for rendering UI elements and exposing them to the
+`Controller`. Unlike MVP and MVVM, the `View` is not intentionally passive and does not need to hide its concrete
+JavaFX implementation behind an interface. The `Controller` may directly access JavaFX nodes and invoke methods on the
+concrete `View`.
+
+`Controller` — contains the presentation and interaction logic. It reacts to user events, coordinates work with the
+`Model`, and directly manipulates the `View`. The `Controller` holds a reference to the concrete `View` it controls.
+Because there is no additional abstraction boundary between the `Controller` and `View`, the `Controller` can perform
+imperative UI operations directly, such as changing control values, managing focus, updating selections, or modifying
+the component's layout.
+
+`Model` — represents the application's data and business logic. As in other patterns, the `Model` is completely
+independent of the UI and does not reference either the `View` or the `Controller`.
+
+A key characteristic of MVC is that the `Controller` is the central point where user interaction and presentation
+logic meet. The typical control flow is:
+
+User Action → View → Controller → Model → Controller → View
+
+Unlike MVP, the `Controller` is not restricted to a toolkit-agnostic `View` interface. It can work directly with the
+concrete JavaFX `View`, which makes MVC simple and concise, but also means that the separation between presentation
+logic and UI implementation is enforced primarily by convention rather than by the architecture itself.
+
+#### MVC Pattern Advantages <a name="patterns-mvc-advantages"></a>
+
+* Simple architecture. MVC requires only three primary roles and does not introduce a separate `View` interface or
+  `ViewModel` abstraction.
+* Direct UI control. The `Controller` can directly manipulate the concrete JavaFX `View`, making imperative UI
+  operations straightforward and concise.
+* Low amount of boilerplate. There is no need to duplicate UI state in a `ViewModel` or define a separate `View`
+  interface solely to isolate the `Controller`.
+* Natural fit for imperative JavaFX. MVC works directly with JavaFX controls and their existing state and APIs without
+  requiring an additional presentation abstraction.
+* Easy to start with. Small components such as simple dialogs, forms, or prototypes can be implemented without the
+  additional structural code required by MVP or MVVM.
+* Flexible UI interaction. Because the `Controller` has direct access to the `View`, it can naturally handle
+  interaction patterns that are difficult to express through state alone, such as focus, selection, scrolling, and
+  other procedural UI operations.
+
+#### MVC Pattern Disadvantages <a name="patterns-mvc-disadvantages"></a>
+
+* Weak separation between presentation logic and UI implementation. Because the `Controller` directly depends on the
+  concrete `View`, presentation logic can become tightly coupled to JavaFX controls.
+* Risk of a large `Controller`. Without a structural boundary between presentation logic and the `View`, a growing
+  component can accumulate event handling, presentation logic, UI manipulation, and coordination logic in a single
+  class.
+* Lower testability of presentation logic. Testing a `Controller` independently may require constructing or mocking
+  the concrete `View` and its JavaFX-related API.
+* Greater reliance on discipline. MVC does not structurally prevent the `Controller` from reaching into arbitrary
+  parts of the `View`. Keeping responsibilities well organized therefore depends more heavily on the design of the
+  component.
+* Less explicit abstraction. Unlike MVP, where the `View` interface defines the operations available to the
+  `Presenter`, MVC exposes the concrete `View` directly. This reduces ceremony but also provides fewer architectural
+  boundaries.
+* Less suitable for large interaction-heavy components. As presentation logic grows, direct access to the `View` can
+  make the `Controller` increasingly difficult to maintain and test. In such cases, the additional separation provided
+  by MVP may be beneficial.
 
 ### MVP Pattern <a name="patterns-mvp"></a>
 
@@ -265,9 +335,14 @@ driven by the project's requirements and the developer's preferences.
 
 #### Architecture Overview <a name="patterns-arch-overview"></a>
 
-MVC provides maximum control and is very simple to implement, but it has a serious drawback — MVC tends to mix
-presentation and interaction logic inside the `Controller`, which often leads to tightly coupled and harder-to-test code.
-For this reason, the following analysis focuses only on MVP and MVVM.
+MVC provides maximum control and is the simplest of the three to implement, but it also carries the most risk:
+with no structural boundary between presentation and interaction logic, both tend to accumulate inside the
+`Controller`, which often leads to tightly coupled and harder-to-test code. PatternFX's `Composer` (see
+[Component Composer](#templates-component-composer)) keeps composition logic out of the `Controller` even in MVC,
+but the `Controller` is still free to reach into the `View` directly, so avoiding a "God" `Controller` remains a
+matter of discipline rather than something the template enforces. MVC's own template and trade-offs are covered
+separately in [MVC Template](#templates-mvc); for this reason, the following comparison focuses on MVP and MVVM,
+where PatternFX's `Port`/`Composer` boundaries provide stronger structural guarantees.
 
 MVP and MVVM are similar in that both patterns introduce an explicit representation of UI state outside of the `View`,
 unlike MVC. In MVP, the state is stored in the `Presenter`, while in MVVM, the state is stored in the `ViewModel`.
@@ -381,6 +456,12 @@ The more procedural and interaction-driven it is, the more natural MVP becomes.
 Therefore, when choosing between MVP and MVVM, it is important to consider the nature of the application. MVVM is
 often better suited for data-driven interfaces such as forms and dashboards, whereas MVP tends to fit better for
 interaction-heavy applications such as file managers, IDEs, navigation systems, and complex editing tools.
+
+MVC is worth choosing over MVP mainly for small, short-lived, or throwaway components — simple dialogs, prototypes,
+or a team already comfortable writing imperative JavaFX code — where the `Controller`'s direct access to the `View`
+saves the ceremony of a passive `View` interface without much added risk. As a component's interaction logic grows,
+that same directness is what makes a `Controller` gradually accumulate presentation logic it should not own, which is
+exactly the failure mode MVP's `View` interface exists to prevent (see [Architecture Overview](#patterns-arch-overview)).
 
 ## Templates <a name="templates"></a>
 
@@ -641,6 +722,166 @@ maintainability and reduces parent component complexity.
 * The element is simple enough that separating it into its own component would add unnecessary complexity rather
 than improving clarity.
 
+### MVC Template <a name="templates-mvc"></a>
+
+In this template, additional responsibilities are distributed between the `View` and `Controller`. For
+responsibilities that cannot be performed without creating an additional element, a `Composer` is introduced:
+
+| **Task**                                              | **Responsible**              |
+|-------------------------------------------------------|-------------------------------|
+| Storing component metadata and state                  | `Descriptor` in `Controller` |
+| Managing the component lifecycle                      | `Controller`                 |
+| Creating and removing components                      | `Composer`                   |
+| Composing and decomposing components                  | `Composer`                   |
+| Maintaining references to parent and child components | `Composer`                   |
+| Representing the node in the "component" tree         | `View`                       |
+
+This table is identical to MVP's (see [MVP Template](#templates-mvp)) — both templates give the `Controller`/`Presenter`
+ownership of the descriptor and lifecycle, and both keep composition centralized in a `Composer` held by the `View`.
+The difference between the two templates is not in this table; it is in what the `Controller` is allowed to do with
+the `View` it holds. In MVP, the `Presenter` depends only on a toolkit-agnostic `View` interface, so the framework
+splits the view layer into a passive `View`/`ParentView`/`ChildView` interface hierarchy and a separate
+`FxView`/`ParentFxView`/`ChildFxView` JavaFX implementation of it (see [MVP Template](#templates-mvp)). In MVC, the
+`Controller` is expected to hold a direct reference to the concrete `View` and manipulate it imperatively, so that
+split serves no purpose: MVC has a single `View`/`ParentView`/`ChildView` hierarchy that is JavaFX-based from the
+start, and a concrete `Controller` is typically parameterized with the concrete `View` subclass it drives, not with
+an interface. For the same reason, a component's `Composer` in MVC does not need its own dedicated interface either
+(compare with `FooView.Composer`/`FooComposer` in the [MVP](#templates-mvp-example)/[MVVM](#templates-mvvm-example)
+examples) — it can be a plain concrete inner class, since there is no boundary left for an interface to protect.
+
+#### MVC Component Structure <a name="templates-mvc-structure"></a>
+
+A component consists of the following classes: a `View`, a `Controller`. In addition to them, a component always has
+a `Descriptor` (which is provided by the framework and normally does not require custom implementation) and may
+include `Params`, a `Composer`, a `Port` and a `History` classes. `Params` and `Port` are not MVC-specific — see
+[Component Params](#templates-component-params) and [Component Port](#templates-component-port) — the `Controller`
+is simply the class that, in this template, retains `Params` across initialization and implements a `Port`. Even
+though the `Controller` can reach the concrete `View` directly, `Port` is still the only type ever handed to another
+component — `Controller` instances are never shared directly between components, exactly as in MVP and MVVM.
+
+#### MVC Component Lifecycle <a name="templates-mvc-lifecycle"></a>
+
+Each `Controller` provides the `Controller#initialize()` and `Controller#deinitialize()` methods, which initialize
+and deinitialize all parts of the component respectively, updating its state. This mirrors MVP exactly, where the
+`Presenter` — not the `View` — is the owner of the lifecycle.
+
+The default implementation of these methods in `AbstractController` is based on the Template Method pattern.
+Initialization and deinitialization are divided into three phases.
+
+The first phase consists of invoking the protected methods `preInitialize()` / `preDeinitialize()`, which may be
+overridden. The second phase is strictly fixed and performs the core initialization and deinitialization logic.
+The third phase consists of invoking the protected methods `postInitialize()` / `postDeinitialize()`, which may also
+be overridden.
+
+The second phase is the most important one. During this phase, the `View` is initialized and deinitialized via
+calls to the methods `View#initialize()` and `View#deinitialize()`. During the second phase, the `AbstractView`
+is initialized and deinitialized by invoking four protected methods that perform the core `View` operations. These
+protected methods may be overridden and are responsible for the following:
+
+- building/unbuilding
+- binding/unbinding
+- adding/removing listeners
+- adding/removing handlers
+
+It is important to note that these protected methods should not be considered the only place for performing such tasks
+(e.g., adding or removing handlers) within the `View`; rather, they represent one part of the
+initialization/deinitialization process. Thus, such tasks may also be performed in other methods.
+
+The `Composer` is created and assigned to the `AbstractParentController` when the `AbstractParentView#setController()`
+method is called.
+
+#### MVC Component Example<a name="templates-mvc-example"></a>
+
+`View` class:
+
+```java
+public class FooView extends AbstractParentView<FooController<?>> {
+
+    public class Composer extends AbstractParentView<FooController<?>>.Composer {
+
+        private BarView bar;
+
+        public void showBar(ComponentParams params) {
+            bar = new BarView();
+            var c = new BarController(bar, params);
+            c.initialize();
+            getModifiableChildren().add(bar);
+            someNode.getChildren().add(bar.getNode()); // adding bar view into foo view
+        }
+
+        public BarPort getBar() {
+            return bar == null ? null : bar.getController();
+        }
+
+        public void hideBar() {
+            getModifiableChildren().remove(bar);
+            someNode.getChildren().remove(bar.getNode()); // removing bar view from foo view
+            bar.getController().deinitialize();
+            bar = null;
+        }
+    }
+
+    public FooView() {
+        super();
+    }
+
+    @Override
+    protected void build() {
+        super.build();
+        logger.debug("{} View is initializing", getDescriptor().getLogPrefix());
+    }
+
+    @Override
+    public Composer getComposer() {
+        return (Composer) super.getComposer();
+    }
+
+    @Override
+    protected Composer createComposer() {
+        return new Composer();
+    }
+    ...
+}
+```
+
+`Controller` class:
+
+```java
+public class FooController<V extends FooView> extends AbstractParentController<V> {
+
+    public FooController(V view, ComponentParams params) {
+        super(view, params);
+    }
+
+    public void onAction() {
+        var params = new ComponentParams();
+        ...
+        getView().getComposer().showBar(params);
+        // use bar directly, e.g. getView().getSomeLabel().setText(...)
+    }
+
+    ...
+}
+```
+
+This code demonstrates how to create the foo component instance:
+
+```java
+var params = new ComponentParams();
+var view = new FooView();
+var controller = new FooController<>(view, params);
+controller.initialize();
+... // use the component
+controller.deinitialize();
+```
+
+Note the difference from the MVP/MVVM examples above: there, `Composer` implements a dedicated business interface
+(`FooView.Composer` in MVP, `FooComposer` in MVVM) that the `Presenter`/`ViewModel` depends on instead of the
+concrete `View`. Here, `FooView.Composer` implements no such interface — since `FooController` already depends on
+the concrete `FooView`, and through it the concrete `FooView.Composer`, there is no abstraction boundary left for
+one to protect. `BarPort`, on the other hand, is still returned rather than the concrete `BarController`, because
+[Component Port](#templates-component-port) is a rule shared by every template, not one specific to MVP or MVVM.
+
 ### MVP Template <a name="templates-mvp"></a>
 
 <img width="1197" height="522" alt="PatternFX MVP" src="https://github.com/user-attachments/assets/c9c675f5-76ba-434c-9ccc-08272ad32a44" />
@@ -803,8 +1044,8 @@ public class FooFxView<P extends FooPresenter<?>> extends AbstractParentFxView<P
 This code demonstrates how to create the foo component instance:
 
 ```java
-var view = new FooFxView<>();
 var params = new ComponentParams();
+var view = new FooFxView<>();
 var presenter = new FooPresenter<>(view, params);
 presenter.initialize();
 ... // use the component
@@ -992,6 +1233,21 @@ Java 25+ and JavaFX 25+.
 ## Dependencies <a name="dependencies"></a>
 
 This project will be available on Maven Central in a few weeks.
+
+For MVC template:
+
+```
+<dependency>
+    <groupId>com.techsenger.patternfx</groupId>
+    <artifactId>patternfx-core</artifactId>
+    <version>${patternfx.version}</version>
+</dependency>
+<dependency>
+    <groupId>com.techsenger.patternfx</groupId>
+    <artifactId>patternfx-mvc</artifactId>
+    <version>${patternfx.version}</version>
+</dependency>
+```
 
 For MVP template:
 
