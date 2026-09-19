@@ -3,7 +3,8 @@
 PatternFX is a compact, practical, component-oriented, and modular framework that provides architectural pattern
 templates for building JavaFX applications. Each template is a concrete implementation of a specific architectural
 pattern, comes with its own strengths and weaknesses, and users can choose the one that best fits their application.
-Using multiple templates within a single application is not supported.
+At the same time, all templates share a common architectural foundation. Using multiple templates within a single
+application is not supported.
 
 All templates provide a complete implementation required for building complex applications with dynamic composition
 and are intended for practical, real-world use. For each template, a demo consisting of three components is provided,
@@ -103,15 +104,17 @@ predictable, and easy to extend.
 
 Key features include:
 
+* Component-oriented architecture.
 * Support for the component lifecycle.
 * Models the application as a component tree.
-* Provides all necessary methods for working with a component tree.
+* Supports dynamic component composition.
+* Convenient component tree API.
 * Organizes core tasks within the view.
 * Supports component inheritance.
-* Enables preserving component history.
+* Supports preserving component history.
 * Provides component-level logging support.
 * Designed without FXML dependency.
-* Includes a demo for each template demonstrating its usage.
+* Includes a demo for each template.
 * Comprehensive documentation.
 
 ## Patterns <a name="patterns"></a>
