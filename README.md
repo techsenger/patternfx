@@ -857,7 +857,7 @@ public class FooController<V extends FooView> extends AbstractParentController<V
         var params = new ComponentParams();
         ...
         getView().getComposer().showBar(params);
-        // use bar directly, e.g. getView().getSomeLabel().setText(...)
+        // use bar
     }
 
     ...
