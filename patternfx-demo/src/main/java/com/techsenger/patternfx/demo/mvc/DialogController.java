@@ -28,6 +28,17 @@ import com.techsenger.patternfx.mvc.AbstractController;
  */
 public class DialogController<V extends DialogView> extends AbstractController<V> implements DialogPort {
 
+    private static @Nullable Integer parseAge(String text) {
+        if (text == null || text.isEmpty()) {
+            return null;
+        }
+        try {
+            return Integer.valueOf(text);
+        } catch (NumberFormatException ex) {
+            return null;
+        }
+    }
+
     private @Nullable Person result;
 
     public DialogController(V view, ComponentParams params) {
@@ -42,7 +53,7 @@ public class DialogController<V extends DialogView> extends AbstractController<V
     protected boolean onOk() {
         var firstName = getView().getFirstNameTextField().getText();
         var lastName = getView().getLastNameTextField().getText();
-        var age = Integer.valueOf(getView().getAgeTextField().getText());
+        var age = parseAge(getView().getAgeTextField().getText());
         var person = new Person(firstName, lastName, age);
         var firstNameValid = PersonValidator.isFirstNameValid(person.getFirstName());
         var lastNameValid = PersonValidator.isLastNameValid(person.getLastName());
