@@ -12,6 +12,11 @@ comparisons, when to create a component, complete worked examples) lives in `REA
 non-trivial design changes to `patternfx-mvc`, `patternfx-mvp`, or `patternfx-mvvm`, since the class
 responsibilities are only fully explained there.
 
+## Language
+
+Everything in the project is written in English — README, documentation, Javadoc, code comments, commit
+messages, etc. Always — regardless of what language the conversation with the assistant happens in.
+
 ## Scope of work
 
 It is strictly forbidden to operate outside the project directory. This applies absolutely, to every kind
@@ -21,6 +26,9 @@ The only exception: the developer may explicitly name a directory outside the pr
 specific task. In that case, work must stay confined to the project directory plus exactly the
 directory/directories the developer named — nothing else. Proactively suggesting or using any other
 outside directory on your own is strictly forbidden.
+
+If some source you need isn't in an allowed directory, ask the developer where to find it — never search
+the rest of the machine for it on your own.
 
 ## Module Layout
 
@@ -72,7 +80,7 @@ listeners, add/remove handlers) → `postInitialize()`/`postDeinitialize()` (ove
 Null-safety is enforced at compile time: every package is `@NullMarked` (from `com.techsenger.annotations`),
 and the build fails (`-Werror`) on NullAway violations.
 
-## Common Commands
+## Commands
 
 Full build — compiles, runs unit + integration tests, and checkstyle (from repo root):
 ```
@@ -116,10 +124,139 @@ but are empty.
 - `patternfx-demo` is excluded from publishing (`publishing.plugin.exclusions`) since it's example code, not
   a library artifact.
 
-## Language
+## Architecture: ViewModel state
 
-Everything in the project is written in English — README, documentation, Javadoc, code comments, commit
-messages, etc. Always — regardless of what language the conversation with the assistant happens in.
+The **ViewModel is the source of truth** for a component's state, exposed as JavaFX properties that the View
+binds to directly. Every ViewModel property falls into one of three shapes:
+
+1. **Read and written from outside, fully owned by the ViewModel** (nothing else can change it
+independently): a plain `Property`, exposed as three public methods — `xProperty()`, `getX()`, `setX()`:
+
+```java
+// ViewModel
+private final ObjectProperty<Foo> foo = new SimpleObjectProperty<>();
+
+public ObjectProperty<Foo> fooProperty() {
+    return this.foo;
+}
+
+public Foo getFoo() {
+    return this.foo.get();
+}
+
+public void setFoo(Foo foo) {
+    this.foo.set(foo);
+}
+```
+
+2. **Read only from outside, fully owned by the ViewModel:** a `ReadOnlyObjectWrapper` backing field,
+exposed as two public methods — `xProperty()`, `getX()`:
+
+```java
+// ViewModel
+private final ReadOnlyObjectWrapper<Foo> foo = new ReadOnlyObjectWrapper<>();
+
+public ReadOnlyObjectProperty<Foo> fooProperty() {
+    return this.foo.getReadOnlyProperty();
+}
+
+public Foo getFoo() {
+    return this.foo.get();
+}
+
+ReadOnlyObjectWrapper<Foo> fooWrapper() {
+    return this.foo;
+}
+
+```
+
+3. **Read only from outside, with a request setter — for state a View or the platform owns, not the
+ViewModel (the `wrapper`/`source` naming pattern, its setter marked `@RequestSetter`).** Some ViewModel
+state isn't decided by the ViewModel itself — it's decided by the real widget or the OS (a window's
+width/height/x/y, maximized/minimized, a `TableView`'s selection) — and the *requested* value and the
+*actual* value can legitimately diverge (the platform clamps, ignores, or rejects the request). This is why
+real JavaFX's own `Window#widthProperty()` is `ReadOnlyDoubleProperty` with a separate best-effort
+`setWidth(double)`, not a plain `DoubleProperty`. For this kind of state:
+
+- Expose it as a `ReadOnly*Property` on the Port/ViewModel — never a plain writable `Property`. A writable
+  property lets a caller write an optimistic value straight in; if the platform then silently rejects the
+  request (no compensating change event fires, because nothing about the real state actually changed), that
+  optimistic value sits there being wrong forever — a "lying property," which is worse than the
+  two-way-binding reentrancy problem it might look like it's avoiding.
+- Back it with a `ReadOnly*Wrapper` field, and add a package-private `xWrapper()` accessor — documented as a
+  framework contract ("written directly by the View... direct invocation by user code results in undefined
+  behavior") — that the paired View `.bind()`s straight to the real widget/`Stage` property. When there is no
+  independent widget truth to bind to at all (confirmed only asynchronously, e.g. by a manager after it
+  finishes an operation), the View instead writes the wrapper directly, once, at the point the real outcome
+  is known.
+- Give the public setter (`setWidth`, `setSelectedItem`, ...) a matching package-private `xSource()`
+  accessor returning an `ObservableSource<T>`. The setter only calls `xSource.next(value)` — it never touches
+  the wrapper itself. The View subscribes to `xSource()` and performs the real widget/platform call; the
+  outcome flows back solely through the wrapper. This keeps exactly one writer per property in each
+  direction, so there's no reentrancy/cycle to guard against and no way to bypass whatever side effect the
+  request needs to trigger. Annotate the setter itself with `@RequestSetter`, marking it as best-effort rather
+  than a guaranteed state change.
+- Don't reach for `wrapper`/`source` for state the ViewModel fully owns itself, even if its setter carries a
+  side effect or validation (a derived flag to update, a check that throws) — as long as the setter is the
+  *only* way in, a plain `Property` is correct and a `ReadOnly` wrapper only makes the API harder to use for
+  no safety benefit. Reserve `wrapper`/`source` for state a second, independent party (the View, the
+  platform) can also change out from under the ViewModel.
+- **Naming applies uniformly, with or without a paired wrapper.** A command source with no matching
+  `ReadOnly*Wrapper` at all (e.g. a ViewModel unconditionally telling the View "re-render this now," with no
+  independent "actual" value to diverge from) is still named `<action>Source`, with a same-named accessor
+  `<action>Source()` — never `request<Verb>`/`getRequest<Verb>()`.
+
+```java
+// ViewModel
+private final ReadOnlyObjectWrapper<Item> selectedItem = new ReadOnlyObjectWrapper<>();
+
+private final ObservableSource<Item> selectedItemSource = new SimpleObservableSource<>();
+
+public ReadOnlyObjectProperty<Item> selectedItemProperty() {
+    return this.selectedItem.getReadOnlyProperty();
+}
+
+public Item getSelectedItem() {
+    return this.selectedItem.get();
+}
+
+@RequestSetter
+public void setSelectedItem(Item item) {
+    this.selectedItemSource.next(item);
+}
+
+ReadOnlyObjectWrapper<Item> selectedItemWrapper() {
+    return this.selectedItem;
+}
+
+ObservableSource<Item> selectedItemSource() {
+    return this.selectedItemSource;
+}
+```
+
+```java
+// View
+viewModel.selectedItemWrapper().bind(this.table.getSelectionModel().selectedItemProperty());
+viewModel.selectedItemSource().addListener((item) -> {
+    if (item == null) {
+        this.table.getSelectionModel().clearSelection();
+    } else {
+        this.table.getSelectionModel().select(item);
+    }
+});
+```
+
+4. **Collections fully owned by the ViewModel:** an `ObservableList`/`ObservableSet`/`ObservableMap` follows
+the same read-only-from-outside idea without needing a wrapper at all: keep a private modifiable collection,
+expose an unmodifiable view over it to the View (`FXCollections.unmodifiableObservableList(...)`) — callers
+observe structural changes directly — and, if a subclass needs to mutate the collection itself, expose the
+modifiable collection to subclasses through a `protected` accessor rather than widening the public one.
+
+## Nullability
+
+Types use `com.techsenger.annotations.Nullable`/`@Unmodifiable`; NullAway is enforced at compile time
+(`OnlyNullMarked` mode) — only annotate/guard packages that are explicitly null-marked, don't add blanket
+null checks elsewhere.
 
 ## Member ordering
 
@@ -144,7 +281,46 @@ So the full sequence in one class is: static nested types (public→private) →
 (public→private) → static methods (public→private) → nested instance types (public→private) → instance
 fields (public→private) → constructors (public→private) → instance methods (public→private).
 
-## Naming
+**Field grouping, within one role+visibility bucket.** The three criteria above leave ties: in a `Port` or
+`ViewModel` interface/class, `getX()`/`isX()`, `setX()`, and `xProperty()` for the same field are normally
+all `public` instance methods, so nothing above orders them relative to each other or to the next field's
+trio. **When they share the same access modifier, group them by field** instead of batching all getters,
+then all setters, then all property accessors as three separate blocks — `getX()` → `setX()` (if present) →
+`xProperty()` (if present), then move on to the next field's trio:
+
+```java
+double getWidth();
+
+ReadOnlyDoubleProperty widthProperty();
+
+double getHeight();
+
+ReadOnlyDoubleProperty heightProperty();
+```
+
+not
+
+```java
+double getWidth();
+
+double getHeight();
+
+ReadOnlyDoubleProperty widthProperty();
+
+ReadOnlyDoubleProperty heightProperty();
+```
+
+Field order otherwise follows whichever order is already established (typically the backing fields'
+declaration order in the concrete `XxxViewModel`).
+
+If the field's methods don't share one access modifier — e.g. a `wrapper()`/`source()` pair is
+package-private while `getX()`/`xProperty()` are public (see the `wrapper`/`source` pattern above), or a
+setter is `protected` while its getter is `public` — visibility still wins: keep each method in its own
+visibility block, don't pull a lower-visibility method up next to a public one just to keep the trio
+together. The package-private `xWrapper()`/`xSource()` pair still groups with each other, just in the
+package-private block further down the class, not next to the public `getX()`/`xProperty()`.
+
+## Naming convention
 
 A `Map`-typed field/parameter/local/getter/setter is named `<values>By<key>` (e.g. `Map<FileType, Boolean>
 selectionsByType`, `getSelectionsByType()`/`setSelectionsByType(...)`), not `<key><values>` (e.g.
@@ -210,7 +386,7 @@ the interface method or the parent class method being overridden, not duplicated
 
 ## Code style (Checkstyle)
 
-Checkstyle runs on every `mvn package`/`install` (see Build above) via the `com.techsenger.checkstyle.config`
+Checkstyle runs on every `mvn package`/`install` (see Commands above) via the `com.techsenger.checkstyle.config`
 artifact (Sun checks-derived, `severity=error`) — a violation fails the build, not just a lint warning. Treat
 every rule below as binding when writing or editing Java. `module-info.java` files are exempt from all of it.
 Run just this check with `mvn checkstyle:check`, or skip it entirely with `-Dcheckstyle.plugin.skip=true`
