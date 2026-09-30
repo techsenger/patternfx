@@ -16,11 +16,9 @@
 
 package com.techsenger.patternfx.mvc;
 
-import com.techsenger.annotations.Nullable;
 import com.techsenger.patternfx.core.ComponentParams;
 import com.techsenger.patternfx.core.ComponentState;
 import com.techsenger.patternfx.core.DefaultComponentName;
-import com.techsenger.patternfx.core.HistoryProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,16 +34,10 @@ public abstract class AbstractController<V extends View<?>> implements Controlle
 
     private final ComponentDescriptor descriptor;
 
-    private @Nullable HistoryProvider<? extends ComponentHistory> historyProvider;
-
-    private @Nullable ComponentHistory history;
-
-    @SuppressWarnings("unchecked")
     public AbstractController(V view, ComponentParams params) {
         params.validate();
         this.view = view;
         this.descriptor = createDescriptor();
-        this.historyProvider = (HistoryProvider<? extends ComponentHistory>) params.getHistoryProvider();
         if (this.view instanceof AbstractView<?>) {
             ((AbstractView<?>) this.view).setController(this);
         }
@@ -69,7 +61,6 @@ public abstract class AbstractController<V extends View<?>> implements Controlle
             if (getView() instanceof AbstractView<?>) {
                 ((AbstractView<?>) getView()).initialize();
             }
-            applyOrRestorePersistentState();
             descriptor.setState(ComponentState.INITIALIZED);
             logger.debug("{} Initialized the component", getDescriptor().getLogPrefix());
             // post-initialization
@@ -90,7 +81,6 @@ public abstract class AbstractController<V extends View<?>> implements Controlle
             preDeinitialize();
             // deinitialization
             descriptor.setState(ComponentState.DEINITIALIZING);
-            savePersistentStateToHistory();
             if (getView() instanceof AbstractView<?>) {
                 ((AbstractView<?>) getView()).deinitialize();
             }
@@ -111,9 +101,7 @@ public abstract class AbstractController<V extends View<?>> implements Controlle
     /**
      * The first method called in initialization.
      */
-    protected void preInitialize() {
-        prepareHistory();
-    }
+    protected void preInitialize() { }
 
     /**
      * The last method called in initialization.
@@ -131,31 +119,6 @@ public abstract class AbstractController<V extends View<?>> implements Controlle
     protected void postDeinitialize() { }
 
     /**
-     * Returns the history of this component, or {@code null} before it has been prepared.
-     */
-    protected @Nullable ComponentHistory getHistory() {
-        return history;
-    }
-
-    /**
-     * Applies default values for this component's persistent state; invoked when no history is available or it
-     * is new.
-     */
-    protected void applyPersistentState() { }
-
-    /**
-     * Restores this component's persistent state from history; invoked instead of {@link #applyPersistentState()}
-     * when non-new history is available.
-     */
-    protected void restorePersistentState() { }
-
-    /**
-     * Saves this component's persistent state into history; invoked during deinitialization whenever history is
-     * available.
-     */
-    protected void savePersistentState() { }
-
-    /**
      * Creates this component's descriptor, defaulting to the class's simple name with any trailing "Controller"
      * suffix removed.
      */
@@ -164,39 +127,5 @@ public abstract class AbstractController<V extends View<?>> implements Controlle
         var name = simpleName.endsWith("Controller")
                 ? simpleName.substring(0, simpleName.length() - "Controller".length()) : simpleName;
         return new ComponentDescriptor(new DefaultComponentName(name));
-    }
-
-    private void prepareHistory() {
-        if (this.historyProvider != null) {
-            this.history = this.historyProvider.provide();
-            this.historyProvider = null;
-        }
-    }
-
-    /**
-     * Applies default persistent state, or restores it from history, depending on whether history is missing or
-     * new.
-     */
-    private void applyOrRestorePersistentState() {
-        if (history == null || history.isNew()) {
-            applyPersistentState();
-            logger.debug("{} Persistent state set to defaults. Reason: {}", getDescriptor().getLogPrefix(),
-                    history == null ? "history is null" : "history is new");
-        } else {
-            restorePersistentState();
-            logger.debug("{} Persistent state restored from history", getDescriptor().getLogPrefix());
-        }
-    }
-
-    /**
-     * Saves the current persistent state to history and marks it no longer new, when history is available.
-     */
-    private void savePersistentStateToHistory() {
-        if (this.history == null) {
-            return;
-        }
-        savePersistentState();
-        this.history.setNew(false);
-        logger.debug("{} Persistent state saved to history", getDescriptor().getLogPrefix());
     }
 }

@@ -50,7 +50,6 @@ As a real example of using this framework, see [ShellFX](https://github.com/tech
         * [Component Port](#templates-component-port)
         * [Component Composer](#templates-component-composer)
         * [Imperative Component Management](#templates-component-management)
-        * [Component History](#templates-component-history)
         * [When to Create a Component?](#templates-component-when-to-create)
         * [When Not to Create a Component?](#templates-component-when-not-to-create)
     * [MVC Template](#templates-mvc)
@@ -87,7 +86,6 @@ often encounter challenges that these patterns do not fully address. These inclu
 5. Maintaining references to parent and child components.
 6. Component inheritance.
 7. Application structure when the application consists of multiple components.
-8. Preserving and restoring a component's history.
 
 While these issues may not arise when developing simple applications, they become critical when building complex
 applications.
@@ -111,7 +109,6 @@ Key features include:
 * Convenient component tree API.
 * Organizes core tasks within the view.
 * Supports component inheritance.
-* Supports preserving component history.
 * Provides component-level logging support.
 * Designed without FXML dependency.
 * Includes a demo for each template.
@@ -493,8 +490,7 @@ rules while still supporting dynamic UI assembly.
 PatternFX provides templates for different architectural patterns. In addition, even within a single pattern, multiple
 templates may exist, each with its own set of constituent classes. For these reasons, the term `component` is
 introduced to describe a higher-level abstraction than standard UI controls, fundamentally distinguished by its
-compositional nature, which encompasses and organizes multiple UI controls, its managed lifecycle, and its capacity
-to maintain state history.
+compositional nature, which encompasses and organizes multiple UI controls, and its managed lifecycle.
 
 For example, consider an application that uses the MVC pattern and contains an editor and a search panel that is
 dynamically added and removed. In this case, there are two components. The first component includes the classes
@@ -677,7 +673,6 @@ Strengths:
 - Predictable and transparent initialization and deinitialization order.
 - Full control over component lifecycle and composition.
 - Natural support for dynamic UI scenarios (e.g., tabs, dialogs, docking layouts).
-- Reliable state persistence and restoration via component history.
 - Strict separation of concerns between `Component`, `ComponentView`, and `ComponentViewModel`.
 
 Weaknesses:
@@ -689,25 +684,6 @@ tabs, dialogs, or search panels).
 This approach ensures that PatternFX components behave predictably, remain testable, and can support complex,
 long-living, dynamic UI applications.
 
-#### Component History <a name="templates-component-history"></a>
-
-`History` preserves the component’s state across its lifecycle. In the default implementation, the `History`
-instance is lazily provided via a `HistoryProvider` that is set before initialization. During the initialization phase,
-the provider’s `provide()` method is called to obtain the history. This allows the provider to be overridden in
-subclasses without retrieving a history instance, which may be an expensive operation. After the history is obtained,
-the provider is cleared (set to null), and the component uses the history.
-
-The component itself does not decide whether a `History` instance should be persisted or restored across application
-runs — that responsibility belongs to an external history manager, which supplies (or withholds) the `HistoryProvider`.
-The component only reacts to what it is given: if no history is available, or the available history is new (that is,
-has never been saved), the component applies default persistent state via `applyPersistentState()`. Otherwise, it
-restores its persistent state from history via `restorePersistentState()`. Symmetrically, during deinitialization, if
-history is available, the component saves its persistent state into it via `savePersistentState()`.
-
-Component state is conceptually split into two categories: persistent state, which participates in the history
-mechanism and is handled by the three methods above, and transient state, which is runtime-only and must be managed
-independently.
-
 #### When to Create a Component? <a name="templates-component-when-to-create"></a>
 * The element has independent testable state or business logic that can exist without a `View`.
 * The element has a distinct lifecycle requiring separate initialization/deinitialization, or can be dynamically
@@ -717,7 +693,6 @@ added/removed.
 maintainability and reduces parent component complexity.
 * The element manages structural composition - it contains child components or forms an independent subtree
 (e.g., containers, tabs, panels).
-* State persistence is required - the element needs its own `History` to save and restore state between sessions.
 
 #### When not to Create a Component? <a name="templates-component-when-not-to-create"></a>
 * The element’s `ViewModel` would contain no meaningful behavior or data - making the component redundant.
@@ -756,7 +731,7 @@ examples) — it can be a plain concrete inner class, since there is no boundary
 
 A component consists of the following classes: a `View`, a `Controller`. In addition to them, a component always has
 a `Descriptor` (which is provided by the framework and normally does not require custom implementation) and may
-include `Params`, a `Composer`, a `Port` and a `History` classes. `Params` and `Port` are not MVC-specific — see
+include `Params`, `Composer`, and `Port` classes. `Params` and `Port` are not MVC-specific — see
 [Component Params](#templates-component-params) and [Component Port](#templates-component-port) — the `Controller`
 is simply the class that, in this template, retains `Params` across initialization and implements a `Port`. Even
 though the `Controller` can reach the concrete `View` directly, `Port` is still the only type ever handed to another
@@ -909,7 +884,7 @@ them within a classic MVP template. The `View`, which should operate solely at t
 
 A component  consists of the following classes: a `View`, `FxView`, `Presenter`. In addition to them, a component
 always has a `Descriptor` (which is provided by the framework and normally does not require custom implementation)
-and may include `Params`, `Composer`, `Port` and a `History` classes. `Params` and `Port` are not MVP-specific — see
+and may include `Params`, `Composer` and `Port` classes. `Params` and `Port` are not MVP-specific — see
 [Component Params](#templates-component-params) and [Component Port](#templates-component-port) — the `Presenter` is
 simply the class that, in this template, retains `Params` across initialization and implements a `Port`.
 
@@ -1079,7 +1054,7 @@ in its structure. As for the `ViewModel`, it gains a descriptor and handles comp
 
 A component  consists of the following classes: a `View` and a `ViewModel`. In addition to them, a component
 always has a `Descriptor` (which is provided by the framework and normally does not require custom implementation)
-and may include `Params`, a `Composer`, a `Port`, and a `History` classes. `Params` and `Port` are not MVVM-specific
+and may include `Params`, `Composer`, and `Port` classes. `Params` and `Port` are not MVVM-specific
 — see [Component Params](#templates-component-params) and [Component Port](#templates-component-port) — the
 `ViewModel` is simply the class that, in this template, retains `Params` across initialization and implements a
 `Port`.

@@ -16,23 +16,11 @@
 
 package com.techsenger.patternfx.core;
 
-import com.techsenger.annotations.Nullable;
-
 /**
  *
  * @author Pavel Castornii
  */
 public class ComponentParams {
-
-    private @Nullable HistoryProvider<? extends AbstractComponentHistory> historyProvider;
-
-    public @Nullable HistoryProvider<? extends AbstractComponentHistory> getHistoryProvider() {
-        return historyProvider;
-    }
-
-    public void setHistoryProvider(@Nullable HistoryProvider<? extends AbstractComponentHistory> historyProvider) {
-        this.historyProvider = historyProvider;
-    }
 
     /**
      * Validates the params. Called before the params are used to construct a component. Subclasses adding their

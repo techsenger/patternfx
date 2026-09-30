@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 PatternFX is a compact, component-oriented, modular framework providing architectural pattern templates
 (MVC, MVP, and MVVM) for building JavaFX applications. Each template is a complete implementation of one pattern,
-including lifecycle management, dynamic composition, and component history — not just a conceptual guideline.
+including lifecycle management and dynamic composition — not just a conceptual guideline.
 Mixing templates within a single application is unsupported by design. Full conceptual documentation (pattern
 comparisons, when to create a component, complete worked examples) lives in `README.md` — read it before making
 non-trivial design changes to `patternfx-mvc`, `patternfx-mvp`, or `patternfx-mvvm`, since the class
@@ -37,7 +37,6 @@ Reactor build with five Maven modules (Java 25 / JavaFX 25, uses the Java module
 - **patternfx-core** (`com.techsenger.patternfx.core`) — pattern-agnostic building blocks shared by all
   templates: `AbstractDescriptor`/`ObservableDescriptor` (component metadata/state, kept separate from
   business data), `ComponentState` (CREATING → INITIALIZING → INITIALIZED → DEINITIALIZING → DEINITIALIZED),
-  `AbstractComponentHistory`/`HistoryProvider` (lazy, per-component state persistence),
   `ComponentName`/`ComponentGroup`, and `TreeIterator` (breadth/depth-first traversal of the component tree).
 - **patternfx-mvc** (`com.techsenger.patternfx.mvc`, depends on core) — the MVC template. Controller owns the
   `Descriptor` and lifecycle, exactly like MVP's Presenter, but is expected to hold a direct reference to the
