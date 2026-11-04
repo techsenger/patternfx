@@ -18,7 +18,6 @@ module com.techsenger.patternfx.core {
     requires org.slf4j;
     requires com.techsenger.annotations;
     requires javafx.base;
-    requires javafx.graphics;
 
     exports com.techsenger.patternfx.core;
 }
