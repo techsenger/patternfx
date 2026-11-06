@@ -563,16 +563,41 @@ overall application structure (Child Component).
 
 #### Component Tree <a name="templates-component-tree"></a>
 
-Components in PatternFX form a hierarchical structure, called the component tree that can change dynamically. This tree
-represents the logical composition of the application and is independent of the JavaFX node tree, which is
-responsible only for rendering.
+Components in PatternFX form a hierarchical structure, called the component tree, that can change dynamically. This
+tree represents the logical composition of the application and defines component ownership, parent-child relationships,
+and lifecycle boundaries.
 
 Each `Component` may have a parent component and multiple child components. Together, they form a directed,
 acyclic structure that reflects ownership, lifecycle management, and state boundaries rather than visual layout.
 
-The component tree must not be confused with the JavaFX scene graph. The JavaFX node tree describes how UI elements
-are rendered and laid out on screen. The component tree describes how application functionality is structured,
-initialized, composed, and disposed. These two hierarchies serve different purposes and are intentionally decoupled.
+The component tree must not be confused with the JavaFX node tree. These are two distinct but interconnected
+hierarchies that serve different purposes:
+
+* **Component tree** — the architecture of the UI. It defines which components exist, how they relate to each other,
+  who owns them, and how long they live.
+* **JavaFX node tree** — the visual representation of the UI in the JavaFX toolkit. It defines how UI elements are
+  arranged, rendered, and displayed on screen.
+
+The component tree is independent of the JavaFX node tree in terms of structure and responsibility. A component does
+not necessarily correspond to a single JavaFX node, and the parent-child relationships between components do not
+necessarily mirror the visual hierarchy of JavaFX nodes.
+
+Despite this independence, both trees must remain synchronized. When a node is inserted into or removed from the
+JavaFX node tree, JavaFX performs additional operations on it, such as initializing or disposing skins, updating
+selection, managing focus, and notifying listeners. Throughout these operations the corresponding component must remain
+accessible in the component tree, so modifications to the two trees follow a strictly defined order, implemented by the
+`Composer` methods that add or remove components:
+
+* **Adding a component:** the component is first added to the component tree and only then composed into the JavaFX
+  node tree.
+* **Removing a component:** the component is first removed from the JavaFX node tree and only then removed from the
+  component tree.
+
+In some cases the JavaFX node tree is modified independently of the component tree, by the UI toolkit itself or by
+UI-level operations. For example, dragging and dropping a tab detaches its node from one container and inserts it into
+another. The order above cannot be kept there, so such operations must trigger an immediate synchronization of the
+component tree. This synchronization must be handled centrally to ensure that both hierarchies remain consistent and
+that the ownership and lifecycle model is preserved.
 
 The component tree is built according to the Unidirectional Hierarchy Rule (UHR). This rule establishes a strict
 hierarchical order by explicitly prohibiting circular parent-child relationships, meaning a component cannot be both a
@@ -587,8 +612,8 @@ structural composition. Its responsibility is limited to coordinating initializa
 parent–child relationships, and defining ownership boundaries between components.
 
 Keeping the component layer thin prevents it from becoming a God object and ensures that application logic remains
-properly distributed between the View and the ViewModel. This constraint is essential for preserving architectural
-clarity, testability, and long-term maintainability.
+properly distributed between the View and the ViewModel (or Presenter, depending on the selected template). This
+constraint is essential for preserving architectural clarity, testability, and long-term maintainability.
 
 #### Component Params <a name="templates-component-params"></a>
 
@@ -792,8 +817,8 @@ public class FooView extends AbstractParentView<FooController<?>> {
         }
 
         public void hideBar() {
-            getModifiableChildren().remove(bar);
             someNode.getChildren().remove(bar.getNode()); // removing bar view from foo view
+            getModifiableChildren().remove(bar);
             bar.getController().deinitialize();
             bar = null;
         }
@@ -990,8 +1015,8 @@ public class FooFxView<P extends FooPresenter<?>> extends AbstractParentFxView<P
 
         @Override
         public void hideBar() {
-            getModifiableChildren().remove(bar);
             someNode.getChildren().remove(bar.getNode()); // removing bar view from foo view
+            getModifiableChildren().remove(bar);
             bar.getPresenter().deinitialize();
             bar = null;
         }
@@ -1153,8 +1178,8 @@ public class FooView extends AbstractParentView<FooViewModel> {
 
         @Override
         public void hideBar() {
-            getModifiableChildren().remove(bar);
             someNode.getChildren().remove(bar.getNode()); // removing bar view from foo view
+            getModifiableChildren().remove(bar);
             bar.deinitialize();
             bar = null;
         }

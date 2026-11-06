@@ -68,8 +68,8 @@ public class RegistryView extends AbstractParentView<RegistryViewModel> {
             var viewModel = new ReportViewModel(params);
             var v = new ReportView(viewModel);
             v.initialize();
-            root.getChildren().add(v.getNode());
             getModifiableChildren().add(v);
+            root.getChildren().add(v.getNode());
             report = v;
         }
 
@@ -78,8 +78,8 @@ public class RegistryView extends AbstractParentView<RegistryViewModel> {
             if (report == null) {
                 throw new IllegalStateException("Report hasn't been added");
             }
-            getModifiableChildren().remove(report);
             root.getChildren().remove(report.getNode());
+            getModifiableChildren().remove(report);
             report.deinitialize();
             report = null;
         }

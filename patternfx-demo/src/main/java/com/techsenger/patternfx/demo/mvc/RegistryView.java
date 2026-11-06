@@ -73,16 +73,16 @@ public class RegistryView extends AbstractParentView<RegistryController<?>> {
             report = new ReportView();
             var c = new ReportController(report, new ComponentParams());
             c.initialize();
-            view.root.getChildren().add(report.getNode());
             getModifiableChildren().add(report);
+            view.root.getChildren().add(report.getNode());
         }
 
         public void hideReport() {
             if (report == null) {
                 throw new IllegalStateException("Report hasn't been added");
             }
-            getModifiableChildren().remove(report);
             view.root.getChildren().remove(report.getNode());
+            getModifiableChildren().remove(report);
             report.getController().deinitialize();
             report = null;
         }
